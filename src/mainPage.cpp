@@ -31,11 +31,11 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString
 
 
 	// Add search input and button to the search sizer
-	searchSizer->Add(searchInput, 1, wxALIGN_CENTER_VERTICAL, 10);
+	searchSizer->Add(searchInput, 1, wxALIGN_CENTER, 10);
 	searchSizer->AddSpacer(10);
-	searchSizer->Add(searchButton, 0, wxALIGN_CENTER_VERTICAL, 10);
+	searchSizer->Add(searchButton, 0, wxALIGN_CENTER, 10);
 
-	mainSizer->Add(searchSizer, 0, wxALIGN_CENTER | wxALL, 10);
+	mainSizer->Add(searchSizer, 0, wxALIGN_CENTER);
 
 	mainSizer->AddSpacer(10);
 
@@ -59,7 +59,9 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString
 
 	// Add the searchSizer to the mainSizer
 
-	mainSizer->Add(botSizer, 1, wxEXPAND | wxALL, 85);
+	mainSizer->Add(botSizer, 1, wxEXPAND | wxTOP, 95);
+
+	mainSizer->AddSpacer(20);
 
 
 	this->SetSizerAndFit(mainSizer);
@@ -79,7 +81,7 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 {
 	// Create the search input field
 		// Create the search button
-	wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
+	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
 
 	searchInput = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxSize(633, 33));

@@ -1,10 +1,10 @@
 #include "searchType.h"
 
-searchType::searchType(wxWindow* panel, int& searchTypeInt) : wxComboBox(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(150, 54), 0, nullptr, wxCB_READONLY | wxNO_BORDER)
+searchType::searchType(wxWindow* panel, int& searchTypeInt) : wxComboBox(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxCB_READONLY | wxNO_BORDER)
 {
 
-	this->Append(wxT("Def"));
-	this->Append(wxT("Word"));
+	this->Append(wxT(" Def"));
+	this->Append(wxT(" Word"));
 
 	this->SetSelection(searchTypeInt);
 

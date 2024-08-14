@@ -31,7 +31,7 @@ public:
 
 private:
 	void setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word);
-	void setControls(int& dicTypeInt, int& searchTypeInt, wxString Word);
+	void setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word);
 };
 
 
