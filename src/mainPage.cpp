@@ -94,7 +94,7 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 	searchButton->SetForegroundColour(wxColour("#FFFFFF"));
 
 	// Tạo wxBitmap từ file ảnh
-	wxBitmap bmHistory(wxT("D:/CS163/picture/search history.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmHistory(wxT("picture/search history.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bmRandom(wxT("D:/CS163/picture/random word.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bmFavWords(wxT("D:/CS163/picture/favorite words.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bmWordGames(wxT("D:/CS163/picture/word games.png"), wxBITMAP_TYPE_PNG);
