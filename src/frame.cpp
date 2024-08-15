@@ -14,13 +14,11 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord);
 	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord);
 
-
-
 	// Thêm các trang vào wxSimplebook
 	book->AddPage(home, "Home");
 	book->AddPage(search, "Search");
 
-	book->SetSelection(0);
+	book->SetSelection(1);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(book, 1, wxEXPAND);

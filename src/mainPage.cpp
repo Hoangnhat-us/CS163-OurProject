@@ -63,8 +63,8 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString
 
 	mainSizer->AddSpacer(20);
 
-
 	this->SetSizerAndFit(mainSizer);
+
 
 
 
