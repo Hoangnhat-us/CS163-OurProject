@@ -64,7 +64,6 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString
 	mainSizer->Add(botSizer, 1, wxEXPAND | wxTOP, 95);
 	mainSizer->AddSpacer(20);
 
-
 	this->SetSizerAndFit(mainSizer);
     
 	suggestionBox = new SuggestionListBox(this, dic,dicTypeIt,searchTypeIt);
@@ -73,6 +72,7 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString
 	this->SetSizerAndFit(mainSizer);
 
 	Bind(wxEVT_TEXT, &mainPage::OnTextChange, this, searchInput->GetId());
+
 
 
 }

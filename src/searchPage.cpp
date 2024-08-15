@@ -82,6 +82,38 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, wx
 
 	Sizer1->Add(leftPanel, 0, wxEXPAND);
 
+	wxPanel* rightPanel = new wxPanel(mainPanel, wxID_ANY);
+
+	setRightControls(rightPanel, dicTypeInt, searchTypeInt, Word);
+
+	wxBoxSizer* Sizer3 = new wxBoxSizer(wxVERTICAL);
+
+	wxBoxSizer* wordSizer = new wxBoxSizer(wxHORIZONTAL);
+	wordSizer->Add(word, 0, wxLEFT, 20);
+	Sizer3->Add(wordSizer, 1, wxALL, 20);
+
+	wxBoxSizer* lineSizer = new wxBoxSizer(wxHORIZONTAL);
+	lineSizer->Add(line[0], 0, wxLEFT, 20);
+	Sizer3->Add(lineSizer, 1, wxALL, 20);
+
+	std::vector<wxBoxSizer*> linesSizer;
+	std::vector<wxBoxSizer*> wordsSizer;
+
+	for (int i = 0; i < def.size(); i++)
+	{
+		wxBoxSizer* wordsSizer = new wxBoxSizer(wxHORIZONTAL);
+		wordsSizer->Add(def[i], 0, wxLEFT, 20);
+		Sizer3->Add(wordsSizer, 1, wxALL, 20);
+
+		linesSizer.push_back(new wxBoxSizer(wxHORIZONTAL));
+		linesSizer[i]->Add(line[i + 1], 0, wxLEFT, 20);
+		Sizer3->Add(linesSizer[i], 1, wxALL, 20);
+	}
+
+	rightPanel->SetSizer(Sizer3);
+
+	Sizer1->Add(rightPanel, 1, wxEXPAND);
+
 	mainPanel->SetSizer(Sizer1);
 
 	mainSizer->Add(mainPanel, 1, wxEXPAND);
@@ -95,7 +127,7 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 	home = new wxBitmapButton(panel, wxID_ANY, bmHome, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	home->SetBackgroundColour("#38435A");
 
-	wxFont font(14, wxFONTFAMILY_DEFAULT, wxBOLD, wxFONTWEIGHT_NORMAL, false, "Varela Round");
+	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 
 	choice = new searchType(panel, searchTypeInt);
 	choice->SetSize(wxSize(49, 29));
@@ -123,6 +155,7 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 	wxBitmap bmAddButton(wxT("D:/CS163/picture/addButton-Copy.png"), wxBITMAP_TYPE_PNG);
 	add = new wxBitmapButton(panel, wxID_ANY, bmAddButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	add->SetBackgroundColour("#38435A");
+
 }
 
 void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word)
@@ -140,23 +173,40 @@ void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt
 	wxBitmap bmFix(wxT("D:/CS163/picture/publishing.png"), wxBITMAP_TYPE_PNG);
 	fix = new wxBitmapButton(panel, wxID_ANY, bmFix, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	fix->SetBackgroundColour("#F8D65B");
+}
 
-	//word = new wxStaticText(panel, wxID_ANY, Word, wxDefaultPosition, wxDefaultSize);
-	//word->SetFont(font);
-	//word->SetBackgroundColour("F8D65B");
+void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word)
+{
+	wxFont Wordfont(35, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
+	wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 
-	//editWord = new wxTextCtrl(panel, wxID_ANY, word->GetLabel(), wxDefaultPosition, wxDefaultSize);
-	//editWord->Hide();
+	word = new wxStaticText(panel, wxID_ANY, Word, wxDefaultPosition, wxDefaultSize);
+	word->SetFont(Wordfont);
+	word->SetBackgroundColour("F8D65B");
 
-	//std::vector<wxString> defContent;
+	editWord = new wxTextCtrl(panel, wxID_ANY, word->GetLabel(), wxDefaultPosition, wxDefaultSize);
+	editWord->Hide();
+	editWord->SetFont(Wordfont);
 
-	// Set definition?
+	//Set definition?
 
-	//for (int i = 0; i < def.size(); i++)
-	//{
-	//	def[i] = new wxStaticText(panel, wxID_ANY, Word, wxDefaultPosition, wxSize(300, 30));
-	//	editDef[i] = new wxTextCtrl(this, wxID_ANY, word->GetLabel(), wxDefaultPosition, wxSize(300, 30));
-	//	editDef[i]->Hide();
-	//}
+	def.resize(5);
+	editDef.resize(5);
+
+	for (int i = 0; i < def.size(); i++)
+	{
+		def[i] = new wxStaticText(panel, wxID_ANY, Word, wxDefaultPosition, wxSize(300, 30));
+		editDef[i] = new wxTextCtrl(this, wxID_ANY, word->GetLabel(), wxDefaultPosition, wxSize(300, 30));
+		editDef[i]->Hide();
+		def[i]->SetFont(font);
+		editDef[i]->SetFont(font);
+	}
+
+	line.resize(def.size() + 1);
+	wxBitmap bmLine(wxT("D:/CS163/picture/Line.png"), wxBITMAP_TYPE_PNG);
+	for (int i = 0; i < def.size() + 1; i++)
+	{
+		line[i] = new wxStaticBitmap(panel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	}
 }
 
