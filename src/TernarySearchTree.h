@@ -1,5 +1,4 @@
-#ifndef TERNARYSEARCHTREE_H
-#define TERNARYSEARCHTREE_H
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -71,4 +70,3 @@ public:
 void save2CSV(const std::string& filename, std::string prefix, std::ofstream& fout,TST* tst);
 void saveAll2csv(const std::string& pathname,TST* tst);
 
-#endif // !TERNARYSEARCHTREE_H

@@ -3,15 +3,23 @@
 #include "searchPage.h"
 #include <wx/simplebook.h>
 
+
 frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 {
 	// Tạo wxSimplebook
 	wxSimplebook* book = new wxSimplebook(this, wxID_ANY);
+	dic = std::vector<TST>(4);
+	for (char c = 'A'; c <= 'Z'; c++) {
+		std::string s = "Data_Storage/Eng2Eng/Current/";
+		s += c;
+		s += ".csv";
+		dic[0].loadCSV(s);
+	}
 
 	int dicTypeInt = 0;
 	int searchTypeInt = 0;
 	wxString searchWord = "Word";
-	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord);
+	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord,dic);
 	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord);
 
 
@@ -20,11 +28,16 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	book->AddPage(home, "Home");
 	book->AddPage(search, "Search");
 
-	book->SetSelection(1);
+	book->SetSelection(0);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(book, 1, wxEXPAND);
 	this->SetSizerAndFit(sizer);
+
+
+	
+	
+	
 
 
 	// Đặt wxSimplebook vào khung
@@ -39,5 +52,6 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	//this->SetSizer(sizer);
 	//SetMaxSize(screenSize);
 	//SetMinSize(screenSize);
+
 
 }

@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef SUFFIXARRAY_H
-#define SUFFIXARRAY_H
 
 #include <string>
 #include <vector>
@@ -44,5 +42,3 @@ private:
 	void makeLCPArray(const std::vector<int>& s, std::vector<int>& SA, std::vector<int>& LCP);
 	int findWordStartIndices(int suffixStart);
 };
-
-#endif // SUFFIXARRAY_H

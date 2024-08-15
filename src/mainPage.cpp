@@ -1,8 +1,10 @@
 ﻿#include "dicType.h"
 #include "mainPage.h"
 
-mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString& searchWord) : wxWindow(parent, wxID_ANY)
+mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString& searchWord, std::vector<TST>& dic) : wxWindow(parent, wxID_ANY)
 {
+	this->dic = dic;
+
 
 	this->SetBackgroundColour(wxColor("#38435A"));
 
@@ -60,12 +62,17 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString
 	// Add the searchSizer to the mainSizer
 
 	mainSizer->Add(botSizer, 1, wxEXPAND | wxTOP, 95);
-
 	mainSizer->AddSpacer(20);
 
 
 	this->SetSizerAndFit(mainSizer);
+    
+	suggestionBox = new SuggestionListBox(this, dic,dicTypeIt,searchTypeIt);
+	mainSizer->Add(suggestionBox);
 
+	this->SetSizerAndFit(mainSizer);
+
+	Bind(wxEVT_TEXT, &mainPage::OnTextChange, this, searchInput->GetId());
 
 
 }
@@ -128,3 +135,10 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 	name = new wxBitmapButton(this, wxID_ANY, tPDic, wxDefaultPosition, wxSize(884, 147), wxNO_BORDER);
 	name->SetBackgroundColour("#38435A");
 }
+
+void mainPage::OnTextChange(wxCommandEvent& event) {
+	wxString prefix = searchInput->GetValue();
+	suggestionBox->UpdateSuggestions(prefix);
+}
+
+

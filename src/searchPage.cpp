@@ -114,6 +114,8 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 	searchInput->SetFont(font);
 	searchInput->SetHint("Enter search text...");  // Placeholder text
 
+    
+
 	wxBitmap bmOrigin(wxT("D:/CS163/picture/Origin-Copy.png"), wxBITMAP_TYPE_PNG);
 	origin = new wxBitmapButton(panel, wxID_ANY, bmOrigin, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	origin->SetBackgroundColour("#38435A");
