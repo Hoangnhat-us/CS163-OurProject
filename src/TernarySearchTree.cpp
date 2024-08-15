@@ -214,6 +214,22 @@ void TST::_collect(TSTNode* node, std::string prefix, std::vector<std::string>& 
 	prefix.pop_back();
 	_collect(node->right, prefix, result);
 }
+void TST::_collect2(TSTNode* node, std::string& prefix, std::vector<std::string>& result, int& cnt)
+{
+    if (node == nullptr) {
+        return;
+    }
+    if (cnt == 30) return;
+    _collect2(node->left, prefix, result, cnt);
+    prefix.push_back(node->key);
+    if (node->is_end_of_string) {
+        result.push_back(prefix);
+        cnt++;
+    }
+    _collect2(node->middle, prefix, result, cnt);
+    prefix.pop_back();
+    _collect2(node->right, prefix, result, cnt);
+}
 
 std::vector<std::string> TST::searchPrefix(const std::string& prefix)
 {
@@ -225,6 +241,18 @@ std::vector<std::string> TST::searchPrefix(const std::string& prefix)
 	std::string prefixx = prefix;
 	_collect(node->middle, prefixx, result);
 	return result;
+}
+std::vector<std::string> TST::searchPrefix2(const std::string& prefix)
+{
+    std::vector<std::string> result;
+    TSTNode* node = _searchPrefix(root, prefix, 0);
+    if (node == nullptr) {
+        return result;
+    }
+    std::string prefixx = prefix;
+    int cnt = 0;
+    _collect2(node->middle, prefixx, result, cnt);
+    return result;
 }
 
 

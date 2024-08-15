@@ -44,6 +44,8 @@ private:
     TSTNode* _remove(TSTNode* node, const std::string& word, int index);
     TSTNode* _searchPrefix(TSTNode* node, std::string prefix, int indexx);
     void _collect(TSTNode* node, std::string prefix, std::vector<std::string>& result);
+    //for collect only 20 keys
+    void _collect2(TSTNode* node, std::string& prefix, std::vector<std::string>& result, int& cnt);
 
 	int LevenshteinDistance(const std::string& s1, const std::string& s2);
     void suggestCorrectionsUtil(TSTNode* node, const std::string& prefix, const std::string& target,std::vector<std::string>& result, int maxDistance);
@@ -60,6 +62,8 @@ public:
     void loadCSV(const std::string& filename);
 	void remove(const std::string& word);
 	std::vector<std::string> searchPrefix(const std::string& prefix);
+    //for search prefix return only 20 word
+    std::vector<std::string> searchPrefix2(const std::string& prefix);
     std::vector<std::string> suggestCorrections(const std::string& word, int maxDistance);
 	
 

@@ -20,7 +20,7 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	book->AddPage(home, "Home");
 	book->AddPage(search, "Search");
 
-	book->SetSelection(0);
+	book->SetSelection(1);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(book, 1, wxEXPAND);

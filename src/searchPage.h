@@ -2,6 +2,7 @@
 
 #include "dicType.h"
 #include "searchType.h"
+#include "TernarySearchTree.h"
 #include <vector>
 #include <wx/wx.h>
 
