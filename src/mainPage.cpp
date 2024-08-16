@@ -93,10 +93,10 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 	searchButton->SetForegroundColour(wxColour("#FFFFFF"));
 
 	// Tạo wxBitmap từ file ảnh
-	wxBitmap bmHistory(wxT("D:/CS163/picture/search history.png"), wxBITMAP_TYPE_PNG);
-	wxBitmap bmRandom(wxT("D:/CS163/picture/random word.png"), wxBITMAP_TYPE_PNG);
-	wxBitmap bmFavWords(wxT("D:/CS163/picture/favorite words.png"), wxBITMAP_TYPE_PNG);
-	wxBitmap bmWordGames(wxT("D:/CS163/picture/word games.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmHistory(wxT("../../../../picture/search history.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmRandom(wxT("../../../../picture/random word.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmFavWords(wxT("../../../../picture/favorite words.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmWordGames(wxT("../../../../picture/word games.png"), wxBITMAP_TYPE_PNG);
 
 
 
@@ -114,8 +114,8 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 
 	list = new dicType(this, dicTypeIt);
 
-	wxBitmap bmAddButton(wxT("D:/CS163/picture/addButton.png"), wxBITMAP_TYPE_PNG);
-	wxBitmap bmOrigin(wxT("D:/CS163/picture/origin.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmAddButton(wxT("../../../../picture/addButton.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmOrigin(wxT("../../../../picture/origin.png"), wxBITMAP_TYPE_PNG);
 
 	addButton = new wxBitmapButton(this, wxID_ANY, bmAddButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	origin = new wxBitmapButton(this, wxID_ANY, bmOrigin, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
@@ -123,7 +123,7 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 	addButton->SetBackgroundColour("#38435A");
 	origin->SetBackgroundColour("#38435A");
 
-	wxBitmap tPDic(wxT("D:/CS163/picture/TPHANG DICTIONARY.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap tPDic(wxT("../../../../picture/TPHANG DICTIONARY.png"), wxBITMAP_TYPE_PNG);
 	name = new wxBitmapButton(this, wxID_ANY, tPDic, wxDefaultPosition, wxSize(884, 147), wxNO_BORDER);
 	name->SetBackgroundColour("#38435A");
 

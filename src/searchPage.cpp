@@ -124,7 +124,7 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 
 void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string sWord)
 {
-	wxBitmap bmHome(wxT("D:/CS163/picture/home.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmHome(wxT("../../../../picture/home.png"), wxBITMAP_TYPE_PNG);
 	home = new wxBitmapButton(panel, wxID_ANY, bmHome, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	home->SetBackgroundColour("#38435A");
 
@@ -138,7 +138,7 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 	lists->SetSize(wxSize(127, 33));
 	lists->SetFont(font);
 
-	wxBitmap bmSearchButton(wxT("D:/CS163/picture/searchButton.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmSearchButton(wxT("../../../../picture/searchButton.png"), wxBITMAP_TYPE_PNG);
 	searchButton = new wxBitmapButton(panel, wxID_ANY, bmSearchButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	searchButton->SetBackgroundColour("#38435A");
 
@@ -149,11 +149,11 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 
     
 
-	wxBitmap bmOrigin(wxT("D:/CS163/picture/Origin-Copy.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmOrigin(wxT("../../../../picture/Origin-Copy.png"), wxBITMAP_TYPE_PNG);
 	origin = new wxBitmapButton(panel, wxID_ANY, bmOrigin, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	origin->SetBackgroundColour("#38435A");
 
-	wxBitmap bmAddButton(wxT("D:/CS163/picture/addButton-Copy.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmAddButton(wxT("../../../../picture/addButton-Copy.png"), wxBITMAP_TYPE_PNG);
 	add = new wxBitmapButton(panel, wxID_ANY, bmAddButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	add->SetBackgroundColour("#38435A");
 
@@ -163,15 +163,15 @@ void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt
 {
 	wxFont font(14, wxFONTFAMILY_DEFAULT, wxBOLD, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
-	wxBitmap bmLike(wxT("D:/CS163/picture/heart.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmLike(wxT("../../../../picture/heart.png"), wxBITMAP_TYPE_PNG);
 	like = new wxBitmapButton(panel, wxID_ANY, bmLike, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	like->SetBackgroundColour("#F8D65B");
 
-	wxBitmap bmDel(wxT("D:/CS163/picture/bin.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmDel(wxT("../../../../picture/bin.png"), wxBITMAP_TYPE_PNG);
 	del = new wxBitmapButton(panel, wxID_ANY, bmDel, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	del->SetBackgroundColour("#F8D65B");
 
-	wxBitmap bmFix(wxT("D:/CS163/picture/publishing.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmFix(wxT("../../../../picture/publishing.png"), wxBITMAP_TYPE_PNG);
 	fix = new wxBitmapButton(panel, wxID_ANY, bmFix, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	fix->SetBackgroundColour("#F8D65B");
 }
@@ -206,7 +206,7 @@ void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTy
 	}
 
 	line.resize(def.size() + 1);
-	wxBitmap bmLine(wxT("D:/CS163/picture/Line.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
 	for (int i = 0; i < def.size() + 1; i++)
 	{
 		line[i] = new wxStaticBitmap(panel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
