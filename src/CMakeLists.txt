@@ -4,7 +4,7 @@
 
 # Add source to this project's executable.
 add_executable (src "dictionary.cpp" "dictionary.h" "dicType.cpp" "dicType.h" "frame.cpp" "frame.h" "mainPage.cpp" "mainPage.h" "searchPage.cpp" "searchPage.h" "searchType.cpp" "searchType.h" "Search.h" "Search.cpp"
-"TernarySearchTree.h" "TernarySearchTree.cpp" "SuffixArray.h" "SuffixArray.cpp")
+"TernarySearchTree.h" "TernarySearchTree.cpp" "SuffixArray.h" "SuffixArray.cpp" "Dict.h" "Dict.cpp")
 
 if (WIN32)
 	set_property(TARGET src PROPERTY WIN32_EXECUTABLE TRUE)

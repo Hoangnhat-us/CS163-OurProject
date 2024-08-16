@@ -3,9 +3,23 @@
 
 #include <string>
 #include <vector>
+#include "Dict.h"
 
-enum dictType { EE, EV, VE, SL, EM };
-enum initType { EMPTY, BF, CSV };
+enum class initType
+{
+	EMPTY,
+	CSV,
+	BF
+};
+
+enum class dictType
+{
+	ENG-ENG,
+	ENG-VIE,
+	VIE-ENG,
+	SLANG,
+	EMOJI
+};
 
 class SuffixArray
 {
