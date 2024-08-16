@@ -1,30 +1,50 @@
 #include"Search.h"
 
 void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
-    Clear();
-    std::vector<std::string> suggestions = tst.searchPrefix2(prefix.ToStdString());
+	suggest->Clear();
+	std::vector<std::string> suggestions = tst.searchPrefix2(prefix.ToStdString());
 
-    for (const auto& suggestion : suggestions) {
-        Append(wxString::FromUTF8(suggestion));
-    }
+	for (const auto& suggestion : suggestions) {
+		suggest->Append(wxString::FromUTF8(suggestion));
+	}
 
-    if (!IsShown() && !suggestions.empty()) {
-        Show();
-    }
-    else if (IsShown() && suggestions.empty()) {
-        Hide();
-    }
+	if (!suggest->IsShown() && !suggestions.empty()) {
+		suggest->Show();
+	}
+	else if (suggest->IsShown() && suggestions.empty()) {
+		suggest->Hide();
+	}
 }
 
-SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst,int& dicTypeInt, int& searchType)
-    : wxListBox(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB)
+SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, int& dicTypeInt, int& searchType, wxSize size) : wxPanel(parent, wxID_ANY)
 {
-    switch (dicTypeInt)
-    {
+	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
+
+
+	searchInput = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, size);
+	searchInput->SetFont(font);
+	searchInput->SetHint("Enter search text...");  // Placeholder tex
+
+
+	suggest = new  wxListBox(this, wxID_ANY, wxDefaultPosition, size, 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB);
+	suggest->SetFont(font);
+
+	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
+
+	vbox->Add(searchInput, 0, wxEXPAND);
+
+	// Add the wxListBox to the sizer
+	vbox->Add(suggest, 0, wxEXPAND);
+
+	// Set the sizer for the panel
+	this->SetSizerAndFit(vbox);
+
+	switch (dicTypeInt)
+	{
 	case 0:
 		this->tst = tst[0];
 		break;
-    case 1:
+	case 1:
 		this->tst = tst[1];
 		break;
 	case 2:
@@ -36,8 +56,8 @@ SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst,int
 	case 4:
 		this->tst = tst[4];
 		break;
-    default:
-        break;
-    }
-    Hide();  // Initially hide the suggestion box
+	default:
+		break;
+	}
+	suggest->Hide();  // Initially hide the suggestion box
 }

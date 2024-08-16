@@ -19,7 +19,7 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	int dicTypeInt = 0;
 	int searchTypeInt = 0;
 	wxString searchWord = "Word";
-	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord,dic);
+	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
 	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord);
 
 	// Thêm các trang vào wxSimplebook
@@ -33,9 +33,9 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	this->SetSizerAndFit(sizer);
 
 
-	
-	
-	
+
+
+
 
 
 	// Đặt wxSimplebook vào khung

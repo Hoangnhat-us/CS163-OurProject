@@ -5,6 +5,8 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString
 {
 	this->dic = dic;
 
+	suggestionBox = new SuggestionListBox(this, dic, dicTypeIt, searchTypeIt, wxSize(633, 33));
+	suggestionBox->suggest->SetSize(633, 165);
 
 	this->SetBackgroundColour(wxColor("#38435A"));
 
@@ -33,7 +35,7 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString
 
 
 	// Add search input and button to the search sizer
-	searchSizer->Add(searchInput, 1, wxALIGN_CENTER, 10);
+	searchSizer->Add(suggestionBox, 1, wxALIGN_CENTER, 10);
 	searchSizer->AddSpacer(10);
 	searchSizer->Add(searchButton, 0, wxALIGN_CENTER, 10);
 
@@ -65,15 +67,8 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString
 	mainSizer->AddSpacer(20);
 
 	this->SetSizerAndFit(mainSizer);
-    
-	suggestionBox = new SuggestionListBox(this, dic,dicTypeIt,searchTypeIt);
-	mainSizer->Add(suggestionBox);
 
-	this->SetSizerAndFit(mainSizer);
-
-	Bind(wxEVT_TEXT, &mainPage::OnTextChange, this, searchInput->GetId());
-
-
+	Bind(wxEVT_TEXT, &mainPage::OnTextChange, this, suggestionBox->searchInput->GetId());
 
 }
 
@@ -91,9 +86,6 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
 
-	searchInput = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxSize(633, 33));
-	searchInput->SetFont(font);
-	searchInput->SetHint("Enter search text...");  // Placeholder text
 
 	searchButton = new wxButton(this, wxID_ANY, "Search", wxDefaultPosition, wxSize(50, 33), wxNO_BORDER);
 	searchButton->SetFont(font);
@@ -134,10 +126,12 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 	wxBitmap tPDic(wxT("D:/CS163/picture/TPHANG DICTIONARY.png"), wxBITMAP_TYPE_PNG);
 	name = new wxBitmapButton(this, wxID_ANY, tPDic, wxDefaultPosition, wxSize(884, 147), wxNO_BORDER);
 	name->SetBackgroundColour("#38435A");
+
+
 }
 
 void mainPage::OnTextChange(wxCommandEvent& event) {
-	wxString prefix = searchInput->GetValue();
+	wxString prefix = suggestionBox->searchInput->GetValue();
 	suggestionBox->UpdateSuggestions(prefix);
 }
 

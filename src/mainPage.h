@@ -1,10 +1,10 @@
 #pragma once
 
 #include"dicType.h"
-#include <wx/wx.h>
 #include"Search.h"
-#include<vector>
 #include"TernarySearchTree.h"
+#include<vector>
+#include <wx/wx.h>
 
 class mainPage : public wxWindow {
 public:
@@ -16,7 +16,6 @@ public:
 	wxBitmapButton* FavWords;
 	wxBitmapButton* WordGames;
 
-	wxTextCtrl* searchInput;
 	wxBitmapButton* name;
 	SuggestionListBox* suggestionBox;
 
@@ -25,10 +24,10 @@ public:
 	dicType* list;
 
 
-	mainPage(wxWindow* parent, int& dicTypeInt, int& searchType, wxString& searchWord,std::vector<TST>& dic);
+	mainPage(wxWindow* parent, int& dicTypeInt, int& searchType, wxString& searchWord, std::vector<TST>& dic);
 	void OnButtonClicked(wxCommandEvent& event);
 
-	
+
 private:
 	std::vector<TST>  dic;
 	void setControls(int& dicTypeIt, int& searchTypeIt);
