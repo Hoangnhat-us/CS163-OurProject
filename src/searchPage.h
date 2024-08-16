@@ -28,13 +28,14 @@ public:
 	std::vector<wxTextCtrl*> editDef;
 	std::vector<wxStaticBitmap*> line;
 
-	searchPage(wxWindow* parent, int& dicTypeInt, int& searchType, wxString& Word);
+	searchPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& Word, std::vector<TST>& dic);
 	void OnButtonClicked(wxCommandEvent& event);
 
 private:
-	void setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word);
-	void setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word);
-	void setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word);
+	std::vector<TST>  dic;
+	void setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
+	void setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
+	void setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
 };
 
 

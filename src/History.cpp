@@ -2,7 +2,7 @@
 
 void HistoryManager::addHistory(const std::string& word, const std::vector<std::string>& definitions) {
     history.emplace_back(word, definitions);
-    std::cout << word << " added to history." << std::endl;
+   
 }
 
 void HistoryManager::saveHistory(const std::string& filename) const {
@@ -27,7 +27,7 @@ void HistoryManager::saveHistory(const std::string& filename) const {
         }
 
         outFile.close();
-        std::cout << "History saved to " << filename << std::endl;
+        
     }
     else {
         std::cerr << "Could not open file " << filename << " for writing." << std::endl;
@@ -60,7 +60,7 @@ void HistoryManager::loadHistory(const std::string& filename) {
         }
 
         inFile.close();
-        std::cout << "History loaded from " << filename << std::endl;
+       
     }
     else {
         std::cerr << "Could not open file " << filename << " for reading." << std::endl;
@@ -69,15 +69,15 @@ void HistoryManager::loadHistory(const std::string& filename) {
 
 void HistoryManager::viewHistory() const {
     if (history.empty()) {
-        std::cout << "Your search history is empty." << std::endl;
+       
         return;
     }
 
-    std::cout << "Your search history:" << std::endl;
+    
     for (const auto& pair : history) {
-        std::cout << "Word: " << pair.first << std::endl;
+       
         for (const auto& definition : pair.second) {
-            std::cout << "  - " << definition << std::endl;
+           
         }
     }
 }

@@ -29,7 +29,7 @@ SuffixArray::SuffixArray(initType iType, dictType dType)
 		std::string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		for (auto c : letters)
 		{
-			std::string filename = std::string("Data_Storage/Eng2Eng/Origin/") + c + std::string(".csv");
+			std::string filename = std::string("Data_Storage/Eng2Eng/Current/") + c + std::string(".csv");
 			loadCSV(filename);
 		}
 	}

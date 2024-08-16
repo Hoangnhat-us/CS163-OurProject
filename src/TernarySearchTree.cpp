@@ -287,7 +287,7 @@ void TST::loadfile(const std::string& filename) {
         size_t i = 0;
         while (i < line.size())
         {
-            if (line[i] == ' ' && line[i + 1] == '(')
+            if ((line[i] == '\t' || line[i] == ' ') && line[i + 1] == '(')
             {
                 break;
             }

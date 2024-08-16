@@ -3,13 +3,11 @@
 void FavoriteManager::addFavorite(const std::string& word, const std::vector<std::string>& definitions) {
     for (const auto& pair : favorites) {
         if (pair.first == word) {
-            std::cout << word << " is already in your favorites list." << std::endl;
             return;
         }
     }
 
     favorites.emplace_back(word, definitions);
-    std::cout << word << " added to Favorites." << std::endl;
 }
 
 void FavoriteManager::saveFavorites(const std::string& filename) const {
@@ -35,10 +33,8 @@ void FavoriteManager::saveFavorites(const std::string& filename) const {
         }
 
         outFile.close();
-        std::cout << "Favorites saved to " << filename << std::endl;
     }
     else {
-        std::cerr << "Could not open file " << filename << std::endl;
     }
 }
 
@@ -69,7 +65,6 @@ void FavoriteManager::loadFavorites(const std::string& filename) {
         }
 
         inFile.close();
-        std::cout << "Favorites loaded from " << filename << std::endl;
     }
     else {
         std::cerr << "Could not open file " << filename << " for reading." << std::endl;
@@ -78,15 +73,11 @@ void FavoriteManager::loadFavorites(const std::string& filename) {
 
 void FavoriteManager::viewFavorites() const {
     if (favorites.empty()) {
-        std::cout << "Your favorites list is empty." << std::endl;
         return;
     }
 
-    std::cout << "Your favorite words:" << std::endl;
     for (const auto& pair : favorites) {
-        std::cout << "Word: " << pair.first << std::endl;
         for (const auto& definition : pair.second) {
-            std::cout << "  - " << definition << std::endl;
         }
     }
 }

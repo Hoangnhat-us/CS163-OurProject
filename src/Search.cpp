@@ -26,15 +26,15 @@ SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, in
 	searchInput->SetHint("Enter search text...");  // Placeholder tex
 
 
-	suggest = new  wxListBox(this, wxID_ANY, wxDefaultPosition, size, 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB);
+	suggest = new  wxListBox(this, wxID_ANY, wxDefaultPosition,wxSize(size.GetWidth(),size.GetHeight()*5), 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB);
 	suggest->SetFont(font);
 
 	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
 
-	vbox->Add(searchInput, 0, wxEXPAND);
+	vbox->Add(searchInput);
 
 	// Add the wxListBox to the sizer
-	vbox->Add(suggest, 0, wxEXPAND);
+	vbox->Add(suggest);
 
 	// Set the sizer for the panel
 	this->SetSizerAndFit(vbox);

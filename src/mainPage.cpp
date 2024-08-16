@@ -1,7 +1,7 @@
 ﻿#include "dicType.h"
 #include "mainPage.h"
 
-mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, wxString& searchWord, std::vector<TST>& dic) : wxWindow(parent, wxID_ANY)
+mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, std::string& searchWord, std::vector<TST>& dic) : wxWindow(parent, wxID_ANY)
 {
 	this->dic = dic;
 

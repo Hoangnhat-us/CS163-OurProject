@@ -24,7 +24,7 @@ public:
 	dicType* list;
 
 
-	mainPage(wxWindow* parent, int& dicTypeInt, int& searchType, wxString& searchWord, std::vector<TST>& dic);
+	mainPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& searchWord, std::vector<TST>& dic);
 	void OnButtonClicked(wxCommandEvent& event);
 
 

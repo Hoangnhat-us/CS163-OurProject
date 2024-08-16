@@ -8,4 +8,4 @@
 
 int random(int n);
 
-std::vector<std::pair<std::string, std::vector<std::string>>> WOTD(SuffixArray& sa, TST& tst);
+std::string WOTD(const SuffixArray& SA);

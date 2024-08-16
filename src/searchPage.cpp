@@ -1,8 +1,9 @@
 ﻿#include "dicType.h"
 #include "searchPage.h"
 
-searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, wxString& Word) : wxWindow(parent, wxID_ANY)
+searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, std::string& Word, std::vector<TST>& dic) : wxWindow(parent, wxID_ANY)
 {
+	this->dic = dic;
 	this->SetBackgroundColour("#FFFFFF");
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -121,7 +122,7 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, wx
 	this->SetSizer(mainSizer);
 }
 
-void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word)
+void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string sWord)
 {
 	wxBitmap bmHome(wxT("D:/CS163/picture/home.png"), wxBITMAP_TYPE_PNG);
 	home = new wxBitmapButton(panel, wxID_ANY, bmHome, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
@@ -158,7 +159,7 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 
 }
 
-void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word)
+void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word)
 {
 	wxFont font(14, wxFONTFAMILY_DEFAULT, wxBOLD, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
@@ -175,7 +176,7 @@ void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt
 	fix->SetBackgroundColour("#F8D65B");
 }
 
-void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, wxString Word)
+void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word)
 {
 	wxFont Wordfont(35, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 	wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
@@ -188,14 +189,16 @@ void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTy
 	editWord->Hide();
 	editWord->SetFont(Wordfont);
 
-	//Set definition?
+	std::vector<std::string> defs = dic[0].search(Word);
 
-	def.resize(5);
-	editDef.resize(5);
+
+
+	def.resize(defs.size());
+	editDef.resize(defs.size());
 
 	for (int i = 0; i < def.size(); i++)
 	{
-		def[i] = new wxStaticText(panel, wxID_ANY, Word, wxDefaultPosition, wxSize(300, 30));
+		def[i] = new wxStaticText(panel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
 		editDef[i] = new wxTextCtrl(this, wxID_ANY, word->GetLabel(), wxDefaultPosition, wxSize(300, 30));
 		editDef[i]->Hide();
 		def[i]->SetFont(font);
