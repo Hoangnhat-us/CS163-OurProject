@@ -3,20 +3,19 @@
 
 #include <string>
 #include <vector>
-#include "Dict.h"
 
-enum class initType
+enum initType
 {
 	EMPTY,
 	CSV,
 	BF
 };
 
-enum class dictType
+enum dictType
 {
-	ENG-ENG,
-	ENG-VIE,
-	VIE-ENG,
+	EE,
+	EV,
+	VE,
 	SLANG,
 	EMOJI
 };

@@ -1,4 +1,6 @@
 #include "Random.h"
+#include "SuffixArray.h"
+#include "TernarySearchTree.h"
 #include <random>
 
 int random(int n) {
@@ -8,7 +10,7 @@ int random(int n) {
 	return dis(gen);
 }
 
-std::vector<std::pair<std::string, std::vector<std::string>>> WOTD(const SuffixArray& sa, const TST& tst) {
+std::vector<std::pair<std::string, std::vector<std::string>>> WOTD(SuffixArray& sa, TST& tst) {
 	std::vector<std::pair<std::string, std::vector<std::string>>> wotd;
 
 	int n = sa.words.size();
@@ -19,7 +21,7 @@ std::vector<std::pair<std::string, std::vector<std::string>>> WOTD(const SuffixA
 		// Check if the word is already in the vector
 		bool found = false;
 		for (const auto& w : wotd) {
-			if (w[0] == word) {
+			if (w.first == word) {
 				found = true;
 				break;
 			}
