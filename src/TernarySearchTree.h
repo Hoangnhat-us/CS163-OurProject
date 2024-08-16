@@ -68,7 +68,7 @@ public:
 
     void insert(const std::string& word, const std::string& meaning);
     std::vector<std::string> search(const std::string& word);
-    void loadCSV(const std::string& filename);
+    void loadfile(const std::string& filename);
 	void remove(const std::string& word);
 	std::vector<std::string> searchPrefix(const std::string& prefix);
     //for search prefix return only 20 word

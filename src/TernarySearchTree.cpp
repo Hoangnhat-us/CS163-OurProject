@@ -270,7 +270,7 @@ std::vector<std::string> TST::suggestCorrections(const std::string& word, int ma
     return result;
 }
 
-void TST::loadCSV(const std::string& filename) {
+void TST::loadfile(const std::string& filename) {
     std::ifstream fin;
     fin.open(filename);
     if (!fin.is_open())
@@ -282,13 +282,6 @@ void TST::loadCSV(const std::string& filename) {
     {
         if (line.empty())
             continue;
-        // Ignore characters at the beginning of the line that are not in the alphabet
-        size_t j = 0;
-        if (j < line.size() && line[j] == '"')
-        {
-            j++;
-        }
-        line = line.substr(j);
         std::string key;
         std::string data;
         size_t i = 0;
@@ -319,15 +312,18 @@ void TST::loadCSV(const std::string& filename) {
 void saveAll2csv(const std::string& pathname, TST tst) {
 	std::ofstream fout;
     std::string prefix=" ";
-	for (char c = 'A'; c <= 'Z'; c++) {
-        prefix[0] = tolower(c);
-		std::string filename = pathname + c + ".csv";
+	for (int i=0 ; i <= 27; i++) {
+		std::string c = std::to_string(i + 1);
+        prefix[0] = 'a' + i;
+		if (i == 26) 			prefix = "'";
+		if (i == 27) prefix = "-";
+		std::string filename = pathname + c + ".txt";
 		save2CSV(filename, prefix, fout, tst);
 	}
 }
 
 void save2CSV(const std::string& filename, std::string prefix, std::ofstream& fout, TST tst) {
-	if (tst->getRoot() == nullptr) {
+	if (tst.getRoot() == nullptr) {
 		return;
 	}
 	fout.open(filename);
@@ -335,12 +331,12 @@ void save2CSV(const std::string& filename, std::string prefix, std::ofstream& fo
     {
 		return;
 	}
-	std::vector<std::string> meaning=tst->search(prefix);
+	std::vector<std::string> meaning=tst.search(prefix);
 	for (const auto& m : meaning) {
 		fout << prefix << " " << m << "\n\n";
 	}
 
-	std::vector<std::string> result= tst->searchPrefix(prefix);
+	std::vector<std::string> result= tst.searchPrefix(prefix);
 	if (result.empty())
     {
 		return;

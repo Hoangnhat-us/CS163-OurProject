@@ -9,11 +9,13 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	// Tạo wxSimplebook
 	wxSimplebook* book = new wxSimplebook(this, wxID_ANY);
 	dic = std::vector<TST>(4);
-	for (char c = 'A'; c <= 'Z'; c++) {
-		std::string s = "Data_Storage/Eng2Eng/Current/";
+	
+	for (int i = 0; i <= 27; i++) {
+		std::string c = std::to_string(i+1);
+		std::string s = "Data_Storage/Eng2Eng/Origin/";
 		s += c;
-		s += ".csv";
-		dic[0].loadCSV(s);
+		s += ".txt";
+		dic[0].loadfile(s);
 	}
 
 	int dicTypeInt = 0;
