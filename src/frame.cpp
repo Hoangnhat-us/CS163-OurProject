@@ -1,6 +1,7 @@
 ﻿#include "frame.h"
 #include "mainPage.h"
 #include "searchPage.h"
+#include "favoritePage.h"
 #include <wx/simplebook.h>
 #include "SuffixArray.h"
 #include "Random.h"
@@ -33,18 +34,18 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	std::string searchWord = WOTD(SA);
 	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
 	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
+	favoritePage* favorite = new favoritePage(book, dicTypeInt);
 
 	// Thêm các trang vào wxSimplebook
 	book->AddPage(home, "Home");
 	book->AddPage(search, "Search");
+	book->AddPage(favorite, "Favorite");
 
-	book->SetSelection(0);
+	book->SetSelection(2);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(book, 1, wxEXPAND);
 	this->SetSizerAndFit(sizer);
-
-
 
 
 
