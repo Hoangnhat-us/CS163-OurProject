@@ -1,6 +1,7 @@
 #pragma once
 
 #include <wx/wx.h>
+#include <wx/grid.h>
 #include "dicType.h"
 
 class favoritePage : public wxWindow {
@@ -9,7 +10,8 @@ public:
 
 private:
     void setTopControls(wxPanel* panel, int& dicTypeInt);
-    void OnGamesButtonClicked(wxCommandEvent& event); // Event handler for Games button
+    wxPanel* wordsFavoriteTable(wxWindow* parent);
+    void OnGamesButtonClicked(wxCommandEvent& event);
 
     // UI components
     wxBitmapButton* home;

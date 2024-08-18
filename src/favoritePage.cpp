@@ -6,8 +6,6 @@ favoritePage::favoritePage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent,
     this->SetBackgroundColour("#FFFFFF");
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
-    // Create panel and sizers
-    // Top panel
     wxPanel* topPanel = new wxPanel(this, wxID_ANY);
     topPanel->SetBackgroundColour("#38435A");
 
@@ -42,7 +40,16 @@ favoritePage::favoritePage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent,
     topPanel->SetSizer(topSizer);
 
     mainSizer->Add(topPanel, 0, wxEXPAND);
+
+    wxBitmap favoriteBanner(wxT("../../../../picture/favoriteBanner.png"), wxBITMAP_TYPE_PNG);
+    wxStaticBitmap* banner = new wxStaticBitmap(this, wxID_ANY, favoriteBanner);
+    mainSizer->Add(banner, 0, wxALIGN_CENTER);
+
+    wxPanel* contentPanel = wordsFavoriteTable(this);
+    mainSizer->Add(contentPanel, 1, wxEXPAND | wxALL, 20);
+
     this->SetSizer(mainSizer);
+
 }
 
 void favoritePage::setTopControls(wxPanel* panel, int& dicTypeInt)
@@ -75,6 +82,38 @@ void favoritePage::setTopControls(wxPanel* panel, int& dicTypeInt)
     add = new wxBitmapButton(panel, wxID_ANY, bmAddButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
     add->SetBackgroundColour("#38435A");
 }
+
+wxPanel* favoritePage::wordsFavoriteTable(wxWindow* parent)
+{
+    wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
+
+    wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
+
+    wxGrid* favoriteGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxSize(1000, 1000));
+    favoriteGrid->CreateGrid(1, 2);
+    favoriteGrid->SetColLabelValue(0, "Word");
+    favoriteGrid->SetColLabelValue(1, "Definition");
+
+    favoriteGrid->SetRowSize(0, 250);
+
+    favoriteGrid->SetColSize(0, 200);
+    favoriteGrid->SetColSize(1, 800);
+
+    favoriteGrid->SetRowLabelSize(0);
+
+    favoriteGrid->SetDefaultCellAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
+
+    favoriteGrid->SetGridLineColour(*wxLIGHT_GREY);
+
+    contentSizer->Add(favoriteGrid, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 20);
+
+    mainPanel->SetSizer(contentSizer);
+
+    return mainPanel;
+}
+
+
+
 
 void favoritePage::OnGamesButtonClicked(wxCommandEvent& event)
 {
