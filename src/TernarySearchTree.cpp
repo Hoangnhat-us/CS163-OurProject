@@ -348,6 +348,16 @@ void save2CSV(const std::string& filename, std::string prefix, std::ofstream& fo
 	fout.close();
 }
 
+void TST::editMeaning(const std::string& word, const std::vector<std::string>& meaning) {
+	std::u32string word32 = to_utf32(word);
+	TSTNode* node = _searchPrefix(root, word32, 0);
+	if (node == nullptr) {
+		return;
+	}
+
+	node->meaning = meaning;
+}
+
 std::u32string to_utf32(const std::string& utf8_str) {
     std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
     return converter.from_bytes(utf8_str);

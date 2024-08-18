@@ -74,7 +74,7 @@ public:
     //for search prefix return only 20 word
     std::vector<std::string> searchPrefix2(const std::string& prefix);
     std::vector<std::string> suggestCorrections(const std::string& word, int maxDistance);
-	
+	void editMeaning(const std::string& word, const std::vector<std::string>& meaning);
 
 };
 void save2CSV(const std::string& filename, std::string prefix, std::ofstream& fout,TST tst);
