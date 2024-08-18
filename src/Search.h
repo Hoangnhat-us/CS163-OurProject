@@ -19,6 +19,7 @@ public:
 
 private:
 	TST tst;
+	bool isHaveunicode(const std::string& str);
 };
 
 

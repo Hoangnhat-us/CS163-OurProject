@@ -2,6 +2,7 @@
 
 void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
 	suggest->Clear();
+	
 	std::vector<std::string> suggestions = tst.searchPrefix2(prefix.ToStdString());
 
 	for (const auto& suggestion : suggestions) {
@@ -60,4 +61,14 @@ SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, in
 		break;
 	}
 	suggest->Hide();  // Initially hide the suggestion box
+}
+
+bool SuggestionListBox::isHaveunicode(const std::string& str)
+{
+	for (int i = 0; i < str.size(); i++)
+	{
+		if (str[i] < 0)
+			return true;
+	}
+	return false;
 }
