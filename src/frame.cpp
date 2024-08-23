@@ -3,8 +3,12 @@
 #include "mainPage.h"
 #include "Random.h"
 #include "searchPage.h"
+<<<<<<< Updated upstream
 #include "SuffixArray.h"
 
+=======
+#include <wx/simplebook.h>
+>>>>>>> Stashed changes
 frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 {
 	// Tạo wxSimplebook
@@ -32,9 +36,13 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	int searchTypeInt = 0;
 	std::string searchWord = WOTD(SA);
 	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
+<<<<<<< Updated upstream
 	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
 	favoritePage* favorite = new favoritePage(book, dicTypeInt);
 
+=======
+	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord);
+>>>>>>> Stashed changes
 	// Thêm các trang vào wxSimplebook
 	book->AddPage(home, "Home");
 	book->AddPage(search, "Search");
