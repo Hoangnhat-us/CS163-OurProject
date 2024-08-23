@@ -72,3 +72,14 @@ bool SuggestionListBox::isHaveunicode(const std::string& str)
 	}
 	return false;
 }
+
+std::string SuggestionListBox::getSearchInput()
+{
+	return searchInput->GetValue().ToStdString();
+}
+
+void SuggestionListBox::OnSuggestionSelected(wxCommandEvent& event)
+{
+	searchInput->SetValue(suggest->GetStringSelection());
+	suggest->Hide();
+}
