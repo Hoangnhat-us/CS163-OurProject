@@ -1,18 +1,13 @@
-﻿#include "favoritePage.h"
-#include "frame.h"
-#include "mainPage.h"
-#include "Random.h"
-#include "searchPage.h"
-#include "SuffixArray.h"
-
+﻿#include "frame.h"
 #include <wx/simplebook.h>
 frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 {
 	// Tạo wxSimplebook
 	book = new wxSimplebook(this, wxID_ANY);
 	dic = std::vector<TST>(4);
-	SuffixArray SA(CSV, EE);
 
+	SuffixArray SA(CSV, EE);
+	std::string searchWord = WOTD(SA);
 
 	for (int i = 0; i <= 27; i++) {
 		std::string c = std::to_string(i + 1);
@@ -29,17 +24,15 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 		dic[1].loadfile(s);
 	}
 
-	int dicTypeInt = 0;
-	int searchTypeInt = 0;
-	std::string searchWord = WOTD(SA);
-	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
-	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
-	favoritePage* favorite = new favoritePage(book, dicTypeInt);
+	home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
+	search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
+	favorite = new favoritePage(book, dicTypeInt);
+	his = new historyPage(book, dicTypeInt);
 
-	// Thêm các trang vào wxSimplebook
 	book->AddPage(home, "Home");
 	book->AddPage(search, "Search");
 	book->AddPage(favorite, "Favorite");
+	book->AddPage(his, "History");
 
 
 	book->SetSelection(2);
@@ -50,27 +43,16 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 
 	home->Random->Bind(wxEVT_BUTTON, &frame::switchToSearch, this);
 	home->searchButton->Bind(wxEVT_BUTTON, &frame::switchToSearch, this);
+	home->history->Bind(wxEVT_BUTTON, &frame::switchToHis, this);
+	home->FavWords->Bind(wxEVT_BUTTON, &frame::switchToFav, this);
 
 
 	Bind(wxEVT_CLOSE_WINDOW, &frame::OnExit, this);
 
 	search->home->Bind(wxEVT_BUTTON, &frame::switchToHome, this);
+	his->home->Bind(wxEVT_BUTTON, &frame::switchToHome, this);
+	favorite->Bind(wxEVT_BUTTON, &frame::switchToHome, this);
 
-
-	// Đặt wxSimplebook vào khung
-	//wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-	//sizer->Add(book, 1, wxEXPAND);
-	// Lấy kích thước màn hình
-	//wxSize screenSize = wxGetDisplaySize();
-	//wxSize screenSize = wxSize(1458, 866);
-
-	// Thiết lập kích thước của frame theo kích thước màn hình
-	//SetSize(screenSize);
-	//this->SetSizer(sizer);
-	//SetMaxSize(screenSize);
-	//SetMinSize(screenSize);
-	/*dic[0].~TST();
-	dic[1].~TST();*/
 }
 
 void frame::OnButtonClicked(wxCommandEvent& event)
@@ -100,5 +82,15 @@ void frame::switchToSearch(wxCommandEvent& event)
 
 void frame::switchToHome(wxCommandEvent& event)
 {
-	book->SetSelection(0);
+	book->SetSelection(1);
+}
+
+void frame::switchToFav(wxCommandEvent& event)
+{
+	book->SetSelection(2);
+}
+
+void frame::switchToHis(wxCommandEvent& event)
+{
+	book->SetSelection(3);
 }
