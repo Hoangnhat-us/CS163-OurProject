@@ -1,8 +1,12 @@
 #pragma once
 
-#include <uni-algo/all.h>
+#include <fstream>
 #include <string>
+#include <uni_algo/all.h>
 #include <vector>
+
+std::ifstream in;
+std::ofstream out;
 
 
 class VNSuffixArray
@@ -19,7 +23,7 @@ public:
 	std::vector<std::pair<std::u32string, std::u16string>> search(const std::u16string& pattern);
 	void insert(const std::u32string& word, const std::u16string& definition);
 	bool remove(const std::u32string& word);
-	bool (const std::u32string& word, const std::u16string& definition);
+	bool update(const std::u32string& word, const std::u16string& definition);
 	void saveToBF(const std::string& filename) const;
 	void loadFromBF(const std::string& filename);
 	void end(bool isModified);

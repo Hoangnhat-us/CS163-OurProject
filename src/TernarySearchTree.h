@@ -58,24 +58,16 @@ private:
 
 	int LevenshteinDistance(const std::u32string& s1, const std::u32string& s2);
 	void suggestCorrectionsUtil(TSTNode* node, const std::u32string& prefix, const std::u32string& target, std::vector<std::string>& result, int maxDistance);
-
-    int LevenshteinDistance(const std::u32string& s1, const std::u32string& s2);
-    void suggestCorrectionsUtil(TSTNode* node, const std::u32string& prefix, const std::u32string& target, std::vector<std::string>& result, int maxDistance);
-   void _deleteTree(TSTNode* node);
+	void _deleteTree(TSTNode* node);
 public:
-    
-    TST() : root(nullptr) {
-        std::srand(std::time(nullptr)); 
-    }
-	/*~TST() {
-		deleteTree();
-	}*/
-	void deleteTree();
-    TSTNode* getRoot() { return root; }
 
 	TST() : root(nullptr) {
 		std::srand(std::time(nullptr));
 	}
+	/*~TST() {
+		deleteTree();
+	}*/
+	void deleteTree();
 	TSTNode* getRoot() { return root; }
 
 	void insert(const std::string& word, const std::string& meaning);

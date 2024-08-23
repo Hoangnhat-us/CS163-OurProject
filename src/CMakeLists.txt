@@ -14,6 +14,9 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 target_link_libraries(src PRIVATE wx::base wx::core)
+target_link_libraries(src PRIVATE uni-algo::uni-algo)
+
+
 
 add_custom_command(TARGET src POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory

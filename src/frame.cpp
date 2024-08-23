@@ -42,7 +42,7 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	book->AddPage(favorite, "Favorite");
 
 
-	book->SetSelection(2);
+	book->SetSelection(1);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(book, 1, wxEXPAND);

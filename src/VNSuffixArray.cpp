@@ -1,14 +1,10 @@
 #include <algorithm>
-#include <iostream>
-#include <fstream>
+#include <cassert>
 #include <codecvt>
 #include <locale>
-#include <cassert>
 
 #include "VNSuffixArray.h"
 
-std::ofstream fout;
-std::ifstream fin;
 
 
 VNSuffixArray::VNSuffixArray()
@@ -20,7 +16,7 @@ VNSuffixArray::VNSuffixArray()
 		std::string filename = std::string("Data_Storage/Eng2Viet/Current/") + c + std::string(".csv");
 		loadCSV(filename);
 	}
-	
+
 	text.push_back(u'$');
 	int n = text.length();
 
@@ -44,13 +40,13 @@ VNSuffixArray::VNSuffixArray()
 
 void VNSuffixArray::loadCSV(std::string filename)
 {
-	fin.open(filename);
-	if (!fin.is_open())
+	in.open(filename);
+	if (!in.is_open())
 	{
 		return;
 	}
 	std::string line;
-	while (std::getline(fin, line))
+	while (std::getline(in, line))
 	{
 		if (line.empty()) continue;
 		int j = 0;
@@ -61,9 +57,8 @@ void VNSuffixArray::loadCSV(std::string filename)
 		line = line.substr(j);
 
 		std::u32string key;
-		std::u16string definition;
-		std::u32string key32;
-		uni::conv::utf8toutf32(line, key32);
+		std::u16string deinition;
+		std::u32string key32 = una::utf8to32u(line);
 
 		int i = 0;
 		while (i < key32.size() && key32[i] != U' ')
@@ -78,24 +73,24 @@ void VNSuffixArray::loadCSV(std::string filename)
 		i++;
 		while (i < key32.size())
 		{
-			definition.push_back(static_cast<char16_t>(key32[i]));
+			deinition.push_back(static_cast<char16_t>(key32[i]));
 			i++;
 		}
 		wordStartIndices.push_back(text.size());
 		words.push_back(key);
-		text += definition + u"|";
+		text += deinition + u"|";
 	}
-	fin.close();
+	in.close();
 }
 
-std::vector<std::pair<std::string, std::u16string>> VNSuffixArray::search(const std::u16string& pattern) {
+std::vector<std::pair<std::u32string, std::u16string>> VNSuffixArray::search(const std::u16string& pattern) {
 	int n = text.size();
 	int m = pattern.size();
 	std::vector<int> result;
 
 	int left = 0, right = n;
 
-	// Find the first occurrence of the pattern
+	// ind the first occurrence of the pattern
 	while (left < right) {
 		int mid = (left + right) / 2;
 		std::u16string suffix = text.substr(SA_[mid], m);
@@ -119,7 +114,7 @@ std::vector<std::pair<std::string, std::u16string>> VNSuffixArray::search(const 
 
 	// Collect and print the results between start and end
 	for (int i = 0; i < result.size() && count < 10; ++i) {
-		// Assuming `findWordStartIndices` and `wordStartIndices` are defined elsewhere
+		// Assuming `indWordStartIndices` and `wordStartIndices` are deined elsewhere
 		// and that they provide the starting index of words in the text.
 		int wordIndex = findWordStartIndices(result[i]);
 		if (wordIndex != -1) {
@@ -137,15 +132,15 @@ std::vector<std::pair<std::string, std::u16string>> VNSuffixArray::search(const 
 	return meanings;
 }
 
-void VNSuffixArray::insert(const std::u32string& word, const std::u16string& definition)
+void VNSuffixArray::insert(const std::u32string& word, const std::u16string& deinition)
 {
 	std::u32string key = word;
-	std::u16string definition_ = definition;
+	std::u16string deinition_ = deinition;
 	words.push_back(key);
 	// Remove '$' from the end of the text
 	text.pop_back();
 	wordStartIndices.push_back(text.size());
-	text += definition_ + u"|";
+	text += deinition_ + u"|";
 	text.push_back(u'$');
 }
 
@@ -174,10 +169,10 @@ bool VNSuffixArray::remove(const std::u32string& word)
 	return true;
 }
 
-bool VNSuffixArray::update(const std::u32string& word, const std::u16string& definition)
+bool VNSuffixArray::update(const std::u32string& word, const std::u16string& deinition)
 {
 	std::u32string key = word;
-	std::u16string definition_ = definition;
+	std::u16string deinition_ = deinition;
 	int index = -1;
 	for (int i = 0; i < words.size(); i++)
 	{
@@ -193,81 +188,79 @@ bool VNSuffixArray::update(const std::u32string& word, const std::u16string& def
 	}
 
 	remove(key);
-	insert(key, definition_);
+	insert(key, deinition_);
 
 	return true;
 }
 
 void VNSuffixArray::saveToBF(const std::string& filename) const
 {
-	fout.open(filename, std::ios::binary);
-	if (!fout.is_open())
-	{	
-		std::cout<< "Error opening file";
+	out.open(filename, std::ios::binary);
+	if (!out.is_open())
+	{
 		return;
 	}
 	// Serialize the object
 	int textSize = text.size() * sizeof(char16_t);
-	fout.write(reinterpret_cast<const char*>(&textSize), sizeof(textSize));
-	fout.write((char*)&text[0], text.size());
-	
+	out.write(reinterpret_cast<const char*>(&textSize), sizeof(textSize));
+	out.write((char*)&text[0], text.size());
+
 	int SASize = SA_.size();
-	fout.write(reinterpret_cast<const char*>(&SASize), sizeof(SASize));
-	fout.write((char*)&SA_[0], SA_.size() * sizeof(int));
-	
+	out.write(reinterpret_cast<const char*>(&SASize), sizeof(SASize));
+	out.write((char*)&SA_[0], SA_.size() * sizeof(int));
+
 	int wordStartIndicesSize = wordStartIndices.size();
-	fout.write(reinterpret_cast<const char*>(&wordStartIndicesSize), sizeof(wordStartIndicesSize));
-	fout.write((char*)&wordStartIndices[0], wordStartIndices.size() * sizeof(int));
-	
+	out.write(reinterpret_cast<const char*>(&wordStartIndicesSize), sizeof(wordStartIndicesSize));
+	out.write((char*)&wordStartIndices[0], wordStartIndices.size() * sizeof(int));
+
 	int wordsSize = words.size();
-	fout.write(reinterpret_cast<const char*>(&wordsSize), sizeof(wordsSize));
-	
+	out.write(reinterpret_cast<const char*>(&wordsSize), sizeof(wordsSize));
+
 	for (const auto& word : words)
 	{
 		int wordSize = word.size() * sizeof(char32_t);
-		fout.write(reinterpret_cast<const char*>(&wordSize), sizeof(wordSize));
-		fout.write(reinterpret_cast<const char*>(&word[0]), wordSize);
+		out.write(reinterpret_cast<const char*>(&wordSize), sizeof(wordSize));
+		out.write(reinterpret_cast<const char*>(&word[0]), wordSize);
 	}
 
-	fout.close();
+	out.close();
 }
 
 void VNSuffixArray::loadFromBF(const std::string& filename)
 {
-	fin.open(filename, std::ios::binary);
-	if (!fin.is_open())
+	in.open(filename, std::ios::binary);
+	if (!in.is_open())
 	{
-		std::cout << "Error opening file";
 		return;
 	}
 	// Deserialize the object
 	int textSize;
-	fin.read(reinterpret_cast<char*>(&textSize), sizeof(textSize));
+	in.read(reinterpret_cast<char*>(&textSize), sizeof(textSize));
 	text.resize(textSize / sizeof(char16_t));
-	fin.read(reinterpret_cast<char*>(&text[0]), textSize);
+	in.read(reinterpret_cast<char*>(&text[0]), textSize);
 
 	int SASize;
-	fin.read(reinterpret_cast<char*>(&SASize), sizeof(SASize));
+	in.read(reinterpret_cast<char*>(&SASize), sizeof(SASize));
 	SA_.resize(SASize);
-	fin.read(reinterpret_cast<char*>(&SA_[0]), SASize * sizeof(int));
+	in.read(reinterpret_cast<char*>(&SA_[0]), SASize * sizeof(int));
 
 	int wordStartIndicesSize;
-	fin.read(reinterpret_cast<char*>(&wordStartIndicesSize), sizeof(wordStartIndicesSize));
+	in.read(reinterpret_cast<char*>(&wordStartIndicesSize), sizeof(wordStartIndicesSize));
 	wordStartIndices.resize(wordStartIndicesSize);
-	fin.read(reinterpret_cast<char*>(&wordStartIndices[0]), wordStartIndicesSize * sizeof(int));
+	in.read(reinterpret_cast<char*>(&wordStartIndices[0]), wordStartIndicesSize * sizeof(int));
 
 	int wordsSize;
-	fin.read(reinterpret_cast<char*>(&wordsSize), sizeof(wordsSize));
+	in.read(reinterpret_cast<char*>(&wordsSize), sizeof(wordsSize));
 	words.resize(wordsSize);
 	for (auto& word : words)
 	{
 		int wordSize;
-		fin.read(reinterpret_cast<char*>(&wordSize), sizeof(wordSize));
+		in.read(reinterpret_cast<char*>(&wordSize), sizeof(wordSize));
 		word.resize(wordSize / sizeof(char32_t));
-		fin.read(reinterpret_cast<char*>(&word[0]), wordSize);
+		in.read(reinterpret_cast<char*>(&word[0]), wordSize);
 	}
 
-	fin.close();
+	in.close();
 }
 
 void VNSuffixArray::end(bool isModified)
@@ -283,7 +276,7 @@ void VNSuffixArray::end(bool isModified)
 		{
 			s[i] = (unsigned char)text[i];
 		}
-		
+
 		SA_.resize(n + 3);
 
 		makeSuffixArray(s, SA, n, 65536);

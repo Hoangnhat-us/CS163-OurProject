@@ -1,23 +1,24 @@
 #pragma once
+#include "SuffixArray.h"
+#include"TernarySearchTree.h"
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
-#include"TernarySearchTree.h"
-#include "SuffixArray.h"
 
 
 int random(int n);
 
-std::u32string WOTD(const VNSuffixArray& VSA);
+std::string WOTD(const SuffixArray& SA);
 
 class QuestionGenerator
 {
-	std::u32string question;
-	std::vector<std::u32string> answers(4);
+public:
+	std::string question;
+	std::vector<std::string> answers;
 	int correctAnswerIndex;
 };
 
-std::vector<QuestionGenerator> chooseCorrectWord(std::string filename, const TernarySearchTree& TST);
-std::vector<QuestionGenerator> chooseCorrectDefinition(std::string filename, const TernarySearchTree& TST);
-QuestionGenerator chooseCorrectWord(const VNSuffixArray& VSA, const TernarySearchTree& TST);
-QuestionGenerator chooseCorrectDefinition(const VNSuffixArray& VSA, const TernarySearchTree& TST);
+std::vector<QuestionGenerator> chooseCorrectWord(std::string filename, TST& TST);
+std::vector<QuestionGenerator> chooseCorrectDefinition(std::string filename, TST& TST);
+QuestionGenerator chooseCorrectWord(const SuffixArray& SA, TST& TST);
+QuestionGenerator chooseCorrectDefinition(const SuffixArray& SA, TST& TST);
