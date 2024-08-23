@@ -3,8 +3,8 @@
 searchType::searchType(wxWindow* panel, int& searchTypeInt) : wxComboBox(panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxCB_READONLY | wxNO_BORDER)
 {
 
-	this->Append(wxT(" Def"));
 	this->Append(wxT(" Word"));
+	this->Append(wxT(" Def"));
 
 	this->SetSelection(searchTypeInt);
 

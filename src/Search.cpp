@@ -2,7 +2,7 @@
 
 void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
 	suggest->Clear();
-	
+
 	std::vector<std::string> suggestions = tst.searchPrefix2(prefix.ToStdString());
 
 	for (const auto& suggestion : suggestions) {
@@ -22,13 +22,18 @@ SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, in
 	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
 
-	searchInput = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, size);
+	wxPanel* panel = new wxPanel(this, wxID_ANY);
+
+
+	searchInput = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, size);
 	searchInput->SetFont(font);
 	searchInput->SetHint("Enter search text...");  // Placeholder tex
 
 
-	suggest = new  wxListBox(this, wxID_ANY, wxDefaultPosition,wxSize(size.GetWidth(),size.GetHeight()*5), 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB);
+	suggest = new  wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(size.GetWidth(), size.GetHeight() * 5), 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB);
 	suggest->SetFont(font);
+
+	wxBoxSizer* main = new wxBoxSizer(wxHORIZONTAL);
 
 	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
 
@@ -37,8 +42,12 @@ SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, in
 	// Add the wxListBox to the sizer
 	vbox->Add(suggest);
 
+	panel->SetSizerAndFit(vbox);
+
+	main->Add(panel, 1, wxEXPAND);
+
 	// Set the sizer for the panel
-	this->SetSizerAndFit(vbox);
+	this->SetSizerAndFit(main);
 
 	switch (dicTypeInt)
 	{

@@ -110,7 +110,7 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 	}
 
 	rightPanel->SetSizer(Sizer3);
-	Sizer1->Add(rightPanel, 0, wxEXPAND);
+	Sizer1->Add(rightPanel);
 
 	mainPanel->SetSizer(Sizer1);
 
@@ -276,45 +276,32 @@ void searchPage::UpdateRightPanel()
 		rightPanel->DestroyChildren();
 
 		// Update the word label and text box
-		wxFont Wordfont(35, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
-		wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
+		setRightControls(rightPanel, dicTypeInt, searchTypeInt, selectedWord);
 
-		word = new wxStaticText(rightPanel, wxID_ANY, selectedWord, wxDefaultPosition, wxDefaultSize);
-		word->SetFont(Wordfont);
-		rightPanel->GetSizer()->Add(word, 0, wxLEFT | wxTOP, 20);
+		wxBoxSizer* Sizer3 = new wxBoxSizer(wxVERTICAL);
 
-		editWord = new wxTextCtrl(rightPanel, wxID_ANY, word->GetLabel(), wxDefaultPosition, wxDefaultSize);
-		editWord->SetFont(Wordfont);
-		editWord->Hide();
-		rightPanel->GetSizer()->Add(editWord, 0, wxLEFT | wxTOP, 20);
+		wxBoxSizer* wordSizer = new wxBoxSizer(wxHORIZONTAL);
+		wordSizer->Add(word, 0, wxLEFT, 20);
+		Sizer3->Add(wordSizer, 1, wxALL, 20);
 
-		// Retrieve definitions for the selected word
-		std::vector<std::string> defs = dic[0].search(selectedWord);
+		wxBoxSizer* lineSizer = new wxBoxSizer(wxHORIZONTAL);
+		lineSizer->Add(line[0], 0, wxLEFT, 20);
+		Sizer3->Add(lineSizer, 1, wxALL, 20);
 
-		// Add the definitions to the right panel
-		def.resize(defs.size());
-		editDef.resize(defs.size());
-		line.resize(def.size() + 1);
-		wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
+		std::vector<wxBoxSizer*> linesSizer;
+		std::vector<wxBoxSizer*> wordsSizer;
 
-		for (int i = 0; i < defs.size(); i++)
+		for (int i = 0; i < def.size(); i++)
 		{
-			def[i] = new wxStaticText(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
-			def[i]->SetFont(font);
-			rightPanel->GetSizer()->Add(def[i], 0, wxALL, 10);
+			wxBoxSizer* wordsSizer = new wxBoxSizer(wxHORIZONTAL);
+			wordsSizer->Add(def[i], 0, wxLEFT, 20);
+			Sizer3->Add(wordsSizer, 0, wxALL, 20);
 
-			rightPanel->GetSizer()->AddSpacer(10);
-
-			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
-			editDef[i]->SetFont(font);
-			editDef[i]->Hide();
-			rightPanel->GetSizer()->Add(editDef[i], 0, wxALL, 10);
-			line[i] = new wxStaticBitmap(rightPanel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-			rightPanel->GetSizer()->Add(line[i], 0, wxLEFT, 20);
+			linesSizer.push_back(new wxBoxSizer(wxHORIZONTAL));
+			linesSizer[i]->Add(line[i + 1], 0, wxLEFT, 20);
+			Sizer3->Add(linesSizer[i], 0, wxALL, 20);
 		}
 
-		// Refresh the layout of the right panel
-		rightPanel->Layout();
-		rightPanel->Refresh();
+		rightPanel->SetSizer(Sizer3);
 	}
 }
