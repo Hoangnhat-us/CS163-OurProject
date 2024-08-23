@@ -83,3 +83,4 @@ void SuggestionListBox::OnSuggestionSelected(wxCommandEvent& event)
 	searchInput->SetValue(suggest->GetStringSelection());
 	suggest->Hide();
 }
+

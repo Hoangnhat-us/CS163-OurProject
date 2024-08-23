@@ -14,3 +14,7 @@ dicType::dicType(wxWindow* panel, int& dicTypeInt) : wxComboBox(panel, wxID_ANY,
 	wxFont font(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 	this->SetFont(font);
 }
+int dicType::getDicType()
+{
+	return this->GetSelection();
+}

@@ -28,18 +28,21 @@ public:
 	wxStaticText* word;
 	wxTextCtrl* editWord;
 	SuggestionListBox* suggestionBox;
+	wxPanel* mainPanel;
 
 	wxSplitterWindow* splitter;
+	
 
 	std::vector<wxStaticText*> def;
 	std::vector<wxTextCtrl*> editDef;
 	std::vector<wxStaticBitmap*> line;
 
-	searchPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& Word, std::vector<TST>& dic);
+	searchPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& sWord, std::vector<TST>& dic);
 	void OnButtonClicked(wxCommandEvent& event);
 	void OnTextChange(wxCommandEvent& event);
 	void OnSuggestionBoxToggle(wxCommandEvent& event);
 	void OnSuggestionBoxSelect(wxCommandEvent& event);
+	void UpdateRightPanel();
 
 private:
 	std::vector<TST>  dic;

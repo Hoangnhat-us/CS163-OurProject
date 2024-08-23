@@ -2,11 +2,12 @@
 #include "searchPage.h"
 #include<wx/splitter.h>
 
-searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, std::string& Word, std::vector<TST>& dic)
+searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, std::string& sWord, std::vector<TST>& dic)
     : wxWindow(parent, wxID_ANY)
 {
     this->dic = dic;
     this->SetBackgroundColour("#FFFFFF");
+	this->Word = sWord;
 
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -54,7 +55,7 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
     topPanel->SetSizer(topSizer);
 
     // Create bottom panel (mainPanel)
-    wxPanel* mainPanel = new wxPanel(splitter, wxID_ANY);
+    mainPanel = new wxPanel(splitter, wxID_ANY);
 
     wxBoxSizer* Sizer1 = new wxBoxSizer(wxHORIZONTAL);
 
@@ -115,9 +116,12 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 
     // Split the top and bottom panels
     splitter->SplitHorizontally(topPanel, mainPanel);
+	splitter->SetSashPosition(100);  // Adjust the initial sash position
+	
 
     // Add the splitter window to the main sizer
     mainSizer->Add(splitter, 1, wxEXPAND);
+
 
     this->SetSizer(mainSizer);
 }
@@ -218,6 +222,8 @@ void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTy
 	{
 		line[i] = new wxStaticBitmap(panel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	}
+	panel->Layout();
+    panel->Refresh();
 }
 
 void searchPage::OnTextChange(wxCommandEvent& event) {
@@ -242,8 +248,73 @@ void searchPage::OnSuggestionBoxToggle(wxCommandEvent& event)
 void searchPage::OnSuggestionBoxSelect(wxCommandEvent& event)
 {
 	suggestionBox->OnSuggestionSelected(event);
-	std::string sWord = suggestionBox->getSearchInput();
+	Word = suggestionBox->getSearchInput();
 	suggestionBox->suggest->Hide();
 	OnSuggestionBoxToggle(event);
+	UpdateRightPanel();
+}
+void searchPage::UpdateRightPanel()
+{
+	std::string selectedWord=Word;
+	int dicTypeInt = lists->getDicType();
+	int searchTypeInt = choice->getSearchType();
+	wxWindowList children = mainPanel->GetChildren();
+	wxPanel* rightPanel = nullptr;
 
+	// Assuming rightPanel is the second child in mainPanel
+    if (children.size() > 1)
+    {
+		rightPanel = dynamic_cast<wxPanel*>(children.Item(1)->GetData());
+	}
+
+	// If rightPanel is successfully retrieved, update its controls
+    if (rightPanel)
+    {
+        // Update the word label
+        word->SetLabel(selectedWord);
+        editWord->SetValue(selectedWord);
+
+        // Clear existing definitions
+        for (auto& defLabel : def) {
+            defLabel->Destroy();
+        }
+        def.clear();
+
+        for (auto& defEdit : editDef) {
+            defEdit->Destroy();
+        }
+        editDef.clear();
+
+        // Get definitions for the selected word from the dictionary
+        std::vector<std::string> defs = dic[0].search(selectedWord); // Adjust this based on your dictionary structure
+
+        // Update the definitions
+        def.resize(defs.size());
+        editDef.resize(defs.size());
+
+        wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
+
+        for (int i = 0; i < def.size(); i++)
+        {
+            def[i] = new wxStaticText(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
+            def[i]->SetFont(font);
+
+            editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
+            editDef[i]->Hide();
+            editDef[i]->SetFont(font);
+
+            // Add the new definition controls to the right panel's sizer
+            rightPanel->GetSizer()->Add(def[i], 0, wxALL, 10);
+            rightPanel->GetSizer()->Add(editDef[i], 0, wxALL, 10);
+        }
+        line.clear();
+        line.resize(def.size() + 1);
+        wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
+        for (int i = 0; i < def.size() + 1; i++)
+        {
+            line[i] = new wxStaticBitmap(rightPanel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+        }
+        // Refresh the right panel layout
+        rightPanel->Layout();
+	}
 }
