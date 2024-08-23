@@ -6,11 +6,12 @@
 #include <wx/listbox.h>
 #include <wx/wx.h>
 #include <wx/textctrl.h>
+#include "searchType.h"
 
 class SuggestionListBox : public wxPanel
 {
 public:
-	dicType* dicType;
+	
 	SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, int& dicTypeInt, int& searchType, wxSize size);
 
 	void UpdateSuggestions(const wxString& prefix);
@@ -23,6 +24,8 @@ public:
 private:
 	TST tst;
 	bool isHaveunicode(const std::string& str);
+	int dicTypeInt;
+	int searchType;
 };
 
 

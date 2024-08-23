@@ -18,3 +18,7 @@ int dicType::getDicType()
 {
 	return this->GetSelection();
 }
+void dicType::setDicType(int& dicTypeInt)
+{
+	this->SetSelection(dicTypeInt);
+}

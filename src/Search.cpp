@@ -2,6 +2,22 @@
 
 void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
 	suggest->Clear();
+	
+	if (isHaveunicode(prefix.ToStdString()))
+	{
+		if (dicTypeInt == 0) {
+			suggest->Hide();
+			return;
+		}
+		if (dicTypeInt == 1 and searchType == 0) {
+			suggest->Hide();
+			return;
+		}
+		if (dicTypeInt == 2 and searchType == 1) {
+			suggest->Hide();
+			return;
+		}
+	}
 
 	std::vector<std::string> suggestions = tst.searchPrefix2(prefix.ToStdString());
 
@@ -21,16 +37,14 @@ SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, in
 {
 	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
-
-	wxPanel* panel = new wxPanel(this, wxID_ANY);
-
-
+	this->dicTypeInt = dicTypeInt;
+	this->searchType = searchType;
+	wxPanel* panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, size);
 	searchInput = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, size);
 	searchInput->SetFont(font);
 	searchInput->SetHint("Enter search text...");  // Placeholder tex
 
-
-	suggest = new  wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(size.GetWidth(), size.GetHeight() * 5), 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB);
+	suggest = new wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(size.GetWidth(), size.GetHeight() * 5), 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB);
 	suggest->SetFont(font);
 
 	wxBoxSizer* main = new wxBoxSizer(wxHORIZONTAL);

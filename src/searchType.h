@@ -7,5 +7,6 @@ class searchType : public wxComboBox
 public:
 	searchType(wxWindow* panel, int& seacrhTypeInt);
 	int getSearchType();
+	void setSearchType(int& searchTypeInt);
 };
 

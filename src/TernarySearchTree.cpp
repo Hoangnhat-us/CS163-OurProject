@@ -239,7 +239,11 @@ int TST::LevenshteinDistance(const std::u32string& s1, const std::u32string& s2)
                 dp[i][j] = dp[i - 1][j - 1];
             }
             else {
-                //dp[i][j] = 1 + std::min(std::min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]);
+                if (dp[i - 1][j] < dp[i][j - 1] && dp[i - 1][j] < dp[i - 1][j - 1])
+                    dp[i][j] = 1 + dp[i - 1][j];
+                else if (dp[i][j - 1] < dp[i - 1][j] && dp[i][j - 1] < dp[i - 1][j - 1])
+                    dp[i][j] = 1 + dp[i][j - 1];
+                else dp[i][j] = 1 + dp[i - 1][j - 1];
             }
         }
     }
@@ -249,7 +253,7 @@ int TST::LevenshteinDistance(const std::u32string& s1, const std::u32string& s2)
 
 void TST::suggestCorrectionsUtil(TSTNode* node, const std::u32string& prefix, const std::u32string& target, std::vector<std::string>& result, int maxDistance){
     if (node == nullptr) return;
-
+    if (result.size() > 10) return;
     suggestCorrectionsUtil(node->left, prefix, target, result, maxDistance);
 
     std::u32string newPrefix = prefix + node->key;
@@ -266,6 +270,7 @@ void TST::suggestCorrectionsUtil(TSTNode* node, const std::u32string& prefix, co
 
 std::vector<std::string> TST::suggestCorrections(const std::string& word, int maxDistance) {
     std::vector<std::string> result;
+    result.emplace_back("Did you mean: " + word + "?");
     std::u32string word32 = to_utf32(word);
     suggestCorrectionsUtil(root, U"", word32, result, maxDistance);
     return result;

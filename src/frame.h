@@ -34,4 +34,5 @@ private:
 	void switchToHome(wxCommandEvent& event);
 	void switchToFav(wxCommandEvent& event);
 	void switchToHis(wxCommandEvent& event);
+	void LoadDic();
 };

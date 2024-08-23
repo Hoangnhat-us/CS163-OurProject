@@ -15,3 +15,8 @@ int searchType::getSearchType()
 {
 	return this->GetSelection();
 }
+
+void searchType::setSearchType(int& searchTypeInt)
+{
+	this->SetSelection(searchTypeInt);
+}
