@@ -113,7 +113,7 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 	}
 
 	rightPanel->SetSizer(Sizer3);
-	Sizer1->Add(rightPanel, 1, wxEXPAND);
+	Sizer1->Add(rightPanel);
 
 	mainPanel->SetSizer(Sizer1);
 
@@ -301,13 +301,10 @@ void searchPage::UpdateRightPanel()
 			defs = dic[0].suggestCorrections(selectedWord, 2);
 		}
 
-		// Add the definitions to the right panel
-		def.resize(defs.size());
-		editDef.resize(defs.size());
-		line.resize(def.size() + 1);
-		wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
+		std::vector<wxBoxSizer*> linesSizer;
+		std::vector<wxBoxSizer*> wordsSizer;
 
-		for (int i = 0; i < defs.size(); i++)
+		for (int i = 0; i < def.size(); i++)
 		{
 			def[i] = new wxStaticText(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxDefaultSize);
 			def[i]->SetFont(font);
