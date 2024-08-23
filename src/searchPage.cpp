@@ -294,6 +294,8 @@ void searchPage::UpdateRightPanel()
 		// Add the definitions to the right panel
 		def.resize(defs.size());
 		editDef.resize(defs.size());
+		line.resize(def.size() + 1);
+		wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
 
 		for (int i = 0; i < defs.size(); i++)
 		{
@@ -301,17 +303,12 @@ void searchPage::UpdateRightPanel()
 			def[i]->SetFont(font);
 			rightPanel->GetSizer()->Add(def[i], 0, wxALL, 10);
 
+			rightPanel->GetSizer()->AddSpacer(10);
+
 			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
 			editDef[i]->SetFont(font);
 			editDef[i]->Hide();
 			rightPanel->GetSizer()->Add(editDef[i], 0, wxALL, 10);
-		}
-
-		// Add separator lines
-		line.resize(def.size() + 1);
-		wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
-		for (int i = 0; i < def.size() + 1; i++)
-		{
 			line[i] = new wxStaticBitmap(rightPanel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 			rightPanel->GetSizer()->Add(line[i], 0, wxLEFT, 20);
 		}
