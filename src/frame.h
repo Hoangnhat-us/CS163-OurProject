@@ -11,4 +11,5 @@ private:
 	wxSimplebook* book;
 	std::vector<TST> dic;
 	void switchToSearch(wxCommandEvent& event);
+	void switchToHome(wxCommandEvent& event);
 };

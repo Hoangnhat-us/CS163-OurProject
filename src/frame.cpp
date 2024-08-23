@@ -38,8 +38,10 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	// Thêm các trang vào wxSimplebook
 	book->AddPage(home, "Home");
 	book->AddPage(search, "Search");
+	book->AddPage(favorite, "Favorite");
 
-	book->SetSelection(0);
+
+	book->SetSelection(2);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(book, 1, wxEXPAND);
@@ -48,6 +50,8 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	home->Random->Bind(wxEVT_BUTTON, &frame::switchToSearch, this);
 	home->searchButton->Bind(wxEVT_BUTTON, &frame::switchToSearch, this);
 
+
+	search->home->Bind(wxEVT_BUTTON, &frame::switchToHome, this);
 
 
 	// Đặt wxSimplebook vào khung
@@ -69,4 +73,9 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 void frame::switchToSearch(wxCommandEvent& event)
 {
 	book->SetSelection(1);
+}
+
+void frame::switchToHome(wxCommandEvent& event)
+{
+	book->SetSelection(0);
 }
