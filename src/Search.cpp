@@ -39,12 +39,12 @@ SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, in
 
 	this->dicTypeInt = dicTypeInt;
 	this->searchType = searchType;
-	searchInput = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, size);
+	wxPanel* panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, size);
+	searchInput = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, size);
 	searchInput->SetFont(font);
 	searchInput->SetHint("Enter search text...");  // Placeholder tex
 
-
-	suggest = new  wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(size.GetWidth(), size.GetHeight() * 5), 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB);
+	suggest = new wxListBox(panel, wxID_ANY, wxDefaultPosition, wxSize(size.GetWidth(), size.GetHeight() * 5), 0, nullptr, wxLB_SINGLE | wxLB_ALWAYS_SB);
 	suggest->SetFont(font);
 
 	wxBoxSizer* main = new wxBoxSizer(wxHORIZONTAL);

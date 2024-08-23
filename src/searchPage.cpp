@@ -301,8 +301,11 @@ void searchPage::UpdateRightPanel()
 			defs = dic[0].suggestCorrections(selectedWord, 2);
 		}
 
-		std::vector<wxBoxSizer*> linesSizer;
-		std::vector<wxBoxSizer*> wordsSizer;
+		def.resize(defs.size());
+		editDef.resize(defs.size());
+		line.resize(def.size() + 1);
+		wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
+
 
 		for (int i = 0; i < def.size(); i++)
 		{
