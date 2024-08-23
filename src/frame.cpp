@@ -14,20 +14,7 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	SuffixArray SA(CSV, EE);
 
 
-	for (int i = 0; i <= 27; i++) {
-		std::string c = std::to_string(i + 1);
-		std::string s = "Data_Storage/Eng2Eng/Origin/";
-		s += c;
-		s += ".txt";
-		dic[0].loadfile(s);
-	}
-	for (int i = 0; i <= 27; i++) {
-		std::string c = std::to_string(i + 1);
-		std::string s = "Data_Storage/Eng2Viet/Origin/";
-		s += c;
-		s += ".txt";
-		dic[1].loadfile(s);
-	}
+	LoadDic();
 
 	int dicTypeInt = 0;
 	int searchTypeInt = 0;
@@ -101,4 +88,28 @@ void frame::switchToSearch(wxCommandEvent& event)
 void frame::switchToHome(wxCommandEvent& event)
 {
 	book->SetSelection(0);
+}
+
+void frame::LoadDic() {
+	for (int i = 0; i <= 27; i++) {
+		std::string c = std::to_string(i + 1);
+		std::string s = "Data_Storage/Eng2Eng/Origin/";
+		s += c;
+		s += ".txt";
+		dic[0].loadfile(s);
+	}
+	for (int i = 0; i <= 27; i++) {
+		std::string c = std::to_string(i + 1);
+		std::string s = "Data_Storage/Eng2Viet/Origin/";
+		s += c;
+		s += ".txt";
+		dic[1].loadfile(s);
+	}
+	for (int i = 0; i <= 27; i++) {
+		std::string c = std::to_string(i + 1);
+		std::string s = "Data_Storage/Viet2Eng/Origin/";
+		s += c;
+		s += ".txt";
+		dic[2].loadfile(s);
+	}
 }

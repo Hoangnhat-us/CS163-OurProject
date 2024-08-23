@@ -3,6 +3,22 @@
 void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
 	suggest->Clear();
 	
+	if (isHaveunicode(prefix.ToStdString()))
+	{
+		if (dicTypeInt == 0) {
+			suggest->Hide();
+			return;
+		}
+		if (dicTypeInt == 1 and searchType == 0) {
+			suggest->Hide();
+			return;
+		}
+		if (dicTypeInt == 2 and searchType == 1) {
+			suggest->Hide();
+			return;
+		}
+	}
+
 	std::vector<std::string> suggestions = tst.searchPrefix2(prefix.ToStdString());
 
 	for (const auto& suggestion : suggestions) {
@@ -21,7 +37,8 @@ SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, in
 {
 	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
-
+	this->dicTypeInt = dicTypeInt;
+	this->searchType = searchType;
 	searchInput = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, size);
 	searchInput->SetFont(font);
 	searchInput->SetHint("Enter search text...");  // Placeholder tex

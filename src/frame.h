@@ -14,4 +14,5 @@ private:
 	std::vector<TST> dic;
 	void switchToSearch(wxCommandEvent& event);
 	void switchToHome(wxCommandEvent& event);
+	void LoadDic();
 };

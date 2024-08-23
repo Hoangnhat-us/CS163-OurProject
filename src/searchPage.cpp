@@ -9,6 +9,9 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 	this->SetBackgroundColour("#FFFFFF");
 	this->Word = sWord;
 
+	this->dicTypeInt = dicTypeInt;
+	this->searchTypeInt = searchTypeInt;
+
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	// Create a wxSplitterWindow
@@ -137,14 +140,19 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 	choice = new searchType(panel, searchTypeInt);
 	choice->SetSize(wxSize(49, 29));
 	choice->SetFont(font);
+	choice->Bind(wxEVT_COMBOBOX, &searchPage::OnSearchTypeChanged, this);
 
 	lists = new dicType(panel, dicTypeInt);
 	lists->SetSize(wxSize(127, 33));
 	lists->SetFont(font);
 
+	lists->Bind(wxEVT_COMBOBOX, &searchPage::OnDicTypeChanged, this);
+
+
 	wxBitmap bmSearchButton(wxT("../../../../picture/searchButton.png"), wxBITMAP_TYPE_PNG);
 	searchButton = new wxBitmapButton(panel, wxID_ANY, bmSearchButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	searchButton->SetBackgroundColour("#38435A");
+	Bind(wxEVT_BUTTON, &searchPage::OnSearchButtonClicked, this, searchButton->GetId());
 
 
 	//searchInput = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxSize(450, 33));
@@ -249,16 +257,14 @@ void searchPage::OnSuggestionBoxToggle(wxCommandEvent& event)
 void searchPage::OnSuggestionBoxSelect(wxCommandEvent& event)
 {
 	suggestionBox->OnSuggestionSelected(event);
-	Word = suggestionBox->getSearchInput();
 	suggestionBox->suggest->Hide();
 	OnSuggestionBoxToggle(event);
-	UpdateRightPanel();
 }
 void searchPage::UpdateRightPanel()
 {
 	std::string selectedWord = Word;
-	int dicTypeInt = lists->getDicType();
-	int searchTypeInt = choice->getSearchType();
+	//int dicTypeInt = lists->getDicType();
+	//int searchTypeInt = choice->getSearchType();
 	wxWindowList children = mainPanel->GetChildren();
 	wxPanel* rightPanel = nullptr;
 
@@ -271,25 +277,29 @@ void searchPage::UpdateRightPanel()
 	// If rightPanel is successfully retrieved, update its controls
 	if (rightPanel)
 	{
-
-		// Clear existing controls in the right panel
 		rightPanel->DestroyChildren();
+		wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
+		rightPanel->SetSizer(rightSizer);
 
-		// Update the word label and text box
+		// Set fonts
 		wxFont Wordfont(35, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 		wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 
+		// Update the word label and text box
 		word = new wxStaticText(rightPanel, wxID_ANY, selectedWord, wxDefaultPosition, wxDefaultSize);
 		word->SetFont(Wordfont);
-		rightPanel->GetSizer()->Add(word, 0, wxLEFT | wxTOP, 20);
+		rightSizer->Add(word, 0, wxLEFT | wxTOP, 20);
 
 		editWord = new wxTextCtrl(rightPanel, wxID_ANY, word->GetLabel(), wxDefaultPosition, wxDefaultSize);
 		editWord->SetFont(Wordfont);
 		editWord->Hide();
-		rightPanel->GetSizer()->Add(editWord, 0, wxLEFT | wxTOP, 20);
+		rightSizer->Add(editWord, 0, wxLEFT | wxTOP, 20);
 
 		// Retrieve definitions for the selected word
 		std::vector<std::string> defs = dic[0].search(selectedWord);
+		if (defs.empty()) {
+			defs = dic[0].suggestCorrections(selectedWord, 2);
+		}
 
 		// Add the definitions to the right panel
 		def.resize(defs.size());
@@ -299,22 +309,43 @@ void searchPage::UpdateRightPanel()
 
 		for (int i = 0; i < defs.size(); i++)
 		{
-			def[i] = new wxStaticText(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
+			def[i] = new wxStaticText(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxDefaultSize);
 			def[i]->SetFont(font);
-			rightPanel->GetSizer()->Add(def[i], 0, wxALL, 10);
+			rightSizer->Add(def[i], 0, wxALL, 10);
 
-			rightPanel->GetSizer()->AddSpacer(10);
 
-			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
+			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxDefaultSize);
 			editDef[i]->SetFont(font);
 			editDef[i]->Hide();
-			rightPanel->GetSizer()->Add(editDef[i], 0, wxALL, 10);
+			rightSizer->Add(editDef[i], 0, wxALL, 10);
+
 			line[i] = new wxStaticBitmap(rightPanel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-			rightPanel->GetSizer()->Add(line[i], 0, wxLEFT, 20);
+			rightSizer->Add(line[i], 0, wxLEFT, 20);
 		}
 
-		// Refresh the layout of the right panel
+		// Layout and refresh
 		rightPanel->Layout();
 		rightPanel->Refresh();
 	}
+}
+
+void searchPage::OnSearchButtonClicked(wxCommandEvent& event)
+{
+	Word = suggestionBox->getSearchInput();
+	suggestionBox->suggest->Hide();
+	OnSuggestionBoxToggle(event);
+	//int dicTypeInt = lists->getDicType();
+	//int searchTypeInt = choice->getSearchType();
+
+	UpdateRightPanel();
+}
+
+void searchPage::OnDicTypeChanged(wxCommandEvent& event)
+{
+	dicTypeInt = lists->getDicType();
+}
+
+void searchPage::OnSearchTypeChanged(wxCommandEvent& event)
+{
+	searchTypeInt = choice->getSearchType();
 }
