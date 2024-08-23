@@ -10,7 +10,7 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 {
 	// Tạo wxSimplebook
 	wxSimplebook* book = new wxSimplebook(this, wxID_ANY);
-	dic = std::vector<TST>(4);
+	dic = std::vector<TST>(5);
 	SuffixArray SA(CSV, EE);
 	
 	
@@ -31,7 +31,7 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 
 	int dicTypeInt = 0;
 	int searchTypeInt = 0;
-	std::string searchWord = WOTD(SA);
+	std::string searchWord = /*WOTD(SA)*/" ";
 	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
 	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
 	favoritePage* favorite = new favoritePage(book, dicTypeInt);
@@ -47,7 +47,8 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	sizer->Add(book, 1, wxEXPAND);
 	this->SetSizerAndFit(sizer);
 
-
+	Bind(wxEVT_BUTTON, &frame::OnButtonClicked, this, wxID_EXIT);
+	Bind(wxEVT_CLOSE_WINDOW, &frame::OnExit, this);
 
 
 
@@ -63,6 +64,26 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	//this->SetSizer(sizer);
 	//SetMaxSize(screenSize);
 	//SetMinSize(screenSize);
+	/*dic[0].~TST();
+	dic[1].~TST();*/
+}
 
+void frame::OnButtonClicked(wxCommandEvent& event)
+{
+	Close(true);
+}
 
+void frame::OnExit(wxCloseEvent& event)
+{
+	if (wxMessageBox("Are you sure to quit?", "Confirm", wxICON_QUESTION | wxYES_NO) == wxYES)
+	{
+		for (int i = 0; i < dic.size(); i++) {
+			dic[i].deleteTree();
+		}
+		Destroy();
+	}
+	else
+	{
+		event.Veto();
+	}
 }

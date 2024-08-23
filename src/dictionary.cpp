@@ -11,4 +11,6 @@ bool dictionary::OnInit()
 	return true;
 }
 
+
 wxIMPLEMENT_APP(dictionary);
+

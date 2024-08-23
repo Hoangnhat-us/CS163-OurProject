@@ -6,7 +6,8 @@
 class frame : public wxFrame {
 public:
 	frame();
+	void OnButtonClicked(wxCommandEvent& event);
+	void OnExit(wxCloseEvent& event);
 private:
 	std::vector<TST> dic;
-	
 };

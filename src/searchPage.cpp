@@ -270,51 +270,53 @@ void searchPage::UpdateRightPanel()
 	// If rightPanel is successfully retrieved, update its controls
     if (rightPanel)
     {
-        // Update the word label
-        word->SetLabel(selectedWord);
-        editWord->SetValue(selectedWord);
+		
+        // Clear existing controls in the right panel
+        rightPanel->DestroyChildren();
 
-        // Clear existing definitions
-        for (auto& defLabel : def) {
-            defLabel->Destroy();
-        }
-        def.clear();
+        // Update the word label and text box
+        wxFont Wordfont(35, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
+        wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 
-        for (auto& defEdit : editDef) {
-            defEdit->Destroy();
-        }
-        editDef.clear();
+        word = new wxStaticText(rightPanel, wxID_ANY, selectedWord, wxDefaultPosition, wxDefaultSize);
+        word->SetFont(Wordfont);
+        rightPanel->GetSizer()->Add(word, 0, wxLEFT | wxTOP, 20);
 
-        // Get definitions for the selected word from the dictionary
-        std::vector<std::string> defs = dic[0].search(selectedWord); // Adjust this based on your dictionary structure
+        editWord = new wxTextCtrl(rightPanel, wxID_ANY, word->GetLabel(), wxDefaultPosition, wxDefaultSize);
+        editWord->SetFont(Wordfont);
+        editWord->Hide();
+        rightPanel->GetSizer()->Add(editWord, 0, wxLEFT | wxTOP, 20);
 
-        // Update the definitions
+        // Retrieve definitions for the selected word
+        std::vector<std::string> defs = dic[0].search(selectedWord);
+
+        // Add the definitions to the right panel
         def.resize(defs.size());
         editDef.resize(defs.size());
 
-        wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
-
-        for (int i = 0; i < def.size(); i++)
+        for (int i = 0; i < defs.size(); i++)
         {
             def[i] = new wxStaticText(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
             def[i]->SetFont(font);
+            rightPanel->GetSizer()->Add(def[i], 0, wxALL, 10);
 
             editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
-            editDef[i]->Hide();
             editDef[i]->SetFont(font);
-
-            // Add the new definition controls to the right panel's sizer
-            rightPanel->GetSizer()->Add(def[i], 0, wxALL, 10);
+            editDef[i]->Hide();
             rightPanel->GetSizer()->Add(editDef[i], 0, wxALL, 10);
         }
-        line.clear();
+
+        // Add separator lines
         line.resize(def.size() + 1);
         wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
         for (int i = 0; i < def.size() + 1; i++)
         {
             line[i] = new wxStaticBitmap(rightPanel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+            rightPanel->GetSizer()->Add(line[i], 0, wxLEFT, 20);
         }
-        // Refresh the right panel layout
+
+        // Refresh the layout of the right panel
         rightPanel->Layout();
+        rightPanel->Refresh();
 	}
 }
