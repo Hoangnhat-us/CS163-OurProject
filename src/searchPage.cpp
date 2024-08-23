@@ -145,7 +145,6 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 	lists = new dicType(panel, dicTypeInt);
 	lists->SetSize(wxSize(127, 33));
 	lists->SetFont(font);
-
 	lists->Bind(wxEVT_COMBOBOX, &searchPage::OnDicTypeChanged, this);
 
 
@@ -239,7 +238,6 @@ void searchPage::OnTextChange(wxCommandEvent& event) {
 	wxString prefix = suggestionBox->searchInput->GetValue();
 	suggestionBox->UpdateSuggestions(prefix);
 	OnSuggestionBoxToggle(event);
-
 }
 void searchPage::OnSuggestionBoxToggle(wxCommandEvent& event)
 {
@@ -263,8 +261,8 @@ void searchPage::OnSuggestionBoxSelect(wxCommandEvent& event)
 void searchPage::UpdateRightPanel()
 {
 	std::string selectedWord = Word;
-	//int dicTypeInt = lists->getDicType();
-	//int searchTypeInt = choice->getSearchType();
+	int dicTypeInt = lists->getDicType();
+	int searchTypeInt = choice->getSearchType();
 	wxWindowList children = mainPanel->GetChildren();
 	wxPanel* rightPanel = nullptr;
 
@@ -296,9 +294,9 @@ void searchPage::UpdateRightPanel()
 		rightSizer->Add(editWord, 0, wxLEFT | wxTOP, 20);
 
 		// Retrieve definitions for the selected word
-		std::vector<std::string> defs = dic[0].search(selectedWord);
+		std::vector<std::string> defs = dic[dicTypeInt].search(selectedWord);
 		if (defs.empty()) {
-			defs = dic[0].suggestCorrections(selectedWord, 2);
+			defs = dic[dicTypeInt].suggestCorrections(selectedWord, 2);
 		}
 
 		def.resize(defs.size());
@@ -309,12 +307,13 @@ void searchPage::UpdateRightPanel()
 
 		for (int i = 0; i < def.size(); i++)
 		{
-			def[i] = new wxStaticText(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxDefaultSize);
+
+			def[i] = new wxStaticText(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxDefaultSize);
 			def[i]->SetFont(font);
 			rightSizer->Add(def[i], 0, wxALL, 10);
 
 
-			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, defs[i], wxDefaultPosition, wxDefaultSize);
+			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxDefaultSize);
 			editDef[i]->SetFont(font);
 			editDef[i]->Hide();
 			rightSizer->Add(editDef[i], 0, wxALL, 10);
@@ -334,8 +333,8 @@ void searchPage::OnSearchButtonClicked(wxCommandEvent& event)
 	Word = suggestionBox->getSearchInput();
 	suggestionBox->suggest->Hide();
 	OnSuggestionBoxToggle(event);
-	//int dicTypeInt = lists->getDicType();
-	//int searchTypeInt = choice->getSearchType();
+	int dicTypeInt = lists->getDicType();
+	int searchTypeInt = choice->getSearchType();
 
 	UpdateRightPanel();
 }
@@ -343,6 +342,7 @@ void searchPage::OnSearchButtonClicked(wxCommandEvent& event)
 void searchPage::OnDicTypeChanged(wxCommandEvent& event)
 {
 	dicTypeInt = lists->getDicType();
+	suggestionBox->UpdateSuggestListBox(dic, dicTypeInt, searchTypeInt);
 }
 
 void searchPage::OnSearchTypeChanged(wxCommandEvent& event)

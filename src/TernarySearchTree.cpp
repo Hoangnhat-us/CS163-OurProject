@@ -183,7 +183,7 @@ void TST::_collect2(TSTNode* node, std::u32string& prefix, std::vector<std::stri
     _collect2(node->left, prefix, result, cnt);
     prefix.push_back(node->key);
 
-    if (node->is_end_of_string) {
+    if (node->is_end_of_string && cnt<=30) {
         result.push_back(to_utf8(prefix));
         cnt++;
     }

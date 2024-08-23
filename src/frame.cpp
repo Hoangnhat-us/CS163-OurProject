@@ -22,7 +22,7 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	book->AddPage(his, "History");
 
 
-	book->SetSelection(2);
+	book->SetSelection(1);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(book, 1, wxEXPAND);
@@ -97,7 +97,7 @@ void frame::LoadDic() {
 		s += ".txt";
 		dic[1].loadfile(s);
 	}
-	for (int i = 0; i <= 27; i++) {
+	for (int i = 0; i <= 24; i++) {
 		std::string c = std::to_string(i + 1);
 		std::string s = "Data_Storage/Viet2Eng/Origin/";
 		s += c;

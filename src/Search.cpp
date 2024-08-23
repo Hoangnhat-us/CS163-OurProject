@@ -106,4 +106,26 @@ void SuggestionListBox::OnSuggestionSelected(wxCommandEvent& event)
 	searchInput->SetValue(suggest->GetStringSelection());
 	suggest->Hide();
 }
-
+void SuggestionListBox::UpdateSuggestListBox(std::vector<TST>& dic, int& dicTypeInt, int& searchType)
+{
+	switch (dicTypeInt)
+	{
+	case 0:
+		this->tst = dic[0];
+		break;
+	case 1:
+		this->tst = dic[1];
+		break;
+	case 2:
+		this->tst = dic[2];
+		break;
+	case 3:
+		this->tst = dic[3];
+		break;
+	case 4:
+		this->tst = dic[4];
+		break;
+	default:
+		break;
+	}
+}

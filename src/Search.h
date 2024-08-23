@@ -13,7 +13,7 @@ class SuggestionListBox : public wxPanel
 public:
 	
 	SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, int& dicTypeInt, int& searchType, wxSize size);
-
+	void UpdateSuggestListBox(std::vector<TST>& dic, int& dicTypeInt, int& searchType);
 	void UpdateSuggestions(const wxString& prefix);
 	void OnSuggestionSelected(wxCommandEvent& event);
 	std::string getSearchInput();
