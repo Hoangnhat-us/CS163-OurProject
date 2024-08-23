@@ -281,36 +281,6 @@ void searchPage::UpdateRightPanel()
 		wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
 		rightPanel->SetSizer(rightSizer);
 
-<<<<<<< HEAD
-		// Update the word label and text box
-		setRightControls(rightPanel, dicTypeInt, searchTypeInt, selectedWord);
-
-		wxBoxSizer* Sizer3 = new wxBoxSizer(wxVERTICAL);
-
-		wxBoxSizer* wordSizer = new wxBoxSizer(wxHORIZONTAL);
-		wordSizer->Add(word, 0, wxLEFT, 20);
-		Sizer3->Add(wordSizer, 1, wxALL, 20);
-
-		wxBoxSizer* lineSizer = new wxBoxSizer(wxHORIZONTAL);
-		lineSizer->Add(line[0], 0, wxLEFT, 20);
-		Sizer3->Add(lineSizer, 1, wxALL, 20);
-
-		std::vector<wxBoxSizer*> linesSizer;
-		std::vector<wxBoxSizer*> wordsSizer;
-
-		for (int i = 0; i < def.size(); i++)
-		{
-			wxBoxSizer* wordsSizer = new wxBoxSizer(wxHORIZONTAL);
-			wordsSizer->Add(def[i], 0, wxLEFT, 20);
-			Sizer3->Add(wordsSizer, 0, wxALL, 20);
-
-			linesSizer.push_back(new wxBoxSizer(wxHORIZONTAL));
-			linesSizer[i]->Add(line[i + 1], 0, wxLEFT, 20);
-			Sizer3->Add(linesSizer[i], 0, wxALL, 20);
-		}
-
-		rightPanel->SetSizer(Sizer3);
-=======
 		// Set fonts
 		wxFont Wordfont(35, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 		wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
@@ -356,7 +326,6 @@ void searchPage::UpdateRightPanel()
 		// Layout and refresh
 		rightPanel->Layout();
 		rightPanel->Refresh();
->>>>>>> c428a50719c84aff035179e4c733d301f85975b9
 	}
 }
 

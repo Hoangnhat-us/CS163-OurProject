@@ -6,10 +6,10 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	book = new wxSimplebook(this, wxID_ANY);
 	dic = std::vector<TST>(4);
 
+	LoadDic();
+
 	SuffixArray SA(CSV, EE);
 	std::string searchWord = WOTD(SA);
-
-	LoadDic();
 
 	home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
 	search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
