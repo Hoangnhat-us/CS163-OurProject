@@ -91,11 +91,11 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 
 	wxBoxSizer* wordSizer = new wxBoxSizer(wxHORIZONTAL);
 	wordSizer->Add(word, 0, wxLEFT, 20);
-	Sizer3->Add(wordSizer, 1, wxALL, 20);
+	Sizer3->Add(wordSizer, 0, wxALL, 20);
 
 	wxBoxSizer* lineSizer = new wxBoxSizer(wxHORIZONTAL);
 	lineSizer->Add(line[0], 0, wxLEFT, 20);
-	Sizer3->Add(lineSizer, 1, wxALL, 20);
+	Sizer3->Add(lineSizer, 0, wxALL, 20);
 
 	std::vector<wxBoxSizer*> linesSizer;
 	std::vector<wxBoxSizer*> wordsSizer;
@@ -113,11 +113,11 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 
 	rightPanel->SetSizer(Sizer3);
 
-	Sizer1->Add(rightPanel, 1, wxEXPAND);
+	Sizer1->Add(rightPanel);
 
 	mainPanel->SetSizer(Sizer1);
 
-	mainSizer->Add(mainPanel, 1, wxEXPAND);
+	mainSizer->Add(mainPanel, 1);
 
 	this->SetSizer(mainSizer);
 }
@@ -147,7 +147,7 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 	searchInput->SetFont(font);
 	searchInput->SetHint("Enter search text...");  // Placeholder text
 
-    
+
 
 	wxBitmap bmOrigin(wxT("../../../../picture/Origin-Copy.png"), wxBITMAP_TYPE_PNG);
 	origin = new wxBitmapButton(panel, wxID_ANY, bmOrigin, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);

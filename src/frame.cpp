@@ -1,21 +1,20 @@
-﻿#include "frame.h"
+﻿#include "favoritePage.h"
+#include "frame.h"
 #include "mainPage.h"
-#include "searchPage.h"
-#include "favoritePage.h"
-#include <wx/simplebook.h>
-#include "SuffixArray.h"
 #include "Random.h"
+#include "searchPage.h"
+#include "SuffixArray.h"
 
 frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 {
 	// Tạo wxSimplebook
-	wxSimplebook* book = new wxSimplebook(this, wxID_ANY);
+	book = new wxSimplebook(this, wxID_ANY);
 	dic = std::vector<TST>(4);
 	SuffixArray SA(CSV, EE);
-	
-	
+
+
 	for (int i = 0; i <= 27; i++) {
-		std::string c = std::to_string(i+1);
+		std::string c = std::to_string(i + 1);
 		std::string s = "Data_Storage/Eng2Eng/Origin/";
 		s += c;
 		s += ".txt";
@@ -39,15 +38,15 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	// Thêm các trang vào wxSimplebook
 	book->AddPage(home, "Home");
 	book->AddPage(search, "Search");
-	book->AddPage(favorite, "Favorite");
 
-	book->SetSelection(2);
+	book->SetSelection(0);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(book, 1, wxEXPAND);
 	this->SetSizerAndFit(sizer);
 
-
+	home->Random->Bind(wxEVT_BUTTON, &frame::switchToSearch, this);
+	home->searchButton->Bind(wxEVT_BUTTON, &frame::switchToSearch, this);
 
 
 
@@ -65,4 +64,9 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	//SetMinSize(screenSize);
 
 
+}
+
+void frame::switchToSearch(wxCommandEvent& event)
+{
+	book->SetSelection(1);
 }
