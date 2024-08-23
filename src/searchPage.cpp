@@ -110,7 +110,7 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 	}
 
 	rightPanel->SetSizer(Sizer3);
-	Sizer1->Add(rightPanel, 1, wxEXPAND);
+	Sizer1->Add(rightPanel, 0, wxEXPAND);
 
 	mainPanel->SetSizer(Sizer1);
 
