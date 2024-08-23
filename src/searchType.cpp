@@ -11,3 +11,7 @@ searchType::searchType(wxWindow* panel, int& searchTypeInt) : wxComboBox(panel, 
 	wxFont font(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 	this->SetFont(font);
 }
+int searchType::getSearchType()
+{
+	return this->GetSelection();
+}

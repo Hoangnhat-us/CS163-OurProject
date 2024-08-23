@@ -6,5 +6,6 @@ class dicType : public wxComboBox
 {
 public:
 	dicType(wxWindow* panel, int& dicTypeInt);
+	int getDicType();
 };
 

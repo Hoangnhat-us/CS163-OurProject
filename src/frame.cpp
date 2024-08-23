@@ -3,12 +3,9 @@
 #include "mainPage.h"
 #include "Random.h"
 #include "searchPage.h"
-<<<<<<< Updated upstream
 #include "SuffixArray.h"
 
-=======
 #include <wx/simplebook.h>
->>>>>>> Stashed changes
 frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 {
 	// Tạo wxSimplebook
@@ -34,15 +31,11 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 
 	int dicTypeInt = 0;
 	int searchTypeInt = 0;
-	std::string searchWord = WOTD(SA);
+	std::string searchWord = /*WOTD(SA)*/" ";
 	mainPage* home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
-<<<<<<< Updated upstream
 	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord, dic);
 	favoritePage* favorite = new favoritePage(book, dicTypeInt);
 
-=======
-	searchPage* search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord);
->>>>>>> Stashed changes
 	// Thêm các trang vào wxSimplebook
 	book->AddPage(home, "Home");
 	book->AddPage(search, "Search");
@@ -59,6 +52,8 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	home->searchButton->Bind(wxEVT_BUTTON, &frame::switchToSearch, this);
 
 
+	Bind(wxEVT_CLOSE_WINDOW, &frame::OnExit, this);
+
 	search->home->Bind(wxEVT_BUTTON, &frame::switchToHome, this);
 
 
@@ -74,8 +69,28 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	//this->SetSizer(sizer);
 	//SetMaxSize(screenSize);
 	//SetMinSize(screenSize);
+	/*dic[0].~TST();
+	dic[1].~TST();*/
+}
 
+void frame::OnButtonClicked(wxCommandEvent& event)
+{
+	Close(true);
+}
 
+void frame::OnExit(wxCloseEvent& event)
+{
+	if (wxMessageBox("Are you sure to quit?", "Confirm", wxICON_QUESTION | wxYES_NO) == wxYES)
+	{
+		for (int i = 0; i < dic.size(); i++) {
+			dic[i].deleteTree();
+		}
+		Destroy();
+	}
+	else
+	{
+		event.Veto();
+	}
 }
 
 void frame::switchToSearch(wxCommandEvent& event)

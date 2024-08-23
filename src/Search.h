@@ -5,6 +5,7 @@
 #include <vector>
 #include <wx/listbox.h>
 #include <wx/wx.h>
+#include <wx/textctrl.h>
 
 class SuggestionListBox : public wxPanel
 {
@@ -13,6 +14,8 @@ public:
 	SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, int& dicTypeInt, int& searchType, wxSize size);
 
 	void UpdateSuggestions(const wxString& prefix);
+	void OnSuggestionSelected(wxCommandEvent& event);
+	std::string getSearchInput();
 
 	wxTextCtrl* searchInput;
 	wxListBox* suggest;

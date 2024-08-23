@@ -1,5 +1,6 @@
 #include"TernarySearchTree.h"
 #include <iostream>
+#include <stack>
 
 TSTNode* TST::_insert(TSTNode* node, const std::u32string& word, const std::string& meaning, int index) {
     char32_t char_key = word[index];
@@ -366,4 +367,19 @@ std::u32string to_utf32(const std::string& utf8_str) {
 std::string to_utf8(const std::u32string& utf32_str) {
 	std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
 	return converter.to_bytes(utf32_str);
+}
+void TST::_deleteTree(TSTNode* node) {
+	if (node == nullptr) {
+		return;
+	}
+	_deleteTree(node->left);
+	_deleteTree(node->middle);
+	_deleteTree(node->right);
+	delete node;
+   
+}
+
+void TST::deleteTree() {
+	_deleteTree(root);
+	root = nullptr;
 }
