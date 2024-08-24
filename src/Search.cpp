@@ -98,7 +98,9 @@ bool SuggestionListBox::isHaveunicode(const std::string& str)
 
 std::string SuggestionListBox::getSearchInput()
 {
-	return searchInput->GetValue().ToStdString();
+	wxString wstr = searchInput->GetValue();
+	std::string str = std::string(wstr.mb_str(wxConvUTF8));
+	return str;
 }
 
 void SuggestionListBox::OnSuggestionSelected(wxCommandEvent& event)

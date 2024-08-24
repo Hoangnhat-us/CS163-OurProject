@@ -104,4 +104,5 @@ void frame::LoadDic() {
 		s += ".txt";
 		dic[2].loadfile(s);
 	}
+	std::string s = "Data_Storage/Viet2Viet/Origin/1.txt";
 }

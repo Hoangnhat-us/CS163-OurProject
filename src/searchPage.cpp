@@ -284,7 +284,7 @@ void searchPage::UpdateRightPanel()
 		wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 
 		// Update the word label and text box
-		word = new wxStaticText(rightPanel, wxID_ANY, selectedWord, wxDefaultPosition, wxDefaultSize);
+		word = new wxStaticText(rightPanel, wxID_ANY, wxString::FromUTF8(selectedWord), wxDefaultPosition, wxDefaultSize);
 		word->SetFont(Wordfont);
 		rightSizer->Add(word, 0, wxLEFT | wxTOP, 20);
 
@@ -308,12 +308,12 @@ void searchPage::UpdateRightPanel()
 		for (int i = 0; i < def.size(); i++)
 		{
 
-			def[i] = new wxStaticText(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxDefaultSize);
+			def[i] = new wxStaticText(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(wxDefaultSize.GetWidth()*1.5,wxDefaultSize.GetHeight()));
 			def[i]->SetFont(font);
 			rightSizer->Add(def[i], 0, wxALL, 10);
 
 
-			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxDefaultSize);
+			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(wxDefaultSize.GetWidth() * 1.5, wxDefaultSize.GetHeight()));
 			editDef[i]->SetFont(font);
 			editDef[i]->Hide();
 			rightSizer->Add(editDef[i], 0, wxALL, 10);
