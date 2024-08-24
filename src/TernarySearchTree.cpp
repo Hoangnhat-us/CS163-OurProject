@@ -365,14 +365,15 @@ void TST::editMeaning(const std::string& word, const std::vector<std::string>& m
 }
 
 std::u32string to_utf32(const std::string& utf8_str) {
-    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
-    return converter.from_bytes(utf8_str);
+    std::u32string str = utf8::utf8to32(utf8_str);
+    return str;
 }
 
 std::string to_utf8(const std::u32string& utf32_str) {
-	std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
-	return converter.to_bytes(utf32_str);
+    std::string str = utf8::utf32to8(utf32_str);
+    return str;
 }
+
 void TST::_deleteTree(TSTNode* node) {
 	if (node == nullptr) {
 		return;

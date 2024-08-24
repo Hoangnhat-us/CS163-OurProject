@@ -298,24 +298,25 @@ void searchPage::UpdateRightPanel()
 		if (defs.empty()) {
 			defs = dic[dicTypeInt].suggestCorrections(selectedWord, 2);
 		}
-
-		def.resize(defs.size());
+		//def.resize(defs.size());
 		editDef.resize(defs.size());
-		line.resize(def.size() + 1);
+		line.resize(defs.size() + 1);
 		wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
 
+		int maxWidth = rightPanel->GetSize().GetWidth()*0.95;
 
-		for (int i = 0; i < def.size(); i++)
+		for (int i = 0; i < defs.size(); i++)
 		{
 
-			def[i] = new wxStaticText(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(wxDefaultSize.GetWidth()*1.5,wxDefaultSize.GetHeight()));
+			/*def[i] = new wxStaticText(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(maxWidth,wxDefaultSize.GetHeight()),wxTE_MULTILINE);
 			def[i]->SetFont(font);
-			rightSizer->Add(def[i], 0, wxALL, 10);
+			def[i]->Hide();
+			rightSizer->Add(def[i], 0, wxALL, 10);*/
 
 
-			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(wxDefaultSize.GetWidth() * 1.5, wxDefaultSize.GetHeight()));
+			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(maxWidth, wxDefaultSize.GetHeight()),wxTE_MULTILINE|wxTE_READONLY|wxBORDER_NONE);
 			editDef[i]->SetFont(font);
-			editDef[i]->Hide();
+			//editDef[i]->Hide();
 			rightSizer->Add(editDef[i], 0, wxALL, 10);
 
 			line[i] = new wxStaticBitmap(rightPanel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);

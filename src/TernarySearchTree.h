@@ -1,16 +1,16 @@
 #pragma once
 
-#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include<algorithm>
-#include <codecvt>
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
 #include <iostream>
-#include <locale>
 #include <string>
 #include <vector>
 #include <Windows.h>
+
+#include "utf8.h"
+#include"utf8/cpp20.h"
 
 
 
