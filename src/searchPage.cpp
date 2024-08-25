@@ -60,9 +60,12 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 	// Create bottom panel (mainPanel)
 	mainPanel = new wxPanel(splitter, wxID_ANY);
 
+	wxSplitterWindow* splitterMain = new wxSplitterWindow(mainPanel, wxID_ANY);
+	splitterMain->SetSashGravity(0.2);
+
 	wxBoxSizer* Sizer1 = new wxBoxSizer(wxHORIZONTAL);
 
-	wxPanel* leftPanel = new wxPanel(mainPanel, wxID_ANY);
+	wxPanel* leftPanel = new wxPanel(splitterMain, wxID_ANY);
 	leftPanel->SetBackgroundColour("#F8D65B");
 	setControls(leftPanel, dicTypeInt, searchTypeInt, Word);
 
@@ -83,11 +86,12 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 
 	leftPanel->SetSizer(Sizer2);
 
-	Sizer1->Add(leftPanel, 0, wxEXPAND);
+	//Sizer1->Add(leftPanel, 0, wxEXPAND);
 
-	wxPanel* rightPanel = new wxPanel(mainPanel, wxID_ANY);
+	wxScrolledWindow* rightPanel = new wxScrolledWindow(splitterMain, wxID_ANY,wxDefaultPosition,wxDefaultSize,wxVSCROLL|wxHSCROLL);
+	rightPanel->SetScrollRate(5,5);
 	setRightControls(rightPanel, dicTypeInt, searchTypeInt, Word);
-
+	
 	wxBoxSizer* Sizer3 = new wxBoxSizer(wxVERTICAL);
 
 	wxBoxSizer* wordSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -113,7 +117,11 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 	}
 
 	rightPanel->SetSizer(Sizer3);
-	Sizer1->Add(rightPanel);
+	//Sizer1->Add(rightPanel,1,wxEXPAND|wxALL,20);
+
+	splitterMain->SplitVertically(leftPanel, rightPanel);
+	splitterMain->SetSashPosition(225);  // Adjust the initial sash position
+	Sizer1->Add(splitterMain, 1, wxEXPAND);
 
 	mainPanel->SetSizer(Sizer1);
 
@@ -127,6 +135,7 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 
 
 	this->SetSizer(mainSizer);
+	UpdateRightPanel();
 }
 
 void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string sWord)
@@ -193,6 +202,7 @@ void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt
 	wxBitmap bmFix(wxT("../../../../picture/publishing.png"), wxBITMAP_TYPE_PNG);
 	fix = new wxBitmapButton(panel, wxID_ANY, bmFix, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	fix->SetBackgroundColour("#F8D65B");
+	fix->Bind(wxEVT_BUTTON, &searchPage::OnFixButtonClicked, this, fix->GetId());
 }
 
 void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word)
@@ -212,19 +222,22 @@ void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTy
 
 
 
-	def.resize(defs.size());
+	//def.resize(defs.size());
 	editDef.resize(defs.size());
 
-	for (int i = 0; i < def.size(); i++)
+	int maxWidth = panel->GetSize().GetWidth() * 0.99;
+
+	for (int i = 0; i < defs.size(); i++)
 	{
-		def[i] = new wxStaticText(panel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
-		editDef[i] = new wxTextCtrl(this, wxID_ANY, word->GetLabel(), wxDefaultPosition, wxSize(300, 30));
-		editDef[i]->Hide();
-		def[i]->SetFont(font);
+		//def[i] = new wxStaticText(panel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
+		editDef[i] = new wxTextCtrl(panel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(maxWidth, wxDefaultSize.GetHeight()), wxTE_MULTILINE | wxTE_READONLY | wxNO_BORDER | wxTE_NO_VSCROLL);
+		editDef[i]->SetFont(font);
+		//editDef[i]->Hide();
+		//def[i]->SetFont(font);
 		editDef[i]->SetFont(font);
 	}
 
-	line.resize(def.size() + 1);
+	line.resize(defs.size() + 1);
 	wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
 	for (int i = 0; i < def.size() + 1; i++)
 	{
@@ -264,12 +277,20 @@ void searchPage::UpdateRightPanel()
 	int dicTypeInt = lists->getDicType();
 	int searchTypeInt = choice->getSearchType();
 	wxWindowList children = mainPanel->GetChildren();
-	wxPanel* rightPanel = nullptr;
+	wxScrolledWindow* rightPanel = nullptr;
 
-	// Assuming rightPanel is the second child in mainPanel
-	if (children.size() > 1)
+	// Assuming rightPanel is the second child in the mainSplitter
+	if (children.size() > 0)
 	{
-		rightPanel = dynamic_cast<wxPanel*>(children.Item(1)->GetData());
+		wxSplitterWindow* mainSplitter = dynamic_cast<wxSplitterWindow*>(children.Item(0)->GetData());
+		if (mainSplitter)
+		{
+			wxWindowList splitterChildren = mainSplitter->GetChildren();
+			if (splitterChildren.size() > 1)
+			{
+				rightPanel = dynamic_cast<wxScrolledWindow*>(splitterChildren.Item(1)->GetData());
+			}
+		}
 	}
 
 	// If rightPanel is successfully retrieved, update its controls
@@ -279,11 +300,9 @@ void searchPage::UpdateRightPanel()
 		wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
 		rightPanel->SetSizer(rightSizer);
 
-		// Set fonts
 		wxFont Wordfont(35, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 		wxFont font(15, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 
-		// Update the word label and text box
 		word = new wxStaticText(rightPanel, wxID_ANY, wxString::FromUTF8(selectedWord), wxDefaultPosition, wxDefaultSize);
 		word->SetFont(Wordfont);
 		rightSizer->Add(word, 0, wxLEFT | wxTOP, 20);
@@ -293,39 +312,30 @@ void searchPage::UpdateRightPanel()
 		editWord->Hide();
 		rightSizer->Add(editWord, 0, wxLEFT | wxTOP, 20);
 
-		// Retrieve definitions for the selected word
 		std::vector<std::string> defs = dic[dicTypeInt].search(selectedWord);
 		if (defs.empty()) {
 			defs = dic[dicTypeInt].suggestCorrections(selectedWord, 2);
 		}
-		//def.resize(defs.size());
+
 		editDef.resize(defs.size());
 		line.resize(defs.size() + 1);
 		wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
 
-		int maxWidth = rightPanel->GetSize().GetWidth()*0.95;
+		int maxWidth = rightPanel->GetSize().GetWidth() * 0.99;
 
 		for (int i = 0; i < defs.size(); i++)
 		{
-
-			/*def[i] = new wxStaticText(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(maxWidth,wxDefaultSize.GetHeight()),wxTE_MULTILINE);
-			def[i]->SetFont(font);
-			def[i]->Hide();
-			rightSizer->Add(def[i], 0, wxALL, 10);*/
-
-
-			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(maxWidth, wxDefaultSize.GetHeight()),wxTE_MULTILINE|wxTE_READONLY|wxBORDER_NONE);
+			editDef[i] = new wxTextCtrl(rightPanel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(maxWidth, wxDefaultSize.GetHeight()), wxTE_MULTILINE | wxTE_READONLY | wxNO_BORDER | wxTE_NO_VSCROLL);
 			editDef[i]->SetFont(font);
-			//editDef[i]->Hide();
 			rightSizer->Add(editDef[i], 0, wxALL, 10);
 
 			line[i] = new wxStaticBitmap(rightPanel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-			rightSizer->Add(line[i], 0, wxLEFT, 20);
+			rightSizer->Add(line[i], 0, wxALL, 20);
 		}
 
-		// Layout and refresh
 		rightPanel->Layout();
 		rightPanel->Refresh();
+		mainPanel->Layout();
 	}
 }
 
@@ -349,4 +359,34 @@ void searchPage::OnDicTypeChanged(wxCommandEvent& event)
 void searchPage::OnSearchTypeChanged(wxCommandEvent& event)
 {
 	searchTypeInt = choice->getSearchType();
+}
+
+void searchPage::OnDelButtonClicked(wxCommandEvent& event)
+{
+	
+}
+
+void searchPage::OnFixButtonClicked(wxCommandEvent& event)
+{
+	static bool isEditing = false;
+	std::vector<wxString> wstr;
+
+	for (auto& defCtrl : editDef)
+	{
+		defCtrl->SetEditable(!isEditing);
+		defCtrl->SetBackgroundColour(isEditing ? wxColour(255, 255, 255):wxColour(248, 214, 91));
+		wstr.push_back(defCtrl->GetValue());
+	}
+	isEditing = !isEditing;
+	
+	std::vector<std::string> str;
+	for (auto& w : wstr)
+	{
+		str.push_back(std::string(w.mb_str(wxConvUTF8)));
+	}
+	dic[dicTypeInt].editMeaning(Word, str);
+	
+
+	mainPanel->Layout();
+	mainPanel->Refresh();
 }

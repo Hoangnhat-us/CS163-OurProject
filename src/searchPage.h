@@ -45,6 +45,8 @@ public:
 	void OnSearchButtonClicked(wxCommandEvent& event);
 	void OnDicTypeChanged(wxCommandEvent&event);
 	void OnSearchTypeChanged(wxCommandEvent& event);
+	void OnDelButtonClicked(wxCommandEvent& event);
+	void OnFixButtonClicked(wxCommandEvent& event);
 
 private:
 	int dicTypeInt;
