@@ -13,24 +13,56 @@ std::ifstream fin;
 
 SuffixArray::SuffixArray(initType iType, dictType dType)
 {
-	if (iType == EMPTY)
-	{
-		return;
-	}
-
 	if (iType == BF)
 	{
-		loadFromBF("Data_Storage/Eng2Eng/Current/Eng2Eng.bin");
-		return;
+		if (dType == EE)
+		{
+			loadFromBF("Data_Storage/Eng2Eng/Current/Eng2Eng.bin");
+			return;
+		}
+		else if (dType == EV)
+		{
+			loadFromBF("Data_Storage/Eng2Vie/Current/Eng2Vie.bin");
+			return;
+		}
+		else if (dType == VE)
+		{
+			loadFromBF("Data_Storage/Vie2Eng/Current/Vie2Eng.bin");
+			return;
+		}
+		else if (dType == SLANG)
+		{
+			loadFromBF("Data_Storage/Slang/Current/Slang.bin");
+			return;
+		}
+		else if (dType == EMOJI)
+		{
+			loadFromBF("Data_Storage/Emoji/Current/Emoji.bin");
+			return;
+		}
 	}
 
 	if (iType == CSV)
 	{
-		std::string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		for (auto c : letters)
+		if (dType == EE)
 		{
-			std::string filename = std::string("Data_Storage/Eng2Eng/Current/") + c + std::string(".csv");
-			loadCSV(filename);
+			for (int i = 1; i <= 28; i++)
+			{
+				std::string filename = "Data_Storage/Eng2Eng/Origin/" + std::to_string(i) + ".txt";
+				loadCSV(filename);
+			}
+		}
+		else if (dType == VE)
+		{
+			for (int i = 1; i <= 25; i++)
+			{
+				std::string filename = "Data_Storage/Vie2Eng/Origin/" + std::to_string(i) + ".txt";
+				loadCSV(filename);
+			}
+		}
+		else if (dType == SLANG)
+		{
+			std::string filename = "Data_Storage/Slang/Origin/slangs.csv";
 		}
 	}
 	
@@ -70,17 +102,15 @@ void SuffixArray::loadCSV(std::string filename)
 	while (std::getline(fin, line))
 	{
 		if (line.empty()) continue;
-		int j = 0;
-		while (j < line.size() && !isalpha(line[j]))
-		{
-			j++;
-		}
-		line = line.substr(j);
 		std::string key;
 		std::string definition;
-		int i = 0;
-		while (i < line.size() && line[i] != ' ')
+		size_t i = 0;
+		while (i < line.size())
 		{
+			if ((line[i] == '\t' || line[i] == ' ') && line[i + 1] == '(')
+			{
+				break;
+			}
 			if (i == 0)
 			{
 				key.push_back(tolower(line[i]));

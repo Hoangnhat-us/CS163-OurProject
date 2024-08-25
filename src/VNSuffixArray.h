@@ -8,6 +8,20 @@
 std::ifstream in;
 std::ofstream out;
 
+enum initType
+{
+	CSV,
+	BF
+};
+
+enum dictType
+{
+	EE,
+	EV,
+	VE,
+	SLANG,
+	EMOJI
+};
 
 class VNSuffixArray
 {

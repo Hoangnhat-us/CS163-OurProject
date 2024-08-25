@@ -6,7 +6,6 @@
 
 enum initType
 {
-	EMPTY,
 	CSV,
 	BF
 };
