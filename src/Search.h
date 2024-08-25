@@ -2,6 +2,7 @@
 
 #include "dicType.h"
 #include "TernarySearchTree.h" 
+#include "SuffixArray.h"
 #include <vector>
 #include <wx/listbox.h>
 #include <wx/wx.h>
@@ -12,8 +13,8 @@ class SuggestionListBox : public wxPanel
 {
 public:
 	
-	SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, int& dicTypeInt, int& searchType, wxSize size);
-	void UpdateSuggestListBox(std::vector<TST>& dic, int& dicTypeInt, int& searchType);
+	SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, std::vector<SuffixArray> &SA,int& dicTypeInt, int& searchType, wxSize size);
+	void UpdateSuggestListBox(std::vector<TST>& dic, std::vector<SuffixArray>&SA,int& dicTypeInt, int& searchType);
 	void UpdateSuggestions(const wxString& prefix);
 	void OnSuggestionSelected(wxCommandEvent& event);
 	std::string getSearchInput();
@@ -23,6 +24,7 @@ public:
 
 private:
 	TST tst;
+	SuffixArray SA;
 	bool isHaveunicode(const std::string& str);
 	int dicTypeInt;
 	int searchType;

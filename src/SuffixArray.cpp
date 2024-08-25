@@ -131,7 +131,7 @@ void SuffixArray::loadCSV(std::string filename)
 	fin.close();
 }
 
-std::vector<std::pair<std::string, std::string>> SuffixArray::search(const std::string& pattern) {
+std::vector<std::string> SuffixArray::search(const std::string& pattern) {
 	int n = text.size();
 	int m = pattern.size();
 	std::vector<int> result;
@@ -156,7 +156,7 @@ std::vector<std::pair<std::string, std::string>> SuffixArray::search(const std::
 		left++;
 	}
 
-	std::vector<std::pair<std::string, std::string>> meanings;
+	std::vector<std::string> meanings;
 	// Limit the number of results to 10
 	int count = 0;
 
@@ -171,7 +171,7 @@ std::vector<std::pair<std::string, std::string>> SuffixArray::search(const std::
 			std::string key = words[wordIndex];
 			if (wordEnd != std::string::npos) {
 				std::string foundWord = text.substr(wordStart, wordEnd - wordStart);
-				meanings.push_back(make_pair(key, foundWord));
+				meanings.push_back(key+":"+foundWord);
 				count++;
 			}
 		}

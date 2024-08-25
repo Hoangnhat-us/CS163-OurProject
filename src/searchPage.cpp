@@ -2,10 +2,11 @@
 #include "searchPage.h"
 #include<wx/splitter.h>
 
-searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, std::string& sWord, std::vector<TST>& dic)
+searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, std::string& sWord, std::vector<TST>& dic,std::vector<SuffixArray> &SA)
 	: wxWindow(parent, wxID_ANY)
 {
 	this->dic = dic;
+	this->SA = SA;
 	this->SetBackgroundColour("#FFFFFF");
 	this->Word = sWord;
 
@@ -169,7 +170,7 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 
 
 
-	suggestionBox = new SuggestionListBox(panel, dic, dicTypeInt, searchTypeInt, wxSize(450, 33));
+	suggestionBox = new SuggestionListBox(panel, dic,SA, dicTypeInt, searchTypeInt, wxSize(450, 33));
 	Bind(wxEVT_TEXT, &searchPage::OnTextChange, this, suggestionBox->searchInput->GetId());
 	Bind(wxEVT_BUTTON, &searchPage::OnSuggestionBoxToggle, this, suggestionBox->searchInput->GetId());
 	Bind(wxEVT_LISTBOX, &searchPage::OnSuggestionBoxSelect, this, suggestionBox->suggest->GetId());
@@ -353,12 +354,13 @@ void searchPage::OnSearchButtonClicked(wxCommandEvent& event)
 void searchPage::OnDicTypeChanged(wxCommandEvent& event)
 {
 	dicTypeInt = lists->getDicType();
-	suggestionBox->UpdateSuggestListBox(dic, dicTypeInt, searchTypeInt);
+	suggestionBox->UpdateSuggestListBox(dic,SA, dicTypeInt, searchTypeInt);
 }
 
 void searchPage::OnSearchTypeChanged(wxCommandEvent& event)
 {
 	searchTypeInt = choice->getSearchType();
+	suggestionBox->UpdateSuggestListBox(dic, SA, dicTypeInt, searchTypeInt);
 }
 
 void searchPage::OnDelButtonClicked(wxCommandEvent& event)

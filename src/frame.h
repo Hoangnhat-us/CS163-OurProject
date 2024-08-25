@@ -29,6 +29,7 @@ public:
 private:
 	wxSimplebook* book;
 	std::vector<TST> dic;
+	std::vector<SuffixArray> SA;
 
 	void switchToSearch(wxCommandEvent& event);
 	void switchToHome(wxCommandEvent& event);

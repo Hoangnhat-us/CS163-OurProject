@@ -3,6 +3,7 @@
 #include "dicType.h"
 #include "searchType.h"
 #include "TernarySearchTree.h"
+#include "SuffixArray.h"
 #include <vector>
 #include <wx/wx.h>
 #include "Search.h"
@@ -37,7 +38,7 @@ public:
 	std::vector<wxTextCtrl*> editDef;
 	std::vector<wxStaticBitmap*> line;
 
-	searchPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& sWord, std::vector<TST>& dic);
+	searchPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& sWord, std::vector<TST>& dic,std::vector<SuffixArray>&SA);
 	void OnTextChange(wxCommandEvent& event);
 	void OnSuggestionBoxToggle(wxCommandEvent& event);
 	void OnSuggestionBoxSelect(wxCommandEvent& event);
@@ -52,6 +53,7 @@ private:
 	int dicTypeInt;
 	int searchTypeInt;
 	std::vector<TST>  dic;
+	std::vector<SuffixArray> SA;
 	std::string Word;
 	void setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
 	void setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);

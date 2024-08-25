@@ -18,8 +18,13 @@ void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
 			return;
 		}
 	}
-
-	std::vector<std::string> suggestions = tst.searchPrefix2(prefix.ToStdString());
+	std::vector<std::string> suggestions;
+	if(searchType==0)
+	 suggestions = tst.searchPrefix2(prefix.ToStdString());
+	else
+	{
+		suggestions = SA.search(prefix.ToStdString());
+	}
 
 	for (const auto& suggestion : suggestions) {
 		suggest->Append(wxString::FromUTF8(suggestion));
@@ -33,7 +38,7 @@ void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
 	}
 }
 
-SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, int& dicTypeInt, int& searchType, wxSize size) : wxPanel(parent, wxID_ANY)
+SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst,std::vector<SuffixArray>& SA, int& dicTypeInt, int& searchType, wxSize size) : wxPanel(parent, wxID_ANY)
 {
 	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
@@ -67,18 +72,23 @@ SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, in
 	{
 	case 0:
 		this->tst = tst[0];
+		this->SA = SA[0];
 		break;
 	case 1:
 		this->tst = tst[1];
+		this->SA = SA[1];
 		break;
 	case 2:
 		this->tst = tst[2];
+		this->SA = SA[2];
 		break;
 	case 3:
 		this->tst = tst[3];
+		this->SA = SA[3];
 		break;
 	case 4:
 		this->tst = tst[4];
+		this->SA = SA[4];
 		break;
 	default:
 		break;
@@ -100,6 +110,13 @@ std::string SuggestionListBox::getSearchInput()
 {
 	wxString wstr = searchInput->GetValue();
 	std::string str = std::string(wstr.mb_str(wxConvUTF8));
+	if (searchType == 1) {
+		auto it = std::find(str.begin(), str.end(), ':');
+		if (it != str.end())
+		{
+			str.erase(it, str.end());
+		}
+	}
 	return str;
 }
 
@@ -108,26 +125,33 @@ void SuggestionListBox::OnSuggestionSelected(wxCommandEvent& event)
 	searchInput->SetValue(suggest->GetStringSelection());
 	suggest->Hide();
 }
-void SuggestionListBox::UpdateSuggestListBox(std::vector<TST>& dic, int& dicTypeInt, int& searchType)
+void SuggestionListBox::UpdateSuggestListBox(std::vector<TST>& dic, std::vector<SuffixArray>&SA, int& dicTypeInt, int& searchType)
 {
+	this->dicTypeInt = dicTypeInt;
 	switch (dicTypeInt)
 	{
 	case 0:
 		this->tst = dic[0];
+		this->SA = SA[0];
 		break;
 	case 1:
 		this->tst = dic[1];
+		this->SA = SA[1];
 		break;
 	case 2:
 		this->tst = dic[2];
+		this->SA = SA[2];
 		break;
 	case 3:
 		this->tst = dic[3];
+		this->SA = SA[3];
 		break;
 	case 4:
 		this->tst = dic[4];
+		this->SA = SA[4];
 		break;
 	default:
 		break;
 	}
+	this->searchType = searchType;
 }

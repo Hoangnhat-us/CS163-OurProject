@@ -24,12 +24,13 @@ public:
 	dicType* list;
 
 
-	mainPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& searchWord, std::vector<TST>& dic);
+	mainPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& searchWord, std::vector<TST>& dic,std::vector<SuffixArray>&SA);
 	void OnButtonClicked(wxCommandEvent& event);
 
 
 private:
 	std::vector<TST>  dic;
+	std::vector<SuffixArray> SA;
 	void setControls(int& dicTypeIt, int& searchTypeIt);
 	void OnTextChange(wxCommandEvent& event);
 

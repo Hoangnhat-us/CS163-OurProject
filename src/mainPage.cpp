@@ -1,11 +1,12 @@
 ﻿#include "dicType.h"
 #include "mainPage.h"
 
-mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, std::string& searchWord, std::vector<TST>& dic) : wxWindow(parent, wxID_ANY)
+mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, std::string& searchWord, std::vector<TST>& dic,std::vector<SuffixArray>&SA) : wxWindow(parent, wxID_ANY)
 {
 	this->dic = dic;
+	this->SA = SA;
 
-	suggestionBox = new SuggestionListBox(this, dic, dicTypeIt, searchTypeIt, wxSize(633, 33));
+	suggestionBox = new SuggestionListBox(this, dic,SA, dicTypeIt, searchTypeIt, wxSize(633, 33));
 	suggestionBox->suggest->SetSize(633, 165);
 
 	this->SetBackgroundColour(wxColor("#38435A"));

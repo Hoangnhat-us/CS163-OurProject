@@ -28,10 +28,11 @@ public:
 	std::vector<std::string> words;
 	std::vector<int> LCP;
 
+	SuffixArray() {};
 	SuffixArray(initType iType, dictType dType);
 
 	void loadCSV(std::string filename);
-	std::vector<std::pair<std::string, std::string>> search(const std::string& pattern);
+	std::vector<std::string> search(const std::string& pattern);
 	void insert (const std::string& word, const std::string& definition);
 	bool remove(const std::string& word);
 	bool update(const std::string& word, const std::string& definition);
