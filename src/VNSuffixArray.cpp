@@ -7,14 +7,28 @@
 
 
 
-VNSuffixArray::VNSuffixArray()
+VNSuffixArray::VNSuffixArray(initType iType, dictType dType)
 {
 
-	std::string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	for (auto c : letters)
+	if (iType == EMPTY)
 	{
-		std::string filename = std::string("Data_Storage/Eng2Viet/Current/") + c + std::string(".csv");
-		loadCSV(filename);
+		return;
+	}
+
+	if (iType == BF)
+	{
+		loadFromBF("Data_Storage/Eng2Eng/Current/Eng2Eng.bin");
+		return;
+	}
+
+	if (iType == CSV)
+	{
+		std::string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		for (auto c : letters)
+		{
+			std::string filename = std::string("Data_Storage/Eng2Eng/Current/") + c + std::string(".csv");
+			loadCSV(filename);
+		}
 	}
 
 	text.push_back(u'$');

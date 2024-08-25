@@ -17,7 +17,7 @@ public:
 	std::vector<int> wordStartIndices;
 	std::vector<std::u32string> words;
 
-	VNSuffixArray();
+	VNSuffixArray(initType iType, dictType dType);
 
 	void loadCSV(std::string filename);
 	std::vector<std::pair<std::u32string, std::u16string>> search(const std::u16string& pattern);
