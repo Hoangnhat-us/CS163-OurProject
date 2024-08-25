@@ -1,4 +1,4 @@
-�ability 
+ability 
 abroad 
 accept 
 access 
@@ -406,7 +406,7 @@ failure
 fair 
 famed 
 fare 
-�fault 
+fault 
 faulty 
 favor 
 fax 
@@ -418,10 +418,9 @@ file
 fill 
 final 
 finance 
-financial 
-/fəˈnæn.ʃəl/	
+financial 	
 fix 
-gflexible 
+flexible 
 flight 
 flight attendant 
 fluctuate 
@@ -448,7 +447,7 @@ furniture
 further 
 gesture 
 goal 
-mgoods 
+goods 
 gradually 
 grievance 
 grill 
@@ -459,7 +458,7 @@ haggle
 handle 
 handy 
 harbor 
-nharmful 
+harmful 
 hazardous 
 head office 
 headquarters 
@@ -483,7 +482,7 @@ impersonate
 implement 
 imply 
 impression 
-dimproper 
+improper 
 improve 
 improvement 
 incentive 
@@ -527,17 +526,17 @@ invest
 investigation 
 investment 
 invite 
-linvoice 
+invoice 
 isolate 
 item 
-titemize 
+itemize 
 itinerary 
 jealous 
 jeopardize 
 jeopardy 
 jobless 
 join 
-tjoint 
+joint 
 journal 
 journey 
 judge 
@@ -609,7 +608,7 @@ misrepresent
 monitor 
 monument 
 moral 
-tbmortgage 
+mortgage 
 motivate 
 motivation 
 napkin 
@@ -991,11 +990,11 @@ withdrawal
 workplace 
 workshop 
 worth 
-worthless 
-wrap 
-write 
-yearly 
-yield 
-youth 
-zero 
-zone 
+worthless
+wrap
+write
+yearly
+yield
+youth
+zero
+zone
