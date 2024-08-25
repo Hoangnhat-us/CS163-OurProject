@@ -1,20 +1,16 @@
-#ifndef HISTORY_H
-#define HISTORY_H
+#pragma once
 
-#include <vector>
 #include <string>
-#include <fstream>
-#include <iostream>
-#include <utility>
+#include <vector>
+#include <wx/grid.h>
 
 class HistoryManager {
-    std::vector<std::pair<std::string, std::vector<std::string>>> history;
-
 public:
     void addHistory(const std::string& word, const std::vector<std::string>& definitions);
     void saveHistory(const std::string& filename) const;
     void loadHistory(const std::string& filename);
-    void viewHistory() const;
-};
+    void viewHistory(wxGrid* historyGrid) const;
 
-#endif // HISTORY_H
+private:
+    std::vector<std::pair<std::string, std::vector<std::string>>> history;
+};
