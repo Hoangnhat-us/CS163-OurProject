@@ -69,7 +69,7 @@ void frame::switchToSearch(wxCommandEvent& event)
 
 void frame::switchToHome(wxCommandEvent& event)
 {
-	book->SetSelection(1);
+	book->SetSelection(0);
 }
 
 void frame::switchToFav(wxCommandEvent& event)

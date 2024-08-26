@@ -152,7 +152,7 @@ void historyPage::refreshHistoryGrid() {
     }
 
     HistoryManager historyManager;
-    historyManager.loadHistory("D:/CS163/CS163-OurProject/src/Data_Storage/History/EngtoEng.bin");
+    historyManager.loadHistory("Data_Storage/History/EngtoEng.bin");
 
     const auto& historyData = historyManager.getHistoryData();
 

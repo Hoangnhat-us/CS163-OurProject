@@ -9,7 +9,7 @@
 #include "Search.h"
 #include<wx/splitter.h>
 #include"Random.h"
-
+#include "History.h"
 
 
 class searchPage : public wxWindow {
@@ -59,6 +59,8 @@ private:
 	void setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
 	void setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
 	void setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
+
+	HistoryManager historyManager;
 };
 
 
