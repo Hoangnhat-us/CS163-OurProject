@@ -2,8 +2,7 @@
 #include "historyPage.h"
 #include "History.h"
 
-historyPage::historyPage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, wxID_ANY)
-{
+historyPage::historyPage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, wxID_ANY) {
     this->SetBackgroundColour("#FFFFFF");
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -62,10 +61,11 @@ historyPage::historyPage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, w
     mainSizer->Add(main, 1, wxEXPAND);
 
     this->SetSizer(mainSizer);
+
+    Bind(wxEVT_SHOW, &historyPage::OnShow, this);
 }
 
-void historyPage::setTopControls(wxPanel* panel, int& dicTypeInt)
-{
+void historyPage::setTopControls(wxPanel* panel, int& dicTypeInt) {
     wxBitmap bmHome(wxT("../../../../picture/home.png"), wxBITMAP_TYPE_PNG);
     home = new wxBitmapButton(panel, wxID_ANY, bmHome, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
     home->SetBackgroundColour("#38435A");
@@ -95,19 +95,25 @@ void historyPage::setTopControls(wxPanel* panel, int& dicTypeInt)
     add->SetBackgroundColour("#38435A");
 }
 
-wxPanel* historyPage::wordsHistoryTable(wxWindow* parent)
-{
+wxPanel* historyPage::wordsHistoryTable(wxWindow* parent) {
     wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
     wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
 
-    wxGrid* historyGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    historyGrid->CreateGrid(1, 2);
+    historyGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    historyGrid->CreateGrid(0, 2);  // Start with 0 rows and 2 columns
+
     historyGrid->SetColLabelValue(0, "Word");
     historyGrid->SetColLabelValue(1, "Definition");
+
+    // Ensure there is at least one row before trying to set its size
+    if (historyGrid->GetNumberRows() == 0) {
+        historyGrid->AppendRows(1);
+    }
 
     historyGrid->SetRowSize(0, 250);
     historyGrid->SetColSize(0, 200);
     historyGrid->SetColSize(1, 800);
+
     historyGrid->SetDefaultCellAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
     historyGrid->SetGridLineColour(*wxLIGHT_GREY);
     historyGrid->SetReadOnly(0, 0);
@@ -115,24 +121,78 @@ wxPanel* historyPage::wordsHistoryTable(wxWindow* parent)
     contentSizer->Add(historyGrid, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 20);
     mainPanel->SetSizer(contentSizer);
 
-    HistoryManager historyManager;
-    historyManager.loadHistory("Data_Storage/history.bin");
-    historyManager.viewHistory(historyGrid);
+    refreshHistoryGrid();
 
     return mainPanel;
 }
 
-void historyPage::OnGamesButtonClicked(wxCommandEvent& event)
-{
-    wxMessageBox("Games page not implemented yet.", "Info", wxOK | wxICON_INFORMATION, this);
-}
 
-void historyPage::setMain(wxScrolledWindow* main)
-{
+void historyPage::setMain(wxScrolledWindow* main) {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     wxPanel* contentPanel = wordsHistoryTable(main);
     sizer->Add(contentPanel, 1, wxEXPAND | wxALL, 20);
     main->SetSizer(sizer);
     main->SetScrollbars(20, 20, 50, 50);
     main->SetScrollRate(5, 5);
+}
+
+void historyPage::OnShow(wxShowEvent& event) {
+    if (event.IsShown()) {
+        refreshHistoryGrid();
+    }
+    event.Skip();
+}
+void historyPage::refreshHistoryGrid() {
+    if (!historyGrid) return;
+
+    // Clear existing data and remove all rows
+    int currentRows = historyGrid->GetNumberRows();
+    if (currentRows > 0) {
+        historyGrid->DeleteRows(0, currentRows);
+    }
+
+    HistoryManager historyManager;
+    historyManager.loadHistory("Data_Storage/History/EngtoEng.bin");
+
+    const auto& historyData = historyManager.getHistoryData();
+
+    int numRows = static_cast<int>(historyData.size());
+    if (numRows > 0) {
+        historyGrid->AppendRows(numRows);
+    }
+
+    for (int row = 0; row < numRows; ++row) {
+        const auto& [word, definitions] = historyData[row];
+
+        // Safely convert std::string to wxString using UTF-8
+        wxString wxWord = wxString::FromUTF8(word.c_str());
+
+        // Concatenate definitions into a single string
+        wxString combinedDefinitions;
+        for (const auto& def : definitions) {
+            if (!def.empty()) {
+                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "; ";
+            }
+        }
+
+        if (!combinedDefinitions.IsEmpty()) {
+            combinedDefinitions.RemoveLast(2);  // Remove trailing "; "
+        }
+
+        // Safeguard row index operations
+        if (row < historyGrid->GetNumberRows()) {
+            historyGrid->SetCellValue(row, 0, wxWord);
+            historyGrid->SetCellValue(row, 1, combinedDefinitions);
+        }
+        else {
+            wxLogError("Attempted to access an invalid row index: %d", row);
+        }
+    }
+
+    historyGrid->ForceRefresh();  // Force the grid to refresh and display the new data
+}
+
+
+void historyPage::OnGamesButtonClicked(wxCommandEvent& event) {
+    wxMessageBox("Games page not implemented yet.", "Info", wxOK | wxICON_INFORMATION, this);
 }

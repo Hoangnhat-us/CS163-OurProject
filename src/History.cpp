@@ -1,6 +1,7 @@
 #include "History.h"
 #include <fstream>
 #include <iostream>
+#include <wx/wx.h>
 
 void HistoryManager::addHistory(const std::string& word, const std::vector<std::string>& definitions) {
     history.emplace_back(word, definitions);
@@ -9,7 +10,7 @@ void HistoryManager::addHistory(const std::string& word, const std::vector<std::
 void HistoryManager::saveHistory(const std::string& filename) const {
     std::ofstream outFile(filename, std::ios::binary);
     if (outFile.is_open()) {
-        size_t size = history.size();
+        size_t size = history.size();  // Correct size calculation
         outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
 
         for (const auto& pair : history) {
@@ -26,8 +27,8 @@ void HistoryManager::saveHistory(const std::string& filename) const {
                 outFile.write(definition.c_str(), definitionLength);
             }
         }
-
         outFile.close();
+        
     }
     else {
         std::cerr << "Failed to open " << filename << std::endl;
@@ -35,6 +36,7 @@ void HistoryManager::saveHistory(const std::string& filename) const {
 }
 
 void HistoryManager::loadHistory(const std::string& filename) {
+    history.clear();
     std::ifstream inFile(filename, std::ios::binary);
     if (inFile.is_open()) {
         size_t size;
@@ -66,6 +68,7 @@ void HistoryManager::loadHistory(const std::string& filename) {
     }
 }
 
+
 void HistoryManager::viewHistory(wxGrid* historyGrid) const {
     historyGrid->ClearGrid();  // Clear existing grid data
 
@@ -76,21 +79,20 @@ void HistoryManager::viewHistory(wxGrid* historyGrid) const {
         historyGrid->AppendRows(numRows);
     }
 
-    // Populate the grid with history data
     for (int row = 0; row < numRows; ++row) {
         const auto& pair = history[row];
-        historyGrid->SetCellValue(row, 0, pair.first);  // Set the word
-
-        // Concatenate definitions into a single string
+        historyGrid->SetCellValue(row, 0, pair.first);
         std::string definitions;
         for (const auto& definition : pair.second) {
             definitions += definition + "; ";
         }
         if (!definitions.empty()) {
-            definitions.pop_back();  // Remove the trailing space
+            definitions.pop_back();
         }
-        historyGrid->SetCellValue(row, 1, definitions);  // Set the definitions
+        historyGrid->SetCellValue(row, 1, definitions);
     }
 }
 
-
+const std::vector<std::pair<std::string, std::vector<std::string>>>& HistoryManager::getHistoryData() const {
+    return history;
+}

@@ -1,6 +1,7 @@
 ﻿#include "dicType.h"
 #include "searchPage.h"
 #include<wx/splitter.h>
+#include "History.h"
 
 searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, std::string& sWord, std::vector<TST>& dic,std::vector<SuffixArray> &SA)
 	: wxWindow(parent, wxID_ANY)
@@ -349,6 +350,25 @@ void searchPage::OnSearchButtonClicked(wxCommandEvent& event)
 	int searchTypeInt = choice->getSearchType();
 
 	UpdateRightPanel();
+
+
+	std::string historyFile = "Data_Storage/History/EngToEng.bin";
+
+	historyManager.loadHistory(historyFile); // Load existing history
+
+	std::string searchedWord = Word;
+	std::vector<std::string> defs = dic[dicTypeInt].search(searchedWord);
+	if (defs.empty()) {
+		defs = dic[dicTypeInt].suggestCorrections(searchedWord, 2);
+	}
+
+	if (!defs.empty()) {
+		historyManager.addHistory(searchedWord, defs);
+		historyManager.saveHistory(historyFile);
+	}
+	else {
+		std::cerr << "No definitions found to save to history." << std::endl;
+	}
 }
 
 void searchPage::OnDicTypeChanged(wxCommandEvent& event)

@@ -16,10 +16,14 @@ public:
     wxButton* games;
 
 private:
+    wxGrid* historyGrid;
+
     void setTopControls(wxPanel* panel, int& dicTypeInt);
     wxPanel* wordsHistoryTable(wxWindow* parent);
     void OnGamesButtonClicked(wxCommandEvent& event);
     void setMain(wxScrolledWindow* main);
+    void refreshHistoryGrid();
+    void OnShow(wxShowEvent& event);
 
     HistoryManager historyManager;  // HistoryManager instance
 };

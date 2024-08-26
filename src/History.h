@@ -10,6 +10,7 @@ public:
     void saveHistory(const std::string& filename) const;
     void loadHistory(const std::string& filename);
     void viewHistory(wxGrid* historyGrid) const;
+    const std::vector<std::pair<std::string, std::vector<std::string>>>& getHistoryData() const;
 
 private:
     std::vector<std::pair<std::string, std::vector<std::string>>> history;
