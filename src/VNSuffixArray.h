@@ -5,6 +5,9 @@
 #include <uni_algo/all.h>
 #include <vector>
 
+#include "utf8.h"
+#include "utf8/cpp20.h"
+
 std::ifstream in;
 std::ofstream out;
 
@@ -26,18 +29,19 @@ enum dictType
 class VNSuffixArray
 {
 public:
-	std::u16string text;
+	std::u32string text;
 	std::vector<int> SA_;
 	std::vector<int> wordStartIndices;
-	std::vector<std::u32string> words;
+	std::vector<std::string> words;
 
+	VNSuffixArray() {};
 	VNSuffixArray(initType iType, dictType dType);
 
 	void loadCSV(std::string filename);
-	std::vector<std::pair<std::u32string, std::u16string>> search(const std::u16string& pattern);
-	void insert(const std::u32string& word, const std::u16string& definition);
-	bool remove(const std::u32string& word);
-	bool update(const std::u32string& word, const std::u16string& definition);
+	std::vector<std::string> search(const std::string& pattern);
+	void insert(const std::string& word, const std::string& definition);
+	bool remove(const std::string& word);
+	bool update(const std::string& word, const std::string& definition);
 	void saveToBF(const std::string& filename) const;
 	void loadFromBF(const std::string& filename);
 	void end(bool isModified);
