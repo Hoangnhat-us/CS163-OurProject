@@ -11,8 +11,8 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	//SuffixArray SA(CSV, EE);
 	std::string searchWord = WOTD(SA[0]);
 
-	home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic,SA);
-	search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord, dic,SA);
+	home = new mainPage(book, dicTypeInt, searchTypeInt, searchWord, dic, SA);
+	search = new searchPage(book, dicTypeInt, searchTypeInt, searchWord, dic, SA);
 	favorite = new favoritePage(book, dicTypeInt);
 	his = new historyPage(book, dicTypeInt);
 
@@ -107,6 +107,6 @@ void frame::LoadDic() {
 	dic[3].loadfile("Data_Storage/Emoji/Origin/emoji_df.txt");
 	dic[4].loadfile("Data_Storag/Slang/Origin/slangs.txt");
 	SA[0] = SuffixArray(CSV, EE);
-	//SA[1] = SuffixArray(CSV, EV);
+	SA[1] = SuffixArray(CSV, EV);
 
 }

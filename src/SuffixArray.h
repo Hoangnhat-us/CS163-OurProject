@@ -1,8 +1,12 @@
 #pragma once
 
-
+#include <fstream>
 #include <string>
+#include <uni_algo/all.h>
 #include <vector>
+
+#include "utf8/utf8.h"
+#include "utf8/utf8/cpp20.h"
 
 enum initType
 {
@@ -22,18 +26,17 @@ enum dictType
 class SuffixArray
 {
 public:
-	std::string text;
+	std::u32string text;
 	std::vector<int> SA_;
 	std::vector<int> wordStartIndices;
 	std::vector<std::string> words;
-	std::vector<int> LCP;
 
 	SuffixArray() {};
 	SuffixArray(initType iType, dictType dType);
 
 	void loadCSV(std::string filename);
 	std::vector<std::string> search(const std::string& pattern);
-	void insert (const std::string& word, const std::string& definition);
+	void insert(const std::string& word, const std::string& definition);
 	bool remove(const std::string& word);
 	bool update(const std::string& word, const std::string& definition);
 	void saveToBF(const std::string& filename) const;
@@ -52,6 +55,7 @@ private:
 	bool leq(int a1, int a2, int b1, int b2);
 	bool leq(int a1, int a2, int a3, int b1, int b2, int b3);
 	bool suffix12IsSmaller(const std::vector<int>& s, const std::vector<int>& s12, const std::vector<int>& SA12, int n0, int i, int j, int t);
-	void makeLCPArray(const std::vector<int>& s, std::vector<int>& SA, std::vector<int>& LCP);
 	int findWordStartIndices(int suffixStart);
 };
+
+void fix_utf8_string(std::string& str);

@@ -9,8 +9,8 @@
 #include <vector>
 #include <Windows.h>
 
-#include "utf8.h"
-#include "utf8/cpp20.h"
+#include "utf8/utf8.h"
+#include "utf8/utf8/cpp20.h"
 
 
 
