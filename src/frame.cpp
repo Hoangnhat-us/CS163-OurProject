@@ -112,6 +112,4 @@ void frame::LoadDic() {
 	SA[2] = SuffixArray(CSV, VE);
 	SA[3] = SuffixArray(CSV, SLANG);
 	SA[4] = SuffixArray(CSV, EMOJI);
-	
-
 }

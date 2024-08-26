@@ -8,6 +8,7 @@
 #include <wx/wx.h>
 #include "Search.h"
 #include<wx/splitter.h>
+#include"Random.h"
 
 
 

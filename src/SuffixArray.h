@@ -11,7 +11,7 @@
 enum initType
 {
 	CSV,
-	BF
+	BF,
 };
 
 enum dictType
@@ -33,7 +33,7 @@ public:
 
 	SuffixArray() {};
 	SuffixArray(initType iType, dictType dType);
-
+	
 	void loadCSV(std::string filename);
 	std::vector<std::string> search(const std::string& pattern);
 	void insert(const std::string& word, const std::string& definition);
@@ -42,7 +42,7 @@ public:
 	void saveToBF(const std::string& filename) const;
 	void loadFromBF(const std::string& filename);
 	void end(bool isModified);
-
+	void rebuildSuffixArray();
 private:
 	void makeSuffixArray(const std::vector<int>& s, std::vector<int>& SA, int n, int K);
 	int assignNames(const std::vector<int>& s, std::vector<int>& s12, std::vector<int>& SA12, int n0, int n12, int K);

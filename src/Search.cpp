@@ -114,12 +114,10 @@ std::string SuggestionListBox::getSearchInput()
 	std::string str = std::string(wstr.mb_str(wxConvUTF8));
 	if (searchType == 1) {
 		auto it = std::find(str.begin(), str.end(), ':');
-		if (it != str.end())
-		{
-			str.erase(it, str.end());
+		if (it != str.end()) {
+			str = std::string(str.begin(), it);
 		}
 	}
-	searchInput->Clear();
 	return str;
 }
 

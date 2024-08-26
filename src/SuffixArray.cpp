@@ -38,8 +38,7 @@ SuffixArray::SuffixArray(initType iType, dictType dType)
 			return;
 		}
 	}
-
-	if (iType == CSV)
+	else if (iType == CSV)
 	{
 		if (dType == EE)
 		{
@@ -76,8 +75,29 @@ SuffixArray::SuffixArray(initType iType, dictType dType)
 			loadCSV(filename);
 		}
 	}
-
 	text.push_back(U'$');
+	int n = text.length();
+
+	std::vector<int> s(n + 3);
+	std::vector<int> SA(n + 3);
+
+	for (int i = 0; i < n; ++i)
+	{
+		s[i] = static_cast<unsigned int>(text[i]);
+	}
+
+	SA_.resize(n + 3);
+
+	makeSuffixArray(s, SA, n, 65536);
+
+	for (int i = 0; i < SA_.size(); i++)
+	{
+		SA_[i] = SA[i];
+	}
+}
+
+void SuffixArray::rebuildSuffixArray()
+{
 	int n = text.length();
 
 	std::vector<int> s(n + 3);
@@ -219,17 +239,23 @@ bool SuffixArray::remove(const std::string& word)
 	{
 		return false;
 	}
-	int n = word.size();
 	int start = wordStartIndices[index];
 	int end = text.find(U'|', start);
-	text.erase(start, end - start + 1);
 	words.erase(words.begin() + index);
 	wordStartIndices.erase(wordStartIndices.begin() + index);
+	while (words[index] == key) {
+		end = text.find(U'|', end + 1);
+		words.erase(words.begin() + index);
+		wordStartIndices.erase(wordStartIndices.begin() + index);
+	}
+	
+	text.erase(start, end - start + 1);
+	int n = end - start + 1;
 	for (int i = 0; i < wordStartIndices.size(); i++)
 	{
 		if (wordStartIndices[i] > start)
 		{
-			wordStartIndices[i] -= n + 1;
+			wordStartIndices[i] -= n;
 		}
 	}
 
@@ -252,9 +278,15 @@ bool SuffixArray::update(const std::string& word, const std::string& definition)
 	{
 		return false;
 	}
-
-	remove(key);
-	insert(key, definition);
+	int start = wordStartIndices[index];
+	int end= text.find(U'|', start);
+	while (words[index] == key) {
+		end= text.find(U'|', end+1);
+		index++;
+	}
+	//text.erase(start, end - start + 1);
+	std::u32string definition_ = utf8::utf8to32(definition) + U'|';
+	text.replace(start, end - start + 1,definition_);
 
 	return true;
 }

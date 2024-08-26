@@ -198,6 +198,7 @@ void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt
 	wxBitmap bmDel(wxT("../../../../picture/bin.png"), wxBITMAP_TYPE_PNG);
 	del = new wxBitmapButton(panel, wxID_ANY, bmDel, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	del->SetBackgroundColour("#F8D65B");
+	del->Bind(wxEVT_BUTTON, &searchPage::OnDelButtonClicked, this, del->GetId());
 
 	wxBitmap bmFix(wxT("../../../../picture/publishing.png"), wxBITMAP_TYPE_PNG);
 	fix = new wxBitmapButton(panel, wxID_ANY, bmFix, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
@@ -364,7 +365,11 @@ void searchPage::OnSearchTypeChanged(wxCommandEvent& event)
 
 void searchPage::OnDelButtonClicked(wxCommandEvent& event)
 {
-	
+	dic[dicTypeInt].remove(Word);
+	SA[dicTypeInt].remove(Word);
+	SA[dicTypeInt].rebuildSuffixArray();
+	Word = WOTD(SA[dicTypeInt]);
+	UpdateRightPanel();
 }
 
 void searchPage::OnFixButtonClicked(wxCommandEvent& event)
@@ -378,14 +383,23 @@ void searchPage::OnFixButtonClicked(wxCommandEvent& event)
 		defCtrl->SetBackgroundColour(isEditing ? wxColour(255, 255, 255):wxColour(248, 214, 91));
 		wstr.push_back(defCtrl->GetValue());
 	}
+	if (isEditing)
+	{
+		std::vector<std::string> str;
+		std::string text;
+		for (auto& w : wstr)
+		{
+			std::string s = std::string(w.mb_str(wxConvUTF8));
+			text += s+'|';
+			str.push_back(s);
+		}
+		dic[dicTypeInt].editMeaning(Word, str);
+		SA[dicTypeInt].update(Word, text);
+		SA[dicTypeInt].rebuildSuffixArray();
+	}
 	isEditing = !isEditing;
 	
-	std::vector<std::string> str;
-	for (auto& w : wstr)
-	{
-		str.push_back(std::string(w.mb_str(wxConvUTF8)));
-	}
-	dic[dicTypeInt].editMeaning(Word, str);
+	
 	
 
 	mainPanel->Layout();
