@@ -20,11 +20,6 @@ SuffixArray::SuffixArray(initType iType, dictType dType)
 			loadFromBF("Data_Storage/Eng2Eng/Current/Eng2Eng.bin");
 			return;
 		}
-		else if (dType == EV)
-		{
-			loadFromBF("Data_Storage/Eng2Vie/Current/Eng2Vie.bin");
-			return;
-		}
 		else if (dType == VE)
 		{
 			loadFromBF("Data_Storage/Vie2Eng/Current/Vie2Eng.bin");
@@ -33,11 +28,6 @@ SuffixArray::SuffixArray(initType iType, dictType dType)
 		else if (dType == SLANG)
 		{
 			loadFromBF("Data_Storage/Slang/Current/Slang.bin");
-			return;
-		}
-		else if (dType == EMOJI)
-		{
-			loadFromBF("Data_Storage/Emoji/Current/Emoji.bin");
 			return;
 		}
 	}
