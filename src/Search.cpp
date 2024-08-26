@@ -18,12 +18,14 @@ void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
 			return;
 		}
 	}
+	std::string str = std::string(prefix.mb_str(wxConvUTF8));
 	std::vector<std::string> suggestions;
-	if(searchType==0)
-	 suggestions = tst.searchPrefix2(prefix.ToStdString());
+	if (searchType == 0) {
+		suggestions = tst.searchPrefix2(str);
+	}
 	else
 	{
-		suggestions = SA.search(prefix.ToStdString());
+		suggestions = SA.search(str);
 	}
 
 	for (const auto& suggestion : suggestions) {
@@ -117,6 +119,7 @@ std::string SuggestionListBox::getSearchInput()
 			str.erase(it, str.end());
 		}
 	}
+	searchInput->Clear();
 	return str;
 }
 

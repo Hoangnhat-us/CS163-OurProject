@@ -68,10 +68,12 @@ SuffixArray::SuffixArray(initType iType, dictType dType)
 		else if (dType == SLANG)
 		{
 			std::string filename = "Data_Storage/Slang/Origin/slangs.txt";
+			loadCSV(filename);
 		}
 		else if (dType == EMOJI)
 		{
 			std::string filename = "Data_Storage/Emoji/Origin/emoji_df.txt";
+			loadCSV(filename);
 		}
 	}
 

@@ -104,9 +104,14 @@ void frame::LoadDic() {
 		s += ".txt";
 		dic[2].loadfile(s);
 	}
-	dic[3].loadfile("Data_Storage/Emoji/Origin/emoji_df.txt");
-	dic[4].loadfile("Data_Storag/Slang/Origin/slangs.txt");
+	dic[3].loadfile("Data_Storage/Slang/Origin/slangs.txt");
+	dic[4].loadfile("Data_Storage/Emoji/Origin/emoji_df.txt");
+	
 	SA[0] = SuffixArray(CSV, EE);
 	SA[1] = SuffixArray(CSV, EV);
+	SA[2] = SuffixArray(CSV, VE);
+	SA[3] = SuffixArray(CSV, SLANG);
+	SA[4] = SuffixArray(CSV, EMOJI);
+	
 
 }

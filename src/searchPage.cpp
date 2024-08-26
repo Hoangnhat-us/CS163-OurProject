@@ -136,7 +136,6 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 
 
 	this->SetSizer(mainSizer);
-	UpdateRightPanel();
 }
 
 void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string sWord)
