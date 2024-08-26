@@ -1,4 +1,5 @@
-﻿#include "dicType.h"
+﻿#include "addDialog.h"
+#include "dicType.h"
 #include "mainPage.h"
 
 mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, std::string& searchWord, std::vector<TST>& dic, std::vector<SuffixArray>& SA) : wxWindow(parent, wxID_ANY)
@@ -69,6 +70,7 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, std::str
 	this->SetSizerAndFit(mainSizer);
 
 	Bind(wxEVT_TEXT, &mainPage::OnTextChange, this, suggestionBox->searchInput->GetId());
+	addButton->Bind(wxEVT_BUTTON, &mainPage::OnAdding, this);
 
 }
 
@@ -101,7 +103,7 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 
 
 	// Tạo wxBitmapButton
-	history = new wxBitmapButton(this, wxID_ANY, bmHistory, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	history = new wxBitmapButton(this, wxID_ANY, bmHistory, wxDefaultPosition, wxDefaultSize);
 	Random = new wxBitmapButton(this, wxID_ANY, bmRandom, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	FavWords = new wxBitmapButton(this, wxID_ANY, bmFavWords, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	WordGames = new wxBitmapButton(this, wxID_ANY, bmWordGames, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
@@ -133,6 +135,12 @@ void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
 void mainPage::OnTextChange(wxCommandEvent& event) {
 	wxString prefix = suggestionBox->searchInput->GetValue();
 	suggestionBox->UpdateSuggestions(prefix);
+}
+
+void mainPage::OnAdding(wxCommandEvent& event)
+{
+	addDialog dialog(this, "Adding Dialog");
+	dialog.ShowModal();
 }
 
 

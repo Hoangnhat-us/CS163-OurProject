@@ -22,7 +22,7 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	book->AddPage(his, "History");
 
 
-	book->SetSelection(1);
+	book->SetSelection(0);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(book, 1, wxEXPAND);
@@ -106,7 +106,7 @@ void frame::LoadDic() {
 	}
 	dic[3].loadfile("Data_Storage/Slang/Origin/slangs.txt");
 	dic[4].loadfile("Data_Storage/Emoji/Origin/emoji_df.txt");
-	
+
 	SA[0] = SuffixArray(CSV, EE);
 	SA[1] = SuffixArray(CSV, EV);
 	SA[2] = SuffixArray(CSV, VE);
