@@ -10,35 +10,41 @@ std::ofstream out;
 
 SuffixArray::SuffixArray(initType iType, dictType dType)
 {
-	if (iType == BF)
+	if (iType == Cur)
 	{
 		if (dType == EE)
 		{
-			loadFromBF("Data_Storage/Eng2Eng/Current/Eng2Eng.bin");
-			return;
+			
+				std::string filename = "Data_Storage/Eng2Eng/Current/eng2eng.txt";
+				loadCSV(filename);
+			
 		}
 		else if (dType == EV)
 		{
-			loadFromBF("Data_Storage/Eng2Viet/Current/Eng2Viet.bin");
-			return;
+			
+				std::string filename = "Data_Storage/Eng2Viet/Current/eng2viet.txt";
+				loadCSV(filename);
+			
 		}
 		else if (dType == VE)
 		{
-			loadFromBF("Data_Storage/Viet2Eng/Current/Viet2Eng.bin");
-			return;
+			
+				std::string filename = "Data_Storage/Viet2Eng/Current/viet2eng.txt";
+				loadCSV(filename);
+			
 		}
 		else if (dType == SLANG)
 		{
-			loadFromBF("Data_Storage/Slang/Current/Slang.bin");
-			return;
+			std::string filename = "Data_Storage/Slang/Current/slangs.txt";
+			loadCSV(filename);
 		}
 		else if (dType == EMOJI)
 		{
-			loadFromBF("Data_Storage/Emoji/Current/Emoji.bin");
-			return;
+			std::string filename = "Data_Storage/Emoji/Current/emoji_df.txt";
+			loadCSV(filename);
 		}
 	}
-	else if (iType == CSV)
+	else if (iType == Origin)
 	{
 		if (dType == EE)
 		{
@@ -361,32 +367,6 @@ void SuffixArray::loadFromBF(const std::string& filename)
 	in.close();
 }
 
-void SuffixArray::end(bool isModified)
-{
-	if (isModified)
-	{
-		int n = text.length();
-
-		std::vector<int> s(n + 3);
-		std::vector<int> SA(n + 3);
-
-		for (int i = 0; i < n; ++i)
-		{
-			s[i] = (unsigned char)text[i];
-		}
-
-		SA_.resize(n + 3);
-
-		makeSuffixArray(s, SA, n, 65536);
-
-		for (int i = 0; i < SA_.size(); i++)
-		{
-			SA_[i] = SA[i];
-		}
-
-	}
-	saveToBF("Data_Storage/Eng2Eng/Current/Eng2Eng.bin");
-}
 
 void SuffixArray::makeSuffixArray(const std::vector<int>& s, std::vector<int>& SA, int n, int K)
 {

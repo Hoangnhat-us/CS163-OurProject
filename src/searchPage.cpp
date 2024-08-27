@@ -169,6 +169,7 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 	wxBitmap bmOrigin(wxT("../../../../picture/Origin-Copy.png"), wxBITMAP_TYPE_PNG);
 	origin = new wxBitmapButton(panel, wxID_ANY, bmOrigin, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	origin->SetBackgroundColour("#38435A");
+	origin->Bind(wxEVT_BUTTON, &searchPage::OnOriginButtonClicked, this, origin->GetId());
 
 	wxBitmap bmAddButton(wxT("../../../../picture/addButton-Copy.png"), wxBITMAP_TYPE_PNG);
 	add = new wxBitmapButton(panel, wxID_ANY, bmAddButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
@@ -441,4 +442,54 @@ void searchPage::OnFixButtonClicked(wxCommandEvent& event)
 
 	mainPanel->Layout();
 	mainPanel->Refresh();
+}
+
+void searchPage::OnOriginButtonClicked(wxCommandEvent& event)
+{
+	dic[dicTypeInt].deleteTree();
+	switch (dicTypeInt)
+	{
+	case 0:
+		for (int i = 0; i <= 27; i++) {
+			std::string c = std::to_string(i + 1);
+			std::string s = "Data_Storage/Eng2Eng/Origin/";
+			s += c;
+			s += ".txt";
+			dic[dicTypeInt].loadfile(s);
+		}
+		SA[dicTypeInt] = SuffixArray(Origin, EE);
+		break;
+	case 1:
+		for (int i = 0; i <= 27; i++) {
+			std::string c = std::to_string(i + 1);
+			std::string s = "Data_Storage/Eng2Viet/Origin/";
+			s += c;
+			s += ".txt";
+			dic[dicTypeInt].loadfile(s);
+		}
+		SA[dicTypeInt] = SuffixArray(Origin, EV);
+		break;
+	case 2:
+		for (int i = 0; i <= 24; i++) {
+			std::string c = std::to_string(i + 1);
+			std::string s = "Data_Storage/Viet2Eng/Origin/";
+			s += c;
+			s += ".txt";
+			dic[dicTypeInt].loadfile(s);
+		}
+		SA[dicTypeInt] = SuffixArray(Origin, VE);
+		break;
+	case 3:
+		dic[dicTypeInt].loadfile("Data_Storage/Slang/Origin/slangs.txt");
+		SA[dicTypeInt] = SuffixArray(Origin, SLANG);
+		break;
+	case 4:
+		dic[dicTypeInt].loadfile("Data_Storage/Emoji/Origin/emoji_df.txt");
+		SA[dicTypeInt] = SuffixArray(Origin, EMOJI);
+		break;
+	default:
+		break;
+	}
+	suggestionBox->UpdateSuggestListBox(dic, SA, dicTypeInt, searchTypeInt);
+
 }

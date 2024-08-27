@@ -315,45 +315,33 @@ void TST::loadfile(const std::string& filename) {
     fin.close();
 }
 
-void saveAll2csv(const std::string& pathname, TST tst) {
+
+void save2file(const std::string& pathname, TST &tst,SuffixArray&SA) {
 	std::ofstream fout;
-    std::string prefix=" ";
-	for (int i=0 ; i <= 27; i++) {
-		std::string c = std::to_string(i + 1);
-        prefix[0] = 'a' + i;
-		if (i == 26) 			prefix = "'";
-		if (i == 27) prefix = "-";
-		std::string filename = pathname + c + ".txt";
-		save2CSV(filename, prefix, fout, tst);
-	}
-}
-
-void save2CSV(const std::string& filename, std::string prefix, std::ofstream& fout, TST tst) {
-	if (tst.getRoot() == nullptr) {
-		return;
-	}
-	fout.open(filename);
+	fout.open(pathname);
 	if (!fout.is_open())
-    {
+	{
 		return;
 	}
-	std::vector<std::string> meaning=tst.search(prefix);
-	for (const auto& m : meaning) {
-		fout << prefix << " " << m << "\n\n";
-	}
+	helptoSave2file(tst,SA, fout);
 
-	std::vector<std::string> result= tst.searchPrefix(prefix);
-	if (result.empty())
-    {
-		return;
-	}
-	for (const auto& r : result) {
-		fout << r << std::endl<<"\n";
-	}
-	
-	fout.close();
 }
 
+void helptoSave2file(TST&tst, SuffixArray& SA, std::ofstream& fout) {
+    std::string key = "";
+    std::vector<std::string> prefix;
+    for (int i = 0; i < SA.words.size(); i++) {
+        if (SA.words[i] == key) continue;
+		key = SA.words[i];
+		prefix.push_back(key);
+    }
+	for (int i = 0; i < prefix.size(); i++) {
+		std::vector<std::string> meaning = tst.search(prefix[i]);
+		for (const auto& m : meaning) {
+			fout << prefix[i] << " " << m << "\n";
+		}
+	}
+}
 void TST::editMeaning(const std::string& word, const std::vector<std::string>& meaning) {
 	std::u32string word32 = to_utf32(word);
 	TSTNode* node = _searchPrefix(root, word32, 0);
@@ -363,6 +351,7 @@ void TST::editMeaning(const std::string& word, const std::vector<std::string>& m
 
 	node->meaning = meaning;
 }
+
 
 std::u32string to_utf32(const std::string& utf8_str) {
     std::u32string str = utf8::utf8to32(utf8_str);

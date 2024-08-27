@@ -51,6 +51,16 @@ void frame::OnExit(wxCloseEvent& event)
 {
 	if (wxMessageBox("Are you sure to quit?", "Confirm", wxICON_QUESTION | wxYES_NO) == wxYES)
 	{
+		this->dic = search->dic;
+		this->SA = search->SA;
+		save2file("Data_Storage/Eng2Eng/Current/eng2eng.txt", dic[0],SA[0]);
+		save2file("Data_Storage/Eng2Viet/Current/eng2viet.txt", dic[1],SA[1]);
+		save2file("Data_Storage/Viet2Eng/Current/viet2eng.txt", dic[2],SA[2]);
+		save2file("Data_Storage/Slang/Current/slangs.txt", dic[3],SA[3]);
+		save2file("Data_Storage/Emoji/Current/emoji_df.txt", dic[4],SA[4]);
+
+
+
 		for (int i = 0; i < dic.size(); i++) {
 			dic[i].deleteTree();
 		}
@@ -83,33 +93,16 @@ void frame::switchToHis(wxCommandEvent& event)
 }
 
 void frame::LoadDic() {
-	for (int i = 0; i <= 27; i++) {
-		std::string c = std::to_string(i + 1);
-		std::string s = "Data_Storage/Eng2Eng/Origin/";
-		s += c;
-		s += ".txt";
-		dic[0].loadfile(s);
-	}
-	for (int i = 0; i <= 27; i++) {
-		std::string c = std::to_string(i + 1);
-		std::string s = "Data_Storage/Eng2Viet/Origin/";
-		s += c;
-		s += ".txt";
-		dic[1].loadfile(s);
-	}
-	for (int i = 0; i <= 24; i++) {
-		std::string c = std::to_string(i + 1);
-		std::string s = "Data_Storage/Viet2Eng/Origin/";
-		s += c;
-		s += ".txt";
-		dic[2].loadfile(s);
-	}
-	dic[3].loadfile("Data_Storage/Slang/Origin/slangs.txt");
-	dic[4].loadfile("Data_Storage/Emoji/Origin/emoji_df.txt");
+	
+	dic[0].loadfile("Data_Storage/Eng2Eng/Current/eng2eng.txt");
+	dic[1].loadfile("Data_Storage/Eng2Viet/Current/eng2viet.txt");
+	dic[2].loadfile("Data_Storage/Viet2Eng/Current/viet2eng.txt");
+	dic[3].loadfile("Data_Storage/Slang/Current/slangs.txt");
+	dic[4].loadfile("Data_Storage/Emoji/Current/emoji_df.txt");
 
-	SA[0] = SuffixArray(CSV, EE);
-	SA[1] = SuffixArray(CSV, EV);
-	SA[2] = SuffixArray(CSV, VE);
-	SA[3] = SuffixArray(CSV, SLANG);
-	SA[4] = SuffixArray(CSV, EMOJI);
+	SA[0] = SuffixArray(Cur, EE);
+	SA[1] = SuffixArray(Cur, EV);
+	SA[2] = SuffixArray(Cur, VE);
+	SA[3] = SuffixArray(Cur, SLANG);
+	SA[4] = SuffixArray(Cur, EMOJI);
 }

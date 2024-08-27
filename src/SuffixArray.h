@@ -10,8 +10,8 @@
 
 enum initType
 {
-	CSV,
-	BF,
+	Origin,
+	Cur,
 };
 
 enum dictType
@@ -41,7 +41,6 @@ public:
 	bool update(const std::string& word, const std::string& definition);
 	void saveToBF(const std::string& filename) const;
 	void loadFromBF(const std::string& filename);
-	void end(bool isModified);
 	void rebuildSuffixArray();
 private:
 	void makeSuffixArray(const std::vector<int>& s, std::vector<int>& SA, int n, int K);
