@@ -172,8 +172,7 @@ void historyPage::refreshHistoryGrid() {
         historyFile = "Data_Storage/History/Emoji.bin";
         break;
     default:
-        wxLogError("Invalid dictionary type: %d", dicTypeInt);
-        return;  // Exit if dictionary type is invalid
+        std::cerr << "Invalid dictionary type" << std::endl;
     }
 
     // Load history data from the correct file

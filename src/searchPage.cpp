@@ -343,19 +343,44 @@ void searchPage::OnSearchButtonClicked(wxCommandEvent& event)
 
 	UpdateRightPanel();
 
-
-	std::string historyFile = "Data_Storage/History/EngToEng.bin";
-
-	historyManager.loadHistory(historyFile); // Load existing history
-
 	std::string searchedWord = Word;
 	std::vector<std::string> defs = dic[dicTypeInt].search(searchedWord);
 	if (defs.empty()) {
 		defs = dic[dicTypeInt].suggestCorrections(searchedWord, 2);
 	}
 
-	if (!defs.empty()) {
-		historyManager.addHistory(searchedWord, defs);
+	HandleHistoryOperations(searchedWord, defs, dicTypeInt);
+}
+
+void searchPage::HandleHistoryOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt) {
+	std::string basePath = "Data_Storage/History/";
+
+	std::string historyFile;
+	switch (dicTypeInt) {
+	case 0:
+		historyFile = basePath + "EngToEng.bin";
+		break;
+	case 1:
+		historyFile = basePath + "EngToVie.bin";
+		break;
+	case 2:
+		historyFile = basePath + "VieToEng.bin";
+		break;
+	case 3:
+		historyFile = basePath + "Slang.bin";
+		break;
+	case 4:
+		historyFile = basePath + "Emoji.bin";
+		break;
+	default:
+		std::cerr << "Invalid dictionary type." << std::endl;
+		return;
+	}
+
+	historyManager.loadHistory(historyFile);
+
+	if (!definitions.empty()) {
+		historyManager.addHistory(word, definitions);
 		historyManager.saveHistory(historyFile);
 	}
 	else {

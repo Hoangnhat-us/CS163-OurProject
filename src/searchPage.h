@@ -50,6 +50,7 @@ public:
 	void OnDelButtonClicked(wxCommandEvent& event);
 	void OnFixButtonClicked(wxCommandEvent& event);
 
+	void HandleHistoryOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt);
 private:
 	int dicTypeInt;
 	int searchTypeInt;
