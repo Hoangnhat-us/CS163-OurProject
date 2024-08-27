@@ -96,26 +96,15 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 	
 	wxBoxSizer* Sizer3 = new wxBoxSizer(wxVERTICAL);
 
-	wxBoxSizer* wordSizer = new wxBoxSizer(wxHORIZONTAL);
-	wordSizer->Add(word, 0, wxLEFT, 20);
-	Sizer3->Add(wordSizer, 1, wxALL, 20);
+	/*wxBoxSizer* wordSizer = new wxBoxSizer(wxHORIZONTAL);
+	wordSizer->Add(word, 0, wxLEFT, 20);*/
+	Sizer3->Add(word, 0, wxLEFT | wxTOP, 20);
 
-	wxBoxSizer* lineSizer = new wxBoxSizer(wxHORIZONTAL);
-	lineSizer->Add(line[0], 0, wxLEFT, 20);
-	Sizer3->Add(lineSizer, 1, wxALL, 20);
-
-	std::vector<wxBoxSizer*> linesSizer;
-	std::vector<wxBoxSizer*> wordsSizer;
-
-	for (int i = 0; i < def.size(); i++)
+	for (int i = 0; i < editDef.size(); i++)
 	{
-		wxBoxSizer* wordsSizer = new wxBoxSizer(wxHORIZONTAL);
-		wordsSizer->Add(def[i], 0, wxLEFT, 20);
-		Sizer3->Add(wordsSizer, 1, wxALL, 20);
+		Sizer3->Add(editDef[i], 0, wxALL, 10);
 
-		linesSizer.push_back(new wxBoxSizer(wxHORIZONTAL));
-		linesSizer[i]->Add(line[i + 1], 0, wxLEFT, 20);
-		Sizer3->Add(linesSizer[i], 1, wxALL, 20);
+		Sizer3->Add(line[i], 0, wxALL, 20);
 	}
 
 	rightPanel->SetSizer(Sizer3);
@@ -224,26 +213,29 @@ void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTy
 
 
 
-	//def.resize(defs.size());
+	def.resize(defs.size());
 	editDef.resize(defs.size());
+	line.resize(defs.size() + 1);
+	wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
 
-	int maxWidth = panel->GetSize().GetWidth() * 0.99;
+	const int maxWidth = 824;
 
 	for (int i = 0; i < defs.size(); i++)
 	{
-		//def[i] = new wxStaticText(panel, wxID_ANY, defs[i], wxDefaultPosition, wxSize(300, 30));
-		editDef[i] = new wxTextCtrl(panel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(maxWidth, wxDefaultSize.GetHeight()), wxTE_MULTILINE | wxTE_READONLY | wxNO_BORDER | wxTE_NO_VSCROLL);
+		//def[i] = new wxStaticText(panel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxDefaultSize);
+		editDef[i] = new wxTextCtrl(panel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(maxWidth, wxDefaultSize.GetHeight()), wxTE_READONLY | wxNO_BORDER | wxTE_NO_VSCROLL | wxTE_MULTILINE);
+		
 		editDef[i]->SetFont(font);
-		//editDef[i]->Hide();
+		//def[i]->Hide();
+		
 		//def[i]->SetFont(font);
 		editDef[i]->SetFont(font);
 	}
 
-	line.resize(defs.size() + 1);
-	wxBitmap bmLine(wxT("../../../../picture/Line.png"), wxBITMAP_TYPE_PNG);
-	for (int i = 0; i < def.size() + 1; i++)
+	
+	for (int i = 0; i < def.size(); i++)
 	{
-		line[i] = new wxStaticBitmap(panel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	     line[i] = new wxStaticBitmap(panel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	}
 	panel->Layout();
 	panel->Refresh();
