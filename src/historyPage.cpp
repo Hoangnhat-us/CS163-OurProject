@@ -155,7 +155,7 @@ void historyPage::refreshHistoryGrid() {
 
     // Determine the correct history file based on the dictionary type
     std::string historyFile;
-    switch (dicTypeInt) {  // Assume dicTypeInt is a class member or passed appropriately
+    switch (dicTypeInt) {
     case 0:
         historyFile = "Data_Storage/History/EngtoEng.bin";
         break;
@@ -172,8 +172,11 @@ void historyPage::refreshHistoryGrid() {
         historyFile = "Data_Storage/History/Emoji.bin";
         break;
     default:
-        std::cerr << "Invalid dictionary type." << std::endl;
+        wxLogError("Invalid dictionary type: %d", dicTypeInt);
+        return;  // Exit if dictionary type is invalid
     }
+
+    // Load history data from the correct file
     HistoryManager historyManager;
     historyManager.loadHistory(historyFile);
 
@@ -215,6 +218,11 @@ void historyPage::refreshHistoryGrid() {
     historyGrid->ForceRefresh();  // Force the grid to refresh and display the new data
 }
 
+
+void historyPage::OnDicTypeChanged(wxCommandEvent& event) {
+    dicTypeInt = lists->getDicType();
+    refreshHistoryGrid();
+}
 
 
 void historyPage::OnGamesButtonClicked(wxCommandEvent& event) {

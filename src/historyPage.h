@@ -15,10 +15,11 @@ public:
     wxBitmapButton* add;
     wxButton* games;
 
+    void OnDicTypeChanged(wxCommandEvent& event);
+
 private:
-    int dicTypeInt;
-    dicType* lists;
     wxGrid* historyGrid;
+    int dicTypeInt;
 
     void setTopControls(wxPanel* panel, int& dicTypeInt);
     wxPanel* wordsHistoryTable(wxWindow* parent);
@@ -26,8 +27,6 @@ private:
     void setMain(wxScrolledWindow* main);
     void refreshHistoryGrid();
     void OnShow(wxShowEvent& event);
-
-    void OnDicTypeChanged(wxCommandEvent& event);
 
     HistoryManager historyManager;  // HistoryManager instance
 };
