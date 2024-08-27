@@ -2,7 +2,7 @@
 #include "historyPage.h"
 #include "History.h"
 
-historyPage::historyPage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, wxID_ANY) {
+historyPage::historyPage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, wxID_ANY), dicTypeInt(dicTypeInt){
     this->SetBackgroundColour("#FFFFFF");
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -85,6 +85,7 @@ void historyPage::setTopControls(wxPanel* panel, int& dicTypeInt) {
     lists = new dicType(panel, dicTypeInt);
     lists->SetSize(wxSize(1270, 33));
     lists->SetFont(font);
+    lists->Bind(wxEVT_COMBOBOX, &historyPage::OnDicTypeChanged, this);
 
     wxBitmap bmOrigin(wxT("../../../../picture/Origin-Copy.png"), wxBITMAP_TYPE_PNG);
     origin = new wxBitmapButton(panel, wxID_ANY, bmOrigin, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
@@ -142,6 +143,7 @@ void historyPage::OnShow(wxShowEvent& event) {
     }
     event.Skip();
 }
+
 void historyPage::refreshHistoryGrid() {
     if (!historyGrid) return;
 
@@ -151,8 +153,29 @@ void historyPage::refreshHistoryGrid() {
         historyGrid->DeleteRows(0, currentRows);
     }
 
+    // Determine the correct history file based on the dictionary type
+    std::string historyFile;
+    switch (dicTypeInt) {  // Assume dicTypeInt is a class member or passed appropriately
+    case 0:
+        historyFile = "Data_Storage/History/EngtoEng.bin";
+        break;
+    case 1:
+        historyFile = "Data_Storage/History/EngtoVie.bin";
+        break;
+    case 2:
+        historyFile = "Data_Storage/History/VietoEng.bin";
+        break;
+    case 3:
+        historyFile = "Data_Storage/History/Slang.bin";
+        break;
+    case 4:
+        historyFile = "Data_Storage/History/Emoji.bin";
+        break;
+    default:
+        std::cerr << "Invalid dictionary type." << std::endl;
+    }
     HistoryManager historyManager;
-    historyManager.loadHistory("Data_Storage/History/EngtoEng.bin");
+    historyManager.loadHistory(historyFile);
 
     const auto& historyData = historyManager.getHistoryData();
 
@@ -191,6 +214,7 @@ void historyPage::refreshHistoryGrid() {
 
     historyGrid->ForceRefresh();  // Force the grid to refresh and display the new data
 }
+
 
 
 void historyPage::OnGamesButtonClicked(wxCommandEvent& event) {

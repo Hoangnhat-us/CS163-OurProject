@@ -16,6 +16,8 @@ public:
     wxButton* games;
 
 private:
+    int dicTypeInt;
+    dicType* lists;
     wxGrid* historyGrid;
 
     void setTopControls(wxPanel* panel, int& dicTypeInt);
@@ -24,6 +26,8 @@ private:
     void setMain(wxScrolledWindow* main);
     void refreshHistoryGrid();
     void OnShow(wxShowEvent& event);
+
+    void OnDicTypeChanged(wxCommandEvent& event);
 
     HistoryManager historyManager;  // HistoryManager instance
 };
