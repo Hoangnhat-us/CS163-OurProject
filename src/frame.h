@@ -1,5 +1,6 @@
 #pragma once
 #include "favoritePage.h"
+#include "gamePage.h"
 #include "historyPage.h"
 #include "mainPage.h"
 #include "Random.h"
@@ -20,6 +21,8 @@ public:
 	searchPage* search;
 	favoritePage* favorite;
 	historyPage* his;
+	gamePage* game;
+
 
 	int dicTypeInt = 0;
 	int searchTypeInt = 0;
@@ -35,5 +38,6 @@ private:
 	void switchToHome(wxCommandEvent& event);
 	void switchToFav(wxCommandEvent& event);
 	void switchToHis(wxCommandEvent& event);
+	void switchToGame(wxCommandEvent& event);
 	void LoadDic();
 };
