@@ -4,7 +4,7 @@
 
 historyPage::historyPage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, wxID_ANY), dicTypeInt(dicTypeInt) {
     this->SetBackgroundColour("#FFFFFF");
-    mainSizer = new wxBoxSizer(wxVERTICAL);  // Initialize mainSizer here
+    mainSizer = new wxBoxSizer(wxVERTICAL);
 
     wxPanel* topPanel = new wxPanel(this, wxID_ANY);
     topPanel->SetBackgroundColour("#38435A");
@@ -101,34 +101,24 @@ wxPanel* historyPage::wordsHistoryTable(wxWindow* parent) {
     wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
     wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
 
-    // Create the wxGrid with wxFULL_REPAINT_ON_RESIZE to avoid internal scroll bars
+    // Create the wxGrid without wxFULL_REPAINT_ON_RESIZE
     historyGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     historyGrid->CreateGrid(0, 2);  // Start with 0 rows and 2 columns
 
     historyGrid->SetColLabelValue(0, "Word");
     historyGrid->SetColLabelValue(1, "Definition");
 
-    if (historyGrid->GetNumberRows() == 0) {
-        historyGrid->AppendRows(1);
-    }
+    // Set fixed column sizes
+    historyGrid->SetColSize(0, 100);  // Word column width
+    historyGrid->SetColSize(1, 900);  // Definition column width
 
-    historyGrid->SetRowSize(0, 250);
-    historyGrid->SetColSize(0, 200);
-    historyGrid->SetColSize(1, 800);
-
-    wxGridCellStringRenderer* renderer = new wxGridCellStringRenderer();
-    for (int row = 0; row < historyGrid->GetNumberRows(); ++row) {
-        historyGrid->SetCellRenderer(row, 1, renderer);
-        historyGrid->SetCellAlignment(row, 1, wxALIGN_LEFT, wxALIGN_TOP);
-    }
-
+    historyGrid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_TOP);
     historyGrid->SetGridLineColour(*wxLIGHT_GREY);
 
-    // Set the grid to expand within the main panel
     contentSizer->Add(historyGrid, 1, wxEXPAND | wxALL, 20);
     mainPanel->SetSizer(contentSizer);
 
-    refreshHistoryGrid();
+    refreshHistoryGrid();  // Load initial data
 
     return mainPanel;
 }
@@ -162,7 +152,7 @@ void historyPage::refreshHistoryGrid() {
 
     switch (lists->getDicType()) {
     case 0:
-        historyFilePath = "Data_Storage/History/EngtoEng.bin";
+        historyFilePath = "Data_Storage/History/EngToEng.bin";
         break;
     case 1:
         historyFilePath = "Data_Storage/History/EngToVie.bin";
@@ -184,8 +174,8 @@ void historyPage::refreshHistoryGrid() {
     historyManager.loadHistory(historyFilePath);
 
     const auto& historyData = historyManager.getHistoryData();
-
     int numRows = static_cast<int>(historyData.size());
+
     if (numRows > 0) {
         historyGrid->AppendRows(numRows);
     }
@@ -194,29 +184,35 @@ void historyPage::refreshHistoryGrid() {
         const auto& [word, definitions] = historyData[row];
 
         wxString wxWord = wxString::FromUTF8(word.c_str());
-
         wxString combinedDefinitions;
         for (const auto& def : definitions) {
             if (!def.empty()) {
-                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "; ";
+                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "\n";  // Combine into single cell with newlines
             }
         }
 
         if (!combinedDefinitions.IsEmpty()) {
-            combinedDefinitions.RemoveLast(2);
+            combinedDefinitions.RemoveLast();  // Remove the trailing newline
         }
 
         if (row < historyGrid->GetNumberRows()) {
             historyGrid->SetCellValue(row, 0, wxWord);
             historyGrid->SetCellValue(row, 1, combinedDefinitions);
+
+            // Set up cell for text wrapping
+            wxGridCellAttr* attr = new wxGridCellAttr();
+            attr->SetOverflow(false);
+            attr->SetReadOnly(true);
+            attr->SetRenderer(new wxGridCellAutoWrapStringRenderer());
+            historyGrid->SetAttr(row, 1, attr);
+
+            // Set fixed row height
+            int rowHeight = 200;
+            historyGrid->SetRowSize(row, rowHeight);
         }
     }
 
-    historyGrid->AutoSize();
-    wxSize gridSize = historyGrid->GetBestSize();
-    historyGrid->SetMinSize(gridSize);
-
-    historyGrid->ForceRefresh();
+    historyGrid->ForceRefresh();  // Force the grid to refresh and display the new data
     mainSizer->Layout();
 }
 
