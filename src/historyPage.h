@@ -15,9 +15,8 @@ public:
     wxBitmapButton* add;
     wxButton* games;
 
-    void OnDicTypeChanged(wxCommandEvent& event);
-
 private:
+    wxBoxSizer* mainSizer;  // Add this line
     wxGrid* historyGrid;
     int dicTypeInt;
 
@@ -27,6 +26,7 @@ private:
     void setMain(wxScrolledWindow* main);
     void refreshHistoryGrid();
     void OnShow(wxShowEvent& event);
+    void OnDicTypeChanged(wxCommandEvent& event);
 
     HistoryManager historyManager;  // HistoryManager instance
 };

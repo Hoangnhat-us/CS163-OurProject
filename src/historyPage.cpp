@@ -2,9 +2,9 @@
 #include "historyPage.h"
 #include "History.h"
 
-historyPage::historyPage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, wxID_ANY), dicTypeInt(dicTypeInt){
+historyPage::historyPage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, wxID_ANY), dicTypeInt(dicTypeInt) {
     this->SetBackgroundColour("#FFFFFF");
-    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+    mainSizer = new wxBoxSizer(wxVERTICAL);  // Initialize mainSizer here
 
     wxPanel* topPanel = new wxPanel(this, wxID_ANY);
     topPanel->SetBackgroundColour("#38435A");
@@ -65,6 +65,7 @@ historyPage::historyPage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, w
     Bind(wxEVT_SHOW, &historyPage::OnShow, this);
 }
 
+
 void historyPage::setTopControls(wxPanel* panel, int& dicTypeInt) {
     wxBitmap bmHome(wxT("../../../../picture/home.png"), wxBITMAP_TYPE_PNG);
     home = new wxBitmapButton(panel, wxID_ANY, bmHome, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
@@ -100,14 +101,13 @@ wxPanel* historyPage::wordsHistoryTable(wxWindow* parent) {
     wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
     wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
 
-    // Create the wxGrid
+    // Create the wxGrid with wxFULL_REPAINT_ON_RESIZE to avoid internal scroll bars
     historyGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     historyGrid->CreateGrid(0, 2);  // Start with 0 rows and 2 columns
 
     historyGrid->SetColLabelValue(0, "Word");
     historyGrid->SetColLabelValue(1, "Definition");
 
-    // Ensure at least one row exists
     if (historyGrid->GetNumberRows() == 0) {
         historyGrid->AppendRows(1);
     }
@@ -116,16 +116,15 @@ wxPanel* historyPage::wordsHistoryTable(wxWindow* parent) {
     historyGrid->SetColSize(0, 200);
     historyGrid->SetColSize(1, 800);
 
-    // Align text to the left and enable word wrap for all cells in column 1
     wxGridCellStringRenderer* renderer = new wxGridCellStringRenderer();
     for (int row = 0; row < historyGrid->GetNumberRows(); ++row) {
-        historyGrid->SetCellRenderer(row, 1, renderer);  // Apply to column 1 (Definitions)
+        historyGrid->SetCellRenderer(row, 1, renderer);
         historyGrid->SetCellAlignment(row, 1, wxALIGN_LEFT, wxALIGN_TOP);
     }
 
     historyGrid->SetGridLineColour(*wxLIGHT_GREY);
 
-    // Add grid to the sizer
+    // Set the grid to expand within the main panel
     contentSizer->Add(historyGrid, 1, wxEXPAND | wxALL, 20);
     mainPanel->SetSizer(contentSizer);
 
@@ -136,16 +135,10 @@ wxPanel* historyPage::wordsHistoryTable(wxWindow* parent) {
 
 void historyPage::setMain(wxScrolledWindow* main) {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-
-    // Create content panel within the scrolled window
     wxPanel* contentPanel = wordsHistoryTable(main);
-    sizer->Add(contentPanel, 1, wxEXPAND | wxALL, 20);
-
+    sizer->Add(contentPanel, 1, wxEXPAND);
     main->SetSizer(sizer);
-
-    // Enable scrollbars on wxScrolledWindow
-    main->SetScrollbars(20, 20, 50, 50);
-    main->SetScrollRate(5, 5); // Adjust as needed
+    main->SetScrollRate(5, 5);
 }
 
 void historyPage::OnShow(wxShowEvent& event) {
@@ -164,31 +157,31 @@ void historyPage::refreshHistoryGrid() {
         historyGrid->DeleteRows(0, currentRows);
     }
 
-    // Determine the correct history file based on `lists->getDicType()`
-    std::string historyFile;
+    HistoryManager historyManager;
+    std::string historyFilePath;
+
     switch (lists->getDicType()) {
     case 0:
-        historyFile = "Data_Storage/History/EngtoEng.bin";
+        historyFilePath = "Data_Storage/History/EngtoEng.bin";
         break;
     case 1:
-        historyFile = "Data_Storage/History/EngToVie.bin";
+        historyFilePath = "Data_Storage/History/EngToVie.bin";
         break;
     case 2:
-        historyFile = "Data_Storage/History/VietoEng.bin";
+        historyFilePath = "Data_Storage/History/VieToEng.bin";
         break;
     case 3:
-        historyFile = "Data_Storage/History/Slang.bin";
+        historyFilePath = "Data_Storage/History/Slang.bin";
         break;
     case 4:
-        historyFile = "Data_Storage/History/Emoji.bin";
+        historyFilePath = "Data_Storage/History/Emoji.bin";
         break;
     default:
-        wxLogError("Invalid dictionary type.");
+        wxLogError("Unknown dictionary type.");
         return;
     }
 
-    HistoryManager historyManager;
-    historyManager.loadHistory(historyFile);
+    historyManager.loadHistory(historyFilePath);
 
     const auto& historyData = historyManager.getHistoryData();
 
@@ -199,49 +192,38 @@ void historyPage::refreshHistoryGrid() {
 
     for (int row = 0; row < numRows; ++row) {
         const auto& [word, definitions] = historyData[row];
+
         wxString wxWord = wxString::FromUTF8(word.c_str());
+
         wxString combinedDefinitions;
         for (const auto& def : definitions) {
             if (!def.empty()) {
-                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "\n";  // Use newline for multiline display
+                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "; ";
             }
         }
 
         if (!combinedDefinitions.IsEmpty()) {
-            combinedDefinitions.RemoveLast();  // Remove trailing newline
+            combinedDefinitions.RemoveLast(2);
         }
 
-        // Safeguard row index operations
         if (row < historyGrid->GetNumberRows()) {
             historyGrid->SetCellValue(row, 0, wxWord);
             historyGrid->SetCellValue(row, 1, combinedDefinitions);
-
-            // Enable word wrap for the cell
-            wxGridCellAttr* attr = new wxGridCellAttr();
-            attr->SetOverflow(false);
-            attr->SetReadOnly(true);
-            attr->SetRenderer(new wxGridCellAutoWrapStringRenderer());
-            historyGrid->SetAttr(row, 1, attr);
-
-            // Calculate row height based on content
-            int lineCount = std::count(combinedDefinitions.begin(), combinedDefinitions.end(), '\n') + 1;
-            int rowHeight = lineCount * historyGrid->GetDefaultRowSize();
-            historyGrid->SetRowSize(row, rowHeight);
-        }
-        else {
-            wxLogError("Attempted to access an invalid row index: %d", row);
         }
     }
 
-    historyGrid->ForceRefresh();  // Force the grid to refresh and display the new data
-}
+    historyGrid->AutoSize();
+    wxSize gridSize = historyGrid->GetBestSize();
+    historyGrid->SetMinSize(gridSize);
 
+    historyGrid->ForceRefresh();
+    mainSizer->Layout();
+}
 
 void historyPage::OnDicTypeChanged(wxCommandEvent& event) {
     dicTypeInt = lists->getDicType();
     refreshHistoryGrid();
 }
-
 
 void historyPage::OnGamesButtonClicked(wxCommandEvent& event) {
     wxMessageBox("Games page not implemented yet.", "Info", wxOK | wxICON_INFORMATION, this);
