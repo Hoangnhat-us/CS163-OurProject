@@ -38,6 +38,8 @@ public:
 	std::vector<wxStaticText*> def;
 	std::vector<wxTextCtrl*> editDef;
 	std::vector<wxStaticBitmap*> line;
+	std::vector<TST>  dic;
+	std::vector<SuffixArray> SA;
 
 	searchPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& sWord, std::vector<TST>& dic,std::vector<SuffixArray>&SA);
 	void OnTextChange(wxCommandEvent& event);
@@ -49,13 +51,13 @@ public:
 	void OnSearchTypeChanged(wxCommandEvent& event);
 	void OnDelButtonClicked(wxCommandEvent& event);
 	void OnFixButtonClicked(wxCommandEvent& event);
+	void OnOriginButtonClicked(wxCommandEvent& event);
 
 	void HandleHistoryOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt);
 private:
 	int dicTypeInt;
 	int searchTypeInt;
-	std::vector<TST>  dic;
-	std::vector<SuffixArray> SA;
+	
 	std::string Word;
 	void setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
 	void setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
