@@ -100,13 +100,14 @@ wxPanel* historyPage::wordsHistoryTable(wxWindow* parent) {
     wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
     wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
 
+    // Create the wxGrid
     historyGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     historyGrid->CreateGrid(0, 2);  // Start with 0 rows and 2 columns
 
     historyGrid->SetColLabelValue(0, "Word");
     historyGrid->SetColLabelValue(1, "Definition");
 
-    // Ensure there is at least one row before trying to set its size
+    // Ensure at least one row exists
     if (historyGrid->GetNumberRows() == 0) {
         historyGrid->AppendRows(1);
     }
@@ -115,11 +116,17 @@ wxPanel* historyPage::wordsHistoryTable(wxWindow* parent) {
     historyGrid->SetColSize(0, 200);
     historyGrid->SetColSize(1, 800);
 
-    historyGrid->SetDefaultCellAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
-    historyGrid->SetGridLineColour(*wxLIGHT_GREY);
-    historyGrid->SetReadOnly(0, 0);
+    // Align text to the left and enable word wrap for all cells in column 1
+    wxGridCellStringRenderer* renderer = new wxGridCellStringRenderer();
+    for (int row = 0; row < historyGrid->GetNumberRows(); ++row) {
+        historyGrid->SetCellRenderer(row, 1, renderer);  // Apply to column 1 (Definitions)
+        historyGrid->SetCellAlignment(row, 1, wxALIGN_LEFT, wxALIGN_TOP);
+    }
 
-    contentSizer->Add(historyGrid, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 20);
+    historyGrid->SetGridLineColour(*wxLIGHT_GREY);
+
+    // Add grid to the sizer
+    contentSizer->Add(historyGrid, 1, wxEXPAND | wxALL, 20);
     mainPanel->SetSizer(contentSizer);
 
     refreshHistoryGrid();
@@ -127,14 +134,18 @@ wxPanel* historyPage::wordsHistoryTable(wxWindow* parent) {
     return mainPanel;
 }
 
-
 void historyPage::setMain(wxScrolledWindow* main) {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+
+    // Create content panel within the scrolled window
     wxPanel* contentPanel = wordsHistoryTable(main);
     sizer->Add(contentPanel, 1, wxEXPAND | wxALL, 20);
+
     main->SetSizer(sizer);
+
+    // Enable scrollbars on wxScrolledWindow
     main->SetScrollbars(20, 20, 50, 50);
-    main->SetScrollRate(5, 5);
+    main->SetScrollRate(5, 5); // Adjust as needed
 }
 
 void historyPage::OnShow(wxShowEvent& event) {
@@ -153,14 +164,14 @@ void historyPage::refreshHistoryGrid() {
         historyGrid->DeleteRows(0, currentRows);
     }
 
-    // Determine the correct history file based on the dictionary type
+    // Determine the correct history file based on `lists->getDicType()`
     std::string historyFile;
-    switch (dicTypeInt) {
+    switch (lists->getDicType()) {
     case 0:
         historyFile = "Data_Storage/History/EngtoEng.bin";
         break;
     case 1:
-        historyFile = "Data_Storage/History/EngtoVie.bin";
+        historyFile = "Data_Storage/History/EngToVie.bin";
         break;
     case 2:
         historyFile = "Data_Storage/History/VietoEng.bin";
@@ -172,10 +183,10 @@ void historyPage::refreshHistoryGrid() {
         historyFile = "Data_Storage/History/Emoji.bin";
         break;
     default:
-        std::cerr << "Invalid dictionary type" << std::endl;
+        wxLogError("Invalid dictionary type.");
+        return;
     }
 
-    // Load history data from the correct file
     HistoryManager historyManager;
     historyManager.loadHistory(historyFile);
 
@@ -188,26 +199,34 @@ void historyPage::refreshHistoryGrid() {
 
     for (int row = 0; row < numRows; ++row) {
         const auto& [word, definitions] = historyData[row];
-
-        // Safely convert std::string to wxString using UTF-8
         wxString wxWord = wxString::FromUTF8(word.c_str());
-
-        // Concatenate definitions into a single string
         wxString combinedDefinitions;
         for (const auto& def : definitions) {
             if (!def.empty()) {
-                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "; ";
+                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "\n";  // Use newline for multiline display
             }
         }
 
         if (!combinedDefinitions.IsEmpty()) {
-            combinedDefinitions.RemoveLast(2);  // Remove trailing "; "
+            combinedDefinitions.RemoveLast();  // Remove trailing newline
         }
 
         // Safeguard row index operations
         if (row < historyGrid->GetNumberRows()) {
             historyGrid->SetCellValue(row, 0, wxWord);
             historyGrid->SetCellValue(row, 1, combinedDefinitions);
+
+            // Enable word wrap for the cell
+            wxGridCellAttr* attr = new wxGridCellAttr();
+            attr->SetOverflow(false);
+            attr->SetReadOnly(true);
+            attr->SetRenderer(new wxGridCellAutoWrapStringRenderer());
+            historyGrid->SetAttr(row, 1, attr);
+
+            // Calculate row height based on content
+            int lineCount = std::count(combinedDefinitions.begin(), combinedDefinitions.end(), '\n') + 1;
+            int rowHeight = lineCount * historyGrid->GetDefaultRowSize();
+            historyGrid->SetRowSize(row, rowHeight);
         }
         else {
             wxLogError("Attempted to access an invalid row index: %d", row);
