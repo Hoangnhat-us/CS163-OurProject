@@ -337,6 +337,7 @@ void helptoSave2file(TST&tst, SuffixArray& SA, std::ofstream& fout) {
     }
 	for (int i = 0; i < prefix.size(); i++) {
 		std::vector<std::string> meaning = tst.search(prefix[i]);
+		tst.remove(prefix[i]);
 		for (const auto& m : meaning) {
 			fout << prefix[i] << " " << m << "\n";
 		}
