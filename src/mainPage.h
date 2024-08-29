@@ -9,30 +9,22 @@
 class mainPage : public wxWindow {
 public:
 
-	wxBitmapButton* origin;
-	wxBitmapButton* addButton;
+	wxStaticBitmap* banner;
+
 	wxBitmapButton* history;
 	wxBitmapButton* Random;
 	wxBitmapButton* FavWords;
 	wxBitmapButton* WordGames;
 
 	wxBitmapButton* name;
-	SuggestionListBox* suggestionBox;
 
-	wxButton* searchButton;
-
-	dicType* list;
-
-
-	mainPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& searchWord, std::vector<TST>& dic);
-	void OnButtonClicked(wxCommandEvent& event);
+	mainPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& searchWord, std::vector<TST>& dic, std::vector<SuffixArray>& SA);
 
 
 private:
 	std::vector<TST>  dic;
-	void setControls(int& dicTypeIt, int& searchTypeIt);
-	void OnTextChange(wxCommandEvent& event);
-
+	std::vector<SuffixArray> SA;
+	void setControls(int& dicTypeIt, int& searchTypeIt, wxPanel* panel);
 };
 
 

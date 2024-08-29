@@ -3,12 +3,14 @@
 #include "dicType.h"
 #include "searchType.h"
 #include "TernarySearchTree.h"
+#include "SuffixArray.h"
 #include <vector>
 #include <wx/wx.h>
 #include "Search.h"
 #include<wx/splitter.h>
-
-
+#include"Random.h"
+#include "History.h"
+#include"addDialog.h"
 
 class searchPage : public wxWindow {
 public:
@@ -36,20 +38,33 @@ public:
 	std::vector<wxStaticText*> def;
 	std::vector<wxTextCtrl*> editDef;
 	std::vector<wxStaticBitmap*> line;
+	std::vector<TST>  dic;
+	std::vector<SuffixArray> SA;
 
-	searchPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& sWord, std::vector<TST>& dic);
-	void OnButtonClicked(wxCommandEvent& event);
+	searchPage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& sWord, std::vector<TST>& dic,std::vector<SuffixArray>&SA);
 	void OnTextChange(wxCommandEvent& event);
 	void OnSuggestionBoxToggle(wxCommandEvent& event);
 	void OnSuggestionBoxSelect(wxCommandEvent& event);
 	void UpdateRightPanel();
+	void OnSearchButtonClicked(wxCommandEvent& event);
+	void OnDicTypeChanged(wxCommandEvent&event);
+	void OnSearchTypeChanged(wxCommandEvent& event);
+	void OnDelButtonClicked(wxCommandEvent& event);
+	void OnFixButtonClicked(wxCommandEvent& event);
+	void OnOriginButtonClicked(wxCommandEvent& event);
+	void OnAddButtonClicked(wxCommandEvent& event);
 
+	void HandleHistoryOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt);
 private:
-	std::vector<TST>  dic;
+	int dicTypeInt;
+	int searchTypeInt;
+	
 	std::string Word;
 	void setTopControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
 	void setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
 	void setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
+
+	HistoryManager historyManager;
 };
 
 

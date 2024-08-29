@@ -11,6 +11,9 @@ endif()
 
 project ("CS163-OurProject")
 
+# Include cmake modules.
+include_directories("${PROJECT_SOURCE_DIR}/utf8")
+
 # Include sub-projects.
 add_subdirectory("deps")
 add_subdirectory ("src")

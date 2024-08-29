@@ -3,23 +3,25 @@
 #include "dicType.h"
 #include <wx/grid.h>
 #include <wx/wx.h>
+#include "Favorite.h"  // Ensure this include is correct
 
 class favoritePage : public wxWindow {
 public:
-	favoritePage(wxWindow* parent, int& dicTypeInt);
-	wxBitmapButton* home;
-	wxTextCtrl* searchInput;
-	dicType* lists;
-	wxBitmapButton* origin;
-	wxBitmapButton* add;
-	wxButton* games;
+    favoritePage(wxWindow* parent, int& dicTypeInt);
+    wxBitmapButton* home;
+    dicType* lists;
 
 private:
-	void setTopControls(wxPanel* panel, int& dicTypeInt);
-	wxPanel* wordsFavoriteTable(wxWindow* parent);
-	void OnGamesButtonClicked(wxCommandEvent& event);
-	void setMain(wxScrolledWindow* main);
-	// UI components
+    wxBoxSizer* mainSizer;
+    wxGrid* favoriteGrid;
+    int dicTypeInt;
 
+    void setTopControls(wxPanel* panel, int& dicTypeInt);
+    wxPanel* wordsfavoriteTable(wxWindow* parent);
+    void setMain(wxScrolledWindow* main);
+    void refreshFavoriteGrid();
+    void OnShow(wxShowEvent& event);
+    void OnDicTypeChanged(wxCommandEvent& event);
 
+    FavoriteManager favoriteManager;
 };

@@ -1,40 +1,87 @@
 #include <algorithm>
-#include <iostream>
-#include <fstream>
+#include <cassert>
 #include <codecvt>
 #include <locale>
-#include <cassert>
 
 #include "SuffixArray.h"
 
-std::ofstream fout;
-std::ifstream fin;
-
+std::ifstream in;
+std::ofstream out;
 
 SuffixArray::SuffixArray(initType iType, dictType dType)
 {
-	if (iType == EMPTY)
+	if (iType == Cur)
 	{
-		return;
-	}
-
-	if (iType == BF)
-	{
-		loadFromBF("Data_Storage/Eng2Eng/Current/Eng2Eng.bin");
-		return;
-	}
-
-	if (iType == CSV)
-	{
-		std::string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		for (auto c : letters)
+		if (dType == EE)
 		{
-			std::string filename = std::string("Data_Storage/Eng2Eng/Current/") + c + std::string(".csv");
+
+			std::string filename = "Data_Storage/Eng2Eng/Current/eng2eng.txt";
+			loadCSV(filename);
+
+		}
+		else if (dType == EV)
+		{
+
+			std::string filename = "Data_Storage/Eng2Viet/Current/eng2viet.txt";
+			loadCSV(filename);
+
+		}
+		else if (dType == VE)
+		{
+
+			std::string filename = "Data_Storage/Viet2Eng/Current/viet2eng.txt";
+			loadCSV(filename);
+
+		}
+		else if (dType == SLANG)
+		{
+			std::string filename = "Data_Storage/Slang/Current/slangs.txt";
+			loadCSV(filename);
+		}
+		else if (dType == EMOJI)
+		{
+			std::string filename = "Data_Storage/Emoji/Current/emoji_df.txt";
 			loadCSV(filename);
 		}
 	}
-	
-	text.push_back('$');
+	else if (iType == Origin)
+	{
+		if (dType == EE)
+		{
+			for (int i = 1; i <= 28; i++)
+			{
+				std::string filename = "Data_Storage/Eng2Eng/Origin/" + std::to_string(i) + ".txt";
+				loadCSV(filename);
+			}
+		}
+		else if (dType == EV)
+		{
+			for (int i = 1; i <= 28; i++)
+			{
+				std::string filename = "Data_Storage/Eng2Viet/Origin/" + std::to_string(i) + ".txt";
+				loadCSV(filename);
+			}
+		}
+		else if (dType == VE)
+		{
+			for (int i = 1; i <= 25; i++)
+			{
+				std::string filename = "Data_Storage/Viet2Eng/Origin/" + std::to_string(i) + ".txt";
+				loadCSV(filename);
+			}
+		}
+		else if (dType == SLANG)
+		{
+			std::string filename = "Data_Storage/Slang/Origin/slangs.txt";
+			loadCSV(filename);
+		}
+		else if (dType == EMOJI)
+		{
+			std::string filename = "Data_Storage/Emoji/Origin/emoji_df.txt";
+			loadCSV(filename);
+		}
+	}
+	text.push_back(U'$');
 	int n = text.length();
 
 	std::vector<int> s(n + 3);
@@ -42,45 +89,63 @@ SuffixArray::SuffixArray(initType iType, dictType dType)
 
 	for (int i = 0; i < n; ++i)
 	{
-		s[i] = (unsigned char)text[i];
+		s[i] = static_cast<unsigned int>(text[i]);
 	}
 
 	SA_.resize(n + 3);
 
-	makeSuffixArray(s, SA, n, 256);
+	makeSuffixArray(s, SA, n, 65536);
 
 	for (int i = 0; i < SA_.size(); i++)
 	{
 		SA_[i] = SA[i];
 	}
+}
 
-	LCP.resize(n + 3);
+void SuffixArray::rebuildSuffixArray()
+{
+	int n = text.length();
 
-	makeLCPArray(s, SA_, LCP);
+	std::vector<int> s(n + 3);
+	std::vector<int> SA(n + 3);
+
+	for (int i = 0; i < n; ++i)
+	{
+		s[i] = static_cast<unsigned int>(text[i]);
+	}
+
+	SA_.resize(n + 3);
+
+	makeSuffixArray(s, SA, n, 65536);
+
+	for (int i = 0; i < SA_.size(); i++)
+	{
+		SA_[i] = SA[i];
+	}
 }
 
 void SuffixArray::loadCSV(std::string filename)
 {
-	fin.open(filename);
-	if (!fin.is_open())
+	in.open(filename);
+	if (!in.is_open())
 	{
 		return;
 	}
 	std::string line;
-	while (std::getline(fin, line))
+	while (std::getline(in, line))
 	{
 		if (line.empty()) continue;
-		int j = 0;
-		while (j < line.size() && !isalpha(line[j]))
-		{
-			j++;
-		}
-		line = line.substr(j);
+
 		std::string key;
-		std::string definition;
-		int i = 0;
-		while (i < line.size() && line[i] != ' ')
+		std::u32string definition;
+
+		size_t i = 0;
+		while (i < line.size())
 		{
+			if ((line[i] == '\t' || line[i] == ' ') && line[i + 1] == '(')
+			{
+				break;
+			}
 			if (i == 0)
 			{
 				key.push_back(tolower(line[i]));
@@ -89,30 +154,31 @@ void SuffixArray::loadCSV(std::string filename)
 			i++;
 		}
 		i++;
-		while (i < line.size())
-		{
-			definition.push_back(line[i]);
-			i++;
-		}
+
+		fix_utf8_string(line);
+		definition = utf8::utf8to32(line.substr(i, line.size() - i));
 		wordStartIndices.push_back(text.size());
 		words.push_back(key);
-		text += definition + "|";
+		text += definition;
+		std::u32string endSign = U"|";
+		text += endSign;
 	}
-	fin.close();
+	in.close();
 }
 
-std::vector<std::pair<std::string, std::string>> SuffixArray::search(const std::string& pattern) {
+std::vector<std::string> SuffixArray::search(const std::string& pattern) {
+	std::u32string pattern_ = utf8::utf8to32(pattern);
 	int n = text.size();
-	int m = pattern.size();
+	int m = pattern_.size();
 	std::vector<int> result;
 
 	int left = 0, right = n;
 
-	// Find the first occurrence of the pattern
+	// ind the first occurrence of the pattern
 	while (left < right) {
 		int mid = (left + right) / 2;
-		std::string suffix = text.substr(SA_[mid], m);
-		if (suffix < pattern) {
+		std::u32string suffix = text.substr(SA_[mid], m);
+		if (suffix < pattern_) {
 			left = mid + 1;
 		}
 		else {
@@ -121,27 +187,27 @@ std::vector<std::pair<std::string, std::string>> SuffixArray::search(const std::
 	}
 
 	// Collect all occurrences of the pattern
-	while (left < n && text.substr(SA_[left], m) == pattern) {
+	while (left < n && text.substr(SA_[left], m) == pattern_) {
 		result.push_back(SA_[left]);
 		left++;
 	}
 
-	std::vector<std::pair<std::string, std::string>> meanings;
+	std::vector<std::string> meanings;
 	// Limit the number of results to 10
 	int count = 0;
 
 	// Collect and print the results between start and end
 	for (int i = 0; i < result.size() && count < 10; ++i) {
-		// Assuming `findWordStartIndices` and `wordStartIndices` are defined elsewhere
+		// Assuming `indWordStartIndices` and `wordStartIndices` are deined elsewhere
 		// and that they provide the starting index of words in the text.
 		int wordIndex = findWordStartIndices(result[i]);
 		if (wordIndex != -1) {
 			int wordStart = wordStartIndices[wordIndex];
-			int wordEnd = text.find('|', wordStart);
+			int wordEnd = text.find(U'|', wordStart);
 			std::string key = words[wordIndex];
-			if (wordEnd != std::string::npos) {
-				std::string foundWord = text.substr(wordStart, wordEnd - wordStart);
-				meanings.push_back(make_pair(key, foundWord));
+			if (wordEnd != std::u32string::npos) {
+				std::u32string foundWord = text.substr(wordStart, wordEnd - wordStart);
+				meanings.push_back(key + ":\t" + utf8::utf32to8(foundWord));
 				count++;
 			}
 		}
@@ -153,13 +219,14 @@ std::vector<std::pair<std::string, std::string>> SuffixArray::search(const std::
 void SuffixArray::insert(const std::string& word, const std::string& definition)
 {
 	std::string key = word;
-	std::string definition_ = definition;
+	std::u32string definition_ = utf8::utf8to32(definition);
 	words.push_back(key);
 	// Remove '$' from the end of the text
 	text.pop_back();
 	wordStartIndices.push_back(text.size());
-	text += definition_ + "|";
-	text.push_back('$');
+	text += definition_;
+	std::u32string endSign = U"|$";
+	text += endSign;
 }
 
 bool SuffixArray::remove(const std::string& word)
@@ -179,10 +246,24 @@ bool SuffixArray::remove(const std::string& word)
 		return false;
 	}
 	int start = wordStartIndices[index];
-	int end = text.find('|', start);
-	text.erase(start, end - start + 1);
+	int end = text.find(U'|', start);
 	words.erase(words.begin() + index);
 	wordStartIndices.erase(wordStartIndices.begin() + index);
+	while (words[index] == key) {
+		end = text.find(U'|', end + 1);
+		words.erase(words.begin() + index);
+		wordStartIndices.erase(wordStartIndices.begin() + index);
+	}
+
+	text.erase(start, end - start + 1);
+	int n = end - start + 1;
+	for (int i = 0; i < wordStartIndices.size(); i++)
+	{
+		if (wordStartIndices[i] > start)
+		{
+			wordStartIndices[i] -= n;
+		}
+	}
 
 	return true;
 }
@@ -190,7 +271,6 @@ bool SuffixArray::remove(const std::string& word)
 bool SuffixArray::update(const std::string& word, const std::string& definition)
 {
 	std::string key = word;
-	std::string definition_ = definition;
 	int index = -1;
 	for (int i = 0; i < words.size(); i++)
 	{
@@ -204,107 +284,89 @@ bool SuffixArray::update(const std::string& word, const std::string& definition)
 	{
 		return false;
 	}
-
-	remove(key);
-	insert(key, definition_);
+	int start = wordStartIndices[index];
+	int end = text.find(U'|', start);
+	while (words[index] == key) {
+		end = text.find(U'|', end + 1);
+		index++;
+	}
+	//text.erase(start, end - start + 1);
+	std::u32string definition_ = utf8::utf8to32(definition) + U'|';
+	text.replace(start, end - start + 1, definition_);
 
 	return true;
 }
 
 void SuffixArray::saveToBF(const std::string& filename) const
 {
-	fout.open(filename, std::ios::binary);
-	if (!fout.is_open())
-	{	
-		std::cout<< "Error opening file";
+	out.open(filename, std::ios::binary);
+	if (!out.is_open())
+	{
 		return;
 	}
 	// Serialize the object
-	int textSize = text.size();
-	fout.write(reinterpret_cast<const char*>(&textSize), sizeof(textSize));
-	fout.write((char*)&text[0], text.size());
-	
+	int textSize = text.size() * sizeof(char32_t);
+	out.write(reinterpret_cast<const char*>(&textSize), sizeof(textSize));
+	out.write((char*)&text[0], text.size());
+
 	int SASize = SA_.size();
-	fout.write(reinterpret_cast<const char*>(&SASize), sizeof(SASize));
-	fout.write((char*)&SA_[0], SA_.size() * sizeof(int));
-	
+	out.write(reinterpret_cast<const char*>(&SASize), sizeof(SASize));
+	out.write((char*)&SA_[0], SA_.size() * sizeof(int));
+
 	int wordStartIndicesSize = wordStartIndices.size();
-	fout.write(reinterpret_cast<const char*>(&wordStartIndicesSize), sizeof(wordStartIndicesSize));
-	fout.write((char*)&wordStartIndices[0], wordStartIndices.size() * sizeof(int));
-	
+	out.write(reinterpret_cast<const char*>(&wordStartIndicesSize), sizeof(wordStartIndicesSize));
+	out.write((char*)&wordStartIndices[0], wordStartIndices.size() * sizeof(int));
+
 	int wordsSize = words.size();
-	fout.write(reinterpret_cast<const char*>(&wordsSize), sizeof(wordsSize));
-	fout.write((char*)&words[0], words.size());
+	out.write(reinterpret_cast<const char*>(&wordsSize), sizeof(wordsSize));
 
-	int LCPSize = LCP.size();
-	fout.write(reinterpret_cast<const char*>(&LCPSize), sizeof(LCPSize));
-	fout.write((char*)&LCP[0], LCP.size() * sizeof(int));
+	for (const auto& word : words)
+	{
+		int wordSize = word.size();
+		out.write(reinterpret_cast<const char*>(&wordSize), sizeof(wordSize));
+		out.write(reinterpret_cast<const char*>(&word[0]), wordSize);
+	}
 
-	fout.close();
+	out.close();
 }
 
 void SuffixArray::loadFromBF(const std::string& filename)
 {
-	fin.open(filename, std::ios::binary);
-	if (!fin.is_open())
+	in.open(filename, std::ios::binary);
+	if (!in.is_open())
 	{
-		std::cout << "Error opening file";
 		return;
 	}
 	// Deserialize the object
 	int textSize;
-	fin.read(reinterpret_cast<char*>(&textSize), sizeof(textSize));
-	text.resize(textSize);
-	fin.read(&text[0], textSize);
+	in.read(reinterpret_cast<char*>(&textSize), sizeof(textSize));
+	text.resize(textSize / sizeof(char32_t));
+	in.read(reinterpret_cast<char*>(&text[0]), textSize);
 
 	int SASize;
-	fin.read(reinterpret_cast<char*>(&SASize), sizeof(SASize));
+	in.read(reinterpret_cast<char*>(&SASize), sizeof(SASize));
 	SA_.resize(SASize);
-	fin.read((char*)&SA_[0], SASize * sizeof(int));
+	in.read(reinterpret_cast<char*>(&SA_[0]), SASize * sizeof(int));
 
 	int wordStartIndicesSize;
-	fin.read(reinterpret_cast<char*>(&wordStartIndicesSize), sizeof(wordStartIndicesSize));
+	in.read(reinterpret_cast<char*>(&wordStartIndicesSize), sizeof(wordStartIndicesSize));
 	wordStartIndices.resize(wordStartIndicesSize);
-	fin.read((char*)&wordStartIndices[0], wordStartIndicesSize * sizeof(int));
+	in.read(reinterpret_cast<char*>(&wordStartIndices[0]), wordStartIndicesSize * sizeof(int));
 
 	int wordsSize;
-	fin.read(reinterpret_cast<char*>(&wordsSize), sizeof(wordsSize));
+	in.read(reinterpret_cast<char*>(&wordsSize), sizeof(wordsSize));
 	words.resize(wordsSize);
-	fin.read((char*)&words[0], wordsSize);
-
-	fin.close();
-}
-
-void SuffixArray::end(bool isModified)
-{
-	if (isModified)
+	for (auto& word : words)
 	{
-		int n = text.length();
-
-		std::vector<int> s(n + 3);
-		std::vector<int> SA(n + 3);
-
-		for (int i = 0; i < n; ++i)
-		{
-			s[i] = (unsigned char)text[i];
-		}
-		
-		SA_.resize(n + 3);
-
-		makeSuffixArray(s, SA, n, 256);
-
-		for (int i = 0; i < SA_.size(); i++)
-		{
-			SA_[i] = SA[i];
-		}
-
-		LCP.clear();
-		LCP.resize(n + 3);
-
-		makeLCPArray(s, SA_, LCP);
+		int wordSize;
+		in.read(reinterpret_cast<char*>(&wordSize), sizeof(wordSize));
+		word.resize(wordSize);
+		in.read(reinterpret_cast<char*>(&word[0]), wordSize);
 	}
-	saveToBF("Data_Storage/Eng2Eng/Current/Eng2Eng.bin");
+
+	in.close();
 }
+
 
 void SuffixArray::makeSuffixArray(const std::vector<int>& s, std::vector<int>& SA, int n, int K)
 {
@@ -483,35 +545,6 @@ bool SuffixArray::suffix12IsSmaller(const std::vector<int>& s, const std::vector
 	}
 }
 
-void SuffixArray::makeLCPArray(const std::vector<int>& s, std::vector<int>& SA, std::vector<int>& LCP)
-{
-	int n = SA.size();
-	std::vector<int> rank(n);
-	for (int i = 0; i < n; i++)
-	{
-		rank[SA[i]] = i;
-	}
-	int k = 0;
-	for (int i = 0; i < n; i++)
-	{
-		if (rank[i] == n - 1)
-		{
-			k = 0;
-			continue;
-		}
-		int j = SA[rank[i] + 1];
-		while (i + k < n && j + k < n && s[i + k] == s[j + k])
-		{
-			k++;
-		}
-		LCP[rank[i]] = k;
-		if (k > 0)
-		{
-			k--;
-		}
-	}
-}
-
 int SuffixArray::findWordStartIndices(int suffixStart)
 {
 	for (int i = 0; i < wordStartIndices.size(); ++i)
@@ -522,4 +555,11 @@ int SuffixArray::findWordStartIndices(int suffixStart)
 		}
 	}
 	return -1;
+}
+
+void fix_utf8_string(std::string& str)
+{
+	std::string temp;
+	utf8::replace_invalid(str.begin(), str.end(), back_inserter(temp));
+	str = temp;
 }

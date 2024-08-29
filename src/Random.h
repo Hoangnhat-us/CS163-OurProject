@@ -18,7 +18,7 @@ public:
 	int correctAnswerIndex;
 };
 
-std::vector<QuestionGenerator> chooseCorrectWord(std::string filename, TST& TST);
+std::vector<QuestionGenerator> chooseCorrectWord(std::string filename, TST& TST); // EngEng, EngViet
 std::vector<QuestionGenerator> chooseCorrectDefinition(std::string filename, TST& TST);
-QuestionGenerator chooseCorrectWord(const SuffixArray& SA, TST& TST);
+QuestionGenerator chooseCorrectWord(const SuffixArray& SA, TST& TST); // The rest
 QuestionGenerator chooseCorrectDefinition(const SuffixArray& SA, TST& TST);

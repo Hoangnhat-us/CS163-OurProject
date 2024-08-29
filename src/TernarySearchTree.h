@@ -1,17 +1,17 @@
 #pragma once
 
-#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include<algorithm>
-#include <codecvt>
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
 #include <iostream>
-#include <locale>
 #include <string>
 #include <vector>
 #include <Windows.h>
 
+#include "utf8/utf8.h"
+#include "utf8/utf8/cpp20.h"
+#include"SuffixArray.h"
 
 
 
@@ -81,8 +81,8 @@ public:
 	void editMeaning(const std::string& word, const std::vector<std::string>& meaning);
 
 };
-void save2CSV(const std::string& filename, std::string prefix, std::ofstream& fout, TST tst);
-void saveAll2csv(const std::string& pathname, TST tst);
+void helptoSave2file(TST&tst, SuffixArray& SA, std::ofstream& fout);
+void save2file(const std::string& pathname, TST &tst,SuffixArray&SA);
 
 std::u32string to_utf32(const std::string& utf8_str);
 
