@@ -67,7 +67,6 @@ wxPanel* historyPage::wordsHistoryTable(wxWindow* parent) {
     wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
     wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
 
-    // Create the wxGrid without wxFULL_REPAINT_ON_RESIZE
     historyGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     historyGrid->CreateGrid(0, 2);  // Start with 0 rows and 2 columns
 
@@ -153,7 +152,7 @@ void historyPage::refreshHistoryGrid() {
         wxString combinedDefinitions;
         for (const auto& def : definitions) {
             if (!def.empty()) {
-                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "\n";  // Combine into single cell with newlines
+                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "\n";
             }
         }
 

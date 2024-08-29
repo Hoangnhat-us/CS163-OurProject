@@ -79,14 +79,12 @@ void FavoriteManager::loadFavorite(const std::string& filename) {
 }
 
 void FavoriteManager::removeFavorite(const std::string& word, const std::string& filename) {
-    auto it = std::remove_if(favorites.begin(), favorites.end(),
-        [&word](const auto& pair) { return pair.first == word; });
+    auto it = std::remove_if(favorites.begin(), favorites.end(), [&word](const auto& pair) { return pair.first == word; });
     if (it != favorites.end()) {
         favorites.erase(it, favorites.end());
-        saveFavorite(filename);  // Save the updated favorites list to file
+        saveFavorite(filename);
     }
 }
-
 
 const std::vector<std::pair<std::string, std::vector<std::string>>>& FavoriteManager::getFavoriteData() const {
     return favorites;

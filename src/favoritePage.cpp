@@ -186,35 +186,44 @@ void favoritePage::refreshFavoriteGrid() {
 }
 
 void favoritePage::OnRemoveButtonClicked(wxGridEvent& event) {
-    std::string favoriteFilePath;
-
-    switch (dicTypeInt) {
-    case 0:
-        favoriteFilePath = "Data_Storage/Favorite/EngToEng.bin";
-        break;
-    case 1:
-        favoriteFilePath = "Data_Storage/Favorite/EngToVie.bin";
-        break;
-    case 2:
-        favoriteFilePath = "Data_Storage/Favorite/VieToEng.bin";
-        break;
-    case 3:
-        favoriteFilePath = "Data_Storage/Favorite/Slang.bin";
-        break;
-    case 4:
-        favoriteFilePath = "Data_Storage/Favorite/Emoji.bin";
-        break;
-    default:
-        wxLogError("Unknown dictionary type.");
-        return;
-    }
     int row = event.GetRow();
-    if (row != wxNOT_FOUND) {
-        wxString word = favoriteGrid->GetCellValue(row, 0);
+    int col = event.GetCol();
+
+    if (col == 2) {
+        wxString word = favoriteGrid->GetCellValue(row, 0);  // Get the word from the first column
+        std::string favoriteFilePath;
+
+        switch (dicTypeInt) {
+        case 0:
+            favoriteFilePath = "Data_Storage/Favorite/EngToEng.bin";
+            break;
+        case 1:
+            favoriteFilePath = "Data_Storage/Favorite/EngToVie.bin";
+            break;
+        case 2:
+            favoriteFilePath = "Data_Storage/Favorite/VieToEng.bin";
+            break;
+        case 3:
+            favoriteFilePath = "Data_Storage/Favorite/Slang.bin";
+            break;
+        case 4:
+            favoriteFilePath = "Data_Storage/Favorite/Emoji.bin";
+            break;
+        default:
+            wxLogError("Unknown dictionary type.");
+            return;
+        }
+
+        // Remove the favorite word from the file
         favoriteManager.removeFavorite(std::string(word.mb_str()), favoriteFilePath);
         refreshFavoriteGrid();  // Refresh grid after removing the favorite
     }
+    else {
+        // Ignore clicks on other columns
+        event.Skip(); // Skip the event to allow other default processing (like selecting the cell)
+    }
 }
+
 
 void favoritePage::OnDicTypeChanged(wxCommandEvent& event) {
     dicTypeInt = lists->getDicType();
