@@ -1,148 +1,183 @@
 #include "dicType.h"
-#include "favoritePage.h"
+#include "favoritePage.h"  // Ensure proper include path
+#include "Favorite.h"
 
-favoritePage::favoritePage(wxWindow* parent, int& dicTypeInt) : wxWindow(parent, wxID_ANY)
-{
-	this->SetBackgroundColour("#FFFFFF");
-	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+favoritePage::favoritePage(wxWindow* parent, int& dicTypeInt)
+    : wxWindow(parent, wxID_ANY), dicTypeInt(dicTypeInt) {
+    this->SetBackgroundColour("#FFFFFF");
+    mainSizer = new wxBoxSizer(wxVERTICAL);
 
-	wxPanel* topPanel = new wxPanel(this, wxID_ANY);
-	topPanel->SetBackgroundColour("#38435A");
+    wxPanel* topPanel = new wxPanel(this, wxID_ANY);
+    topPanel->SetBackgroundColour("#38435A");
 
-	setTopControls(topPanel, dicTypeInt);
+    setTopControls(topPanel, dicTypeInt);
 
-	wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	wxBoxSizer* s1 = new wxBoxSizer(wxVERTICAL);
-	s1->Add(home, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 20);
-	topSizer->Add(s1, 0, wxTOP | wxBOTTOM | wxEXPAND, 20);
+    wxBoxSizer* s1 = new wxBoxSizer(wxVERTICAL);
+    s1->Add(home, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 20);
+    topSizer->Add(s1, 0, wxTOP | wxBOTTOM | wxEXPAND, 20);
 
-	wxBoxSizer* s2 = new wxBoxSizer(wxVERTICAL);
-	s2->Add(searchInput, 0, wxEXPAND | wxLEFT, 10);
-	topSizer->Add(s2, 1, wxTOP | wxBOTTOM | wxEXPAND, 20);
+    wxBoxSizer* s3 = new wxBoxSizer(wxVERTICAL);
+    s3->Add(lists, 0, wxALIGN_CENTER | wxLEFT, 20);
+    topSizer->Add(s3, 0, wxTOP | wxBOTTOM | wxEXPAND, 20);
 
-	wxBoxSizer* s3 = new wxBoxSizer(wxVERTICAL);
-	s3->Add(lists, 0, wxALIGN_CENTER | wxLEFT, 20);
-	topSizer->Add(s3, 0, wxTOP | wxBOTTOM | wxEXPAND, 20);
+    topPanel->SetSizer(topSizer);
+    mainSizer->Add(topPanel, 0, wxEXPAND);
 
-	wxBoxSizer* s5 = new wxBoxSizer(wxVERTICAL);
-	s5->Add(games, 0, wxALIGN_CENTER | wxLEFT, 30);
-	topSizer->Add(s5, 0, wxTOP | wxBOTTOM | wxEXPAND, 20);
+    wxPanel* mid = new wxPanel(this, wxID_ANY);
+    wxPanel* banners = new wxPanel(mid, wxID_ANY);
+    banners->SetBackgroundColour("#636252");
+    wxBoxSizer* ban = new wxBoxSizer(wxHORIZONTAL);
 
-	wxBoxSizer* s4 = new wxBoxSizer(wxVERTICAL);
-	s4->Add(origin, 0, wxALIGN_CENTER | wxLEFT, 40);
-	topSizer->Add(s4, 0, wxTOP | wxBOTTOM | wxEXPAND, 20);
+    wxBoxSizer* a = new wxBoxSizer(wxHORIZONTAL);
+    wxBitmap favoriteBanner(wxT("../../../../picture/favoriteBanner.png"), wxBITMAP_TYPE_PNG);
+    wxStaticBitmap* banner = new wxStaticBitmap(banners, wxID_ANY, favoriteBanner);
+    a->Add(banner, 1, wxALIGN_CENTER);
 
-	wxBoxSizer* s6 = new wxBoxSizer(wxVERTICAL);
-	s6->Add(add, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 30);
-	topSizer->Add(s6, 0, wxTOP | wxBOTTOM | wxEXPAND, 20);
+    banners->SetSizer(a);
+    ban->Add(banners, 1, wxALIGN_CENTER);
 
-	topPanel->SetSizer(topSizer);
+    mid->SetSizer(ban);
+    mainSizer->Add(mid, 0, wxEXPAND);
 
-	mainSizer->Add(topPanel, 0, wxEXPAND);
+    wxScrolledWindow* main = new wxScrolledWindow(this);
+    setMain(main);
+    mainSizer->Add(main, 1, wxEXPAND);
 
-	wxPanel* mid = new wxPanel(this, wxID_ANY);
-	wxPanel* banners = new wxPanel(mid, wxID_ANY);
-	banners->SetBackgroundColour("#FB88AB");
-	wxBoxSizer* ban = new wxBoxSizer(wxHORIZONTAL);
+    this->SetSizer(mainSizer);
 
-	wxBoxSizer* a = new wxBoxSizer(wxHORIZONTAL);
-	wxBitmap favoriteBanner(wxT("../../../../picture/favoriteBanner.png"), wxBITMAP_TYPE_PNG);
-	wxStaticBitmap* banner = new wxStaticBitmap(banners, wxID_ANY, favoriteBanner);
-	a->Add(banner, 1, wxALIGN_CENTER);
-
-	banners->SetSizer(a);
-
-	ban->Add(banners, 1, wxALIGN_CENTER);
-
-	mid->SetSizer(ban);
-
-	mainSizer->Add(mid, 0, wxEXPAND);
-
-	wxScrolledWindow* main = new wxScrolledWindow(this);
-	setMain(main);
-	mainSizer->Add(main, 1, wxEXPAND);
-
-	this->SetSizer(mainSizer);
-
+    Bind(wxEVT_SHOW, &favoritePage::OnShow, this);
 }
 
-void favoritePage::setTopControls(wxPanel* panel, int& dicTypeInt)
-{
-	wxBitmap bmHome(wxT("../../../../picture/home.png"), wxBITMAP_TYPE_PNG);
-	home = new wxBitmapButton(panel, wxID_ANY, bmHome, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-	home->SetBackgroundColour("#38435A");
+void favoritePage::setTopControls(wxPanel* panel, int& dicTypeInt) {
+    wxBitmap bmHome(wxT("../../../../picture/home.png"), wxBITMAP_TYPE_PNG);
+    home = new wxBitmapButton(panel, wxID_ANY, bmHome, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+    home->SetBackgroundColour("#38435A");
 
-	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
+    wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 
-	searchInput = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxSize(450, 33));
-	searchInput->SetFont(font);
-	searchInput->SetHint("Search...");
-
-	games = new wxButton(panel, wxID_ANY, "Games", wxDefaultPosition, wxSize(80, 33), wxNO_BORDER);
-	games->SetBackgroundColour("#38435A");
-	games->SetForegroundColour("#FFFFFF");
-	games->SetFont(font);
-	games->Bind(wxEVT_BUTTON, &favoritePage::OnGamesButtonClicked, this);
-
-	lists = new dicType(panel, dicTypeInt);
-	lists->SetSize(wxSize(1270, 33));
-	lists->SetFont(font);
-
-	wxBitmap bmOrigin(wxT("../../../../picture/Origin-Copy.png"), wxBITMAP_TYPE_PNG);
-	origin = new wxBitmapButton(panel, wxID_ANY, bmOrigin, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-	origin->SetBackgroundColour("#38435A");
-
-	wxBitmap bmAddButton(wxT("../../../../picture/addButton-Copy.png"), wxBITMAP_TYPE_PNG);
-	add = new wxBitmapButton(panel, wxID_ANY, bmAddButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-	add->SetBackgroundColour("#38435A");
+    lists = new dicType(panel, dicTypeInt);
+    lists->SetSize(wxSize(1270, 33));
+    lists->SetFont(font);
+    lists->Bind(wxEVT_COMBOBOX, &favoritePage::OnDicTypeChanged, this);
 }
 
-wxPanel* favoritePage::wordsFavoriteTable(wxWindow* parent)
-{
-	wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
+wxPanel* favoritePage::wordsfavoriteTable(wxWindow* parent) {
+    wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
+    wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
 
-	wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
+    favoriteGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    favoriteGrid->CreateGrid(0, 2);  // Start with 0 rows and 2 columns
 
-	wxGrid* favoriteGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-	favoriteGrid->CreateGrid(1, 2);
-	favoriteGrid->SetColLabelValue(0, "Word");
-	favoriteGrid->SetColLabelValue(1, "Definition");
+    favoriteGrid->SetColLabelValue(0, "Word");
+    favoriteGrid->SetColLabelValue(1, "Definition");
 
-	favoriteGrid->SetRowSize(0, 250);
+    favoriteGrid->SetColSize(0, 100);  // Word column width
+    favoriteGrid->SetColSize(1, 900);  // Definition column width
 
-	favoriteGrid->SetColSize(0, 200);
-	favoriteGrid->SetColSize(1, 800);
+    favoriteGrid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_TOP);
+    favoriteGrid->SetGridLineColour(*wxLIGHT_GREY);
 
+    contentSizer->Add(favoriteGrid, 1, wxEXPAND | wxALL, 20);
+    mainPanel->SetSizer(contentSizer);
 
-	favoriteGrid->SetDefaultCellAlignment(wxALIGN_CENTER, wxALIGN_CENTER);
+    refreshFavoriteGrid();  // Load initial data
 
-	favoriteGrid->SetGridLineColour(*wxLIGHT_GREY);
-
-	favoriteGrid->SetReadOnly(0, 0);
-
-	contentSizer->Add(favoriteGrid, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 20);
-
-	mainPanel->SetSizer(contentSizer);
-
-	return mainPanel;
+    return mainPanel;
 }
 
-
-
-
-void favoritePage::OnGamesButtonClicked(wxCommandEvent& event)
-{
-	wxMessageBox("Games page not implemented yet.", "Info", wxOK | wxICON_INFORMATION, this);
+void favoritePage::setMain(wxScrolledWindow* main) {
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    wxPanel* contentPanel = wordsfavoriteTable(main);
+    sizer->Add(contentPanel, 1, wxEXPAND);
+    main->SetSizer(sizer);
+    main->SetScrollRate(5, 5);
 }
 
-void favoritePage::setMain(wxScrolledWindow* main)
-{
-	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-	wxPanel* contentPanel = wordsFavoriteTable(main);
-	sizer->Add(contentPanel, 1, wxEXPAND | wxALL, 20);
-	main->SetSizer(sizer);
-
-	main->SetScrollbars(20, 20, 50, 50);
-	main->SetScrollRate(5, 5);
+void favoritePage::OnShow(wxShowEvent& event) {
+    if (event.IsShown()) {
+        refreshFavoriteGrid();
+    }
+    event.Skip();
 }
+
+void favoritePage::refreshFavoriteGrid() {
+    if (!favoriteGrid) return;
+
+    int currentRows = favoriteGrid->GetNumberRows();
+    if (currentRows > 0) {
+        favoriteGrid->DeleteRows(0, currentRows);
+    }
+
+    std::string favoriteFilePath;
+
+    switch (dicTypeInt) {
+    case 0:
+        favoriteFilePath = "Data_Storage/Favorite/EngToEng.bin";
+        break;
+    case 1:
+        favoriteFilePath = "Data_Storage/Favorite/EngToVie.bin";
+        break;
+    case 2:
+        favoriteFilePath = "Data_Storage/Favorite/VieToEng.bin";
+        break;
+    case 3:
+        favoriteFilePath = "Data_Storage/Favorite/Slang.bin";
+        break;
+    case 4:
+        favoriteFilePath = "Data_Storage/Favorite/Emoji.bin";
+        break;
+    default:
+        wxLogError("Unknown dictionary type.");
+        return;
+    }
+    favoriteManager.loadFavorite(favoriteFilePath);
+
+    const auto& favoriteData = favoriteManager.getFavoriteData();
+    int numRows = static_cast<int>(favoriteData.size());
+
+    if (numRows > 0) {
+        favoriteGrid->AppendRows(numRows);
+    }
+
+    for (int row = 0; row < numRows; ++row) {
+        const auto& [word, definitions] = favoriteData[row];
+
+        wxString wxWord = wxString::FromUTF8(word.c_str());
+        wxString combinedDefinitions;
+        for (const auto& def : definitions) {
+            if (!def.empty()) {
+                combinedDefinitions += wxString::FromUTF8(def.c_str()) + "\n";  // Combine into single cell with newlines
+            }
+        }
+
+        if (!combinedDefinitions.IsEmpty()) {
+            combinedDefinitions.RemoveLast();  // Remove the trailing newline
+        }
+
+        if (row < favoriteGrid->GetNumberRows()) {
+            favoriteGrid->SetCellValue(row, 0, wxWord);
+            favoriteGrid->SetCellValue(row, 1, combinedDefinitions);
+
+            wxGridCellAttr* attr = new wxGridCellAttr();
+            attr->SetOverflow(false);
+            attr->SetReadOnly(true);
+            attr->SetRenderer(new wxGridCellAutoWrapStringRenderer());
+            favoriteGrid->SetAttr(row, 1, attr);
+
+            int lineCount = std::count(combinedDefinitions.begin(), combinedDefinitions.end(), '\n') + 1;
+            int rowHeight = lineCount * favoriteGrid->GetDefaultRowSize();
+            favoriteGrid->SetRowSize(row, rowHeight);
+        }
+    }
+
+    favoriteGrid->ForceRefresh();  // Force the grid to refresh and display the new data
+    mainSizer->Layout();
+}
+
+void favoritePage::OnDicTypeChanged(wxCommandEvent& event) {
+    dicTypeInt = lists->getDicType();
+    refreshFavoriteGrid();
+}
+
