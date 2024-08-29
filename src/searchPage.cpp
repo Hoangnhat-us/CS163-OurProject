@@ -1,11 +1,11 @@
 ﻿#include "dicType.h"
+#include "Favorite.h"
+#include "History.h"
 #include "searchPage.h"
 #include<wx/splitter.h>
-#include "History.h"
-#include "Favorite.h"
 
 
-searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, std::string& sWord, std::vector<TST>& dic,std::vector<SuffixArray> &SA)
+searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, std::string& sWord, std::vector<TST>& dic, std::vector<SuffixArray>& SA)
 	: wxWindow(parent, wxID_ANY)
 {
 	this->dic = dic;
@@ -88,14 +88,18 @@ searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, st
 	ss3->Add(fix, 0, wxALIGN_CENTER | wxALL, 20);
 	Sizer2->Add(ss3, 1, wxEXPAND);
 
+	wxBoxSizer* ss4 = new wxBoxSizer(wxVERTICAL);
+	ss4->Add(random, 0, wxALIGN_CENTER | wxALL, 20);
+	Sizer2->Add(ss4, 1, wxEXPAND);
+
 	leftPanel->SetSizer(Sizer2);
 
 	//Sizer1->Add(leftPanel, 0, wxEXPAND);
 
-	wxScrolledWindow* rightPanel = new wxScrolledWindow(splitterMain, wxID_ANY,wxDefaultPosition,wxDefaultSize,wxVSCROLL|wxHSCROLL);
-	rightPanel->SetScrollRate(5,5);
+	wxScrolledWindow* rightPanel = new wxScrolledWindow(splitterMain, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL | wxHSCROLL);
+	rightPanel->SetScrollRate(5, 5);
 	setRightControls(rightPanel, dicTypeInt, searchTypeInt, Word);
-	
+
 	wxBoxSizer* Sizer3 = new wxBoxSizer(wxVERTICAL);
 
 	/*wxBoxSizer* wordSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -161,7 +165,7 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 
 
 
-	suggestionBox = new SuggestionListBox(panel, dic,SA, dicTypeInt, searchTypeInt, wxSize(450, 33));
+	suggestionBox = new SuggestionListBox(panel, dic, SA, dicTypeInt, searchTypeInt, wxSize(450, 33));
 	Bind(wxEVT_TEXT, &searchPage::OnTextChange, this, suggestionBox->searchInput->GetId());
 	Bind(wxEVT_BUTTON, &searchPage::OnSuggestionBoxToggle, this, suggestionBox->searchInput->GetId());
 	Bind(wxEVT_LISTBOX, &searchPage::OnSuggestionBoxSelect, this, suggestionBox->suggest->GetId());
@@ -186,19 +190,26 @@ void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt
 	wxFont font(14, wxFONTFAMILY_DEFAULT, wxBOLD, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
 	wxBitmap bmLike(wxT("../../../../picture/heart.png"), wxBITMAP_TYPE_PNG);
-	like = new wxBitmapButton(panel, wxID_ANY, bmLike, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	like = new wxBitmapButton(panel, wxID_ANY, bmLike, wxDefaultPosition, wxDefaultSize);
 	like->SetBackgroundColour("#F8D65B");
 	like->Bind(wxEVT_BUTTON, &searchPage::OnLikeButtonClicked, this, like->GetId());
 
 	wxBitmap bmDel(wxT("../../../../picture/bin.png"), wxBITMAP_TYPE_PNG);
-	del = new wxBitmapButton(panel, wxID_ANY, bmDel, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	del = new wxBitmapButton(panel, wxID_ANY, bmDel, wxDefaultPosition, wxDefaultSize);
 	del->SetBackgroundColour("#F8D65B");
 	del->Bind(wxEVT_BUTTON, &searchPage::OnDelButtonClicked, this, del->GetId());
 
 	wxBitmap bmFix(wxT("../../../../picture/publishing.png"), wxBITMAP_TYPE_PNG);
-	fix = new wxBitmapButton(panel, wxID_ANY, bmFix, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	fix = new wxBitmapButton(panel, wxID_ANY, bmFix, wxDefaultPosition, wxDefaultSize);
 	fix->SetBackgroundColour("#F8D65B");
 	fix->Bind(wxEVT_BUTTON, &searchPage::OnFixButtonClicked, this, fix->GetId());
+
+	wxBitmap bmRan(wxT("../../../../picture/random.png"), wxBITMAP_TYPE_PNG);
+	random = new wxBitmapButton(panel, wxID_ANY, bmRan, wxDefaultPosition, wxDefaultSize);
+	random->SetBackgroundColour("#F8D65B");
+	random->Bind(wxEVT_BUTTON, &searchPage::OnRandomButtonClicked, this, random->GetId());
+
+
 }
 
 void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word)
@@ -229,18 +240,18 @@ void searchPage::setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTy
 	{
 		//def[i] = new wxStaticText(panel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxDefaultSize);
 		editDef[i] = new wxTextCtrl(panel, wxID_ANY, wxString::FromUTF8(defs[i]), wxDefaultPosition, wxSize(maxWidth, wxDefaultSize.GetHeight()), wxTE_READONLY | wxNO_BORDER | wxTE_NO_VSCROLL | wxTE_MULTILINE);
-		
+
 		editDef[i]->SetFont(font);
 		//def[i]->Hide();
-		
+
 		//def[i]->SetFont(font);
 		editDef[i]->SetFont(font);
 	}
 
-	
+
 	for (int i = 0; i < def.size(); i++)
 	{
-	     line[i] = new wxStaticBitmap(panel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+		line[i] = new wxStaticBitmap(panel, wxID_ANY, bmLine, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	}
 	panel->Layout();
 	panel->Refresh();
@@ -350,6 +361,12 @@ void searchPage::OnLikeButtonClicked(wxCommandEvent& event)
 	HandleFavoriteOperations(likedWord, defs, dicTypeInt);
 }
 
+void searchPage::OnRandomButtonClicked(wxCommandEvent& event)
+{
+	this->Word = WOTD(SA[lists->GetSelection()]);
+	UpdateRightPanel();
+}
+
 void searchPage::HandleFavoriteOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt) {
 	std::string basePath = "Data_Storage/Favorite/";
 
@@ -446,7 +463,7 @@ void searchPage::HandleHistoryOperations(const std::string& word, const std::vec
 void searchPage::OnDicTypeChanged(wxCommandEvent& event)
 {
 	dicTypeInt = lists->getDicType();
-	suggestionBox->UpdateSuggestListBox(dic,SA, dicTypeInt, searchTypeInt);
+	suggestionBox->UpdateSuggestListBox(dic, SA, dicTypeInt, searchTypeInt);
 }
 
 void searchPage::OnSearchTypeChanged(wxCommandEvent& event)
@@ -472,7 +489,7 @@ void searchPage::OnFixButtonClicked(wxCommandEvent& event)
 	for (auto& defCtrl : editDef)
 	{
 		defCtrl->SetEditable(!isEditing);
-		defCtrl->SetBackgroundColour(isEditing ? wxColour(255, 255, 255):wxColour(248, 214, 91));
+		defCtrl->SetBackgroundColour(isEditing ? wxColour(255, 255, 255) : wxColour(248, 214, 91));
 		wstr.push_back(defCtrl->GetValue());
 	}
 	if (isEditing)
@@ -482,7 +499,7 @@ void searchPage::OnFixButtonClicked(wxCommandEvent& event)
 		for (auto& w : wstr)
 		{
 			std::string s = std::string(w.mb_str(wxConvUTF8));
-			text += s+'|';
+			text += s + '|';
 			str.push_back(s);
 		}
 		dic[dicTypeInt].editMeaning(Word, str);
