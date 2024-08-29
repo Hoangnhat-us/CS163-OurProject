@@ -90,64 +90,43 @@ void gameDia2::LoadQuestion() {
     }
     else if (dicType == 2) { // Viet-Eng
         if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
-            QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
-            LuuTru.push_back(q);
+            LuuTru.clear();
+            for (int i = 0; i < 1000; ++i) {
+                LuuTru.push_back(chooseCorrectDefinition(*SA, *tst));
+            }
         }
         else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
-            QuestionGenerator q = chooseCorrectWord(*SA, *tst);
-            LuuTru.push_back(q);
-        }
-        // Generate 1000 questions
-        while (LuuTru.size() < 1000) {
-            if (mode == 1) {
-                QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
-                LuuTru.push_back(q);
-            }
-            else if (mode == 2) {
-                QuestionGenerator q = chooseCorrectWord(*SA, *tst);
-                LuuTru.push_back(q);
+            LuuTru.clear();
+            for (int i = 0; i < 1000; ++i) {
+                LuuTru.push_back(chooseCorrectWord(*SA, *tst));
             }
         }
     }
     else if (dicType == 3) { // Slang
         if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
-            QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
-            LuuTru.push_back(q);
+            LuuTru.clear();
+            for (int i = 0; i < 1000; ++i) {
+                LuuTru.push_back(chooseCorrectDefinition(*SA, *tst));
+            }
         }
         else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
-            QuestionGenerator q = chooseCorrectWord(*SA, *tst);
-            LuuTru.push_back(q);
-        }
-        // Generate 1000 questions
-        while (LuuTru.size() < 1000) {
-            if (mode == 1) {
-                QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
-                LuuTru.push_back(q);
-            }
-            else if (mode == 2) {
-                QuestionGenerator q = chooseCorrectWord(*SA, *tst);
-                LuuTru.push_back(q);
+            LuuTru.clear();
+            for (int i = 0; i < 1000; ++i) {
+                LuuTru.push_back(chooseCorrectWord(*SA, *tst));
             }
         }
     }
     else if (dicType == 4) { // Emoji
         if (mode == 1) { // Chế độ 1: 1 emoji ra 4 nghĩa
-            QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
-            LuuTru.push_back(q);
+            LuuTru.clear();
+            for (int i = 0; i < 1000; ++i) {
+                LuuTru.push_back(chooseCorrectDefinition(*SA, *tst));
+            }
         }
         else if (mode == 2) { // Chế độ 2: 1 nghĩa và 4 emoji
-            QuestionGenerator q = chooseCorrectWord(*SA, *tst);
-            LuuTru.push_back(q);
-        }
-        // Generate 1000 questions
-        while (LuuTru.size() < 1000) {
-            if (mode == 1) {
-                QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
-                LuuTru.push_back(q);
-            }
-            else if (mode == 2) {
-                QuestionGenerator q = chooseCorrectWord(*SA, *tst);
-                LuuTru.push_back(q);
+            LuuTru.clear();
+            for (int i = 0; i < 1000; ++i) {
+                LuuTru.push_back(chooseCorrectWord(*SA, *tst));
             }
         }
     }
