@@ -1,5 +1,4 @@
 #pragma once
-#include <wx/timer.h>
 #include <wx/wx.h>
 
 class CountdownTimer : public wxPanel

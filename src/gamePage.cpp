@@ -72,7 +72,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	wxBoxSizer* s4 = new wxBoxSizer(wxVERTICAL);
 	s4->Add(list, 1, wxALIGN_RIGHT);
-	Sizer2->Add(s4, 1, wxEXPAND);
+	Sizer2->Add(s4, 1);
 
 	Panel2->SetSizer(Sizer2);
 
@@ -87,7 +87,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	level = new wxComboBox(Panel3, wxID_ANY, "Select an option",
 		wxDefaultPosition, wxDefaultSize,
 		WXSIZEOF(choices), choices);
-	wxFont font(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
+	wxFont font2(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
 	level->SetFont(font);
 	level->SetSelection(0);
 
@@ -118,9 +118,6 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	btn1->SetValue(true);
 
-	btn1->Bind(wxEVT_TOGGLEBUTTON, &gamePage::OnToggleButton, this);
-	btn2->Bind(wxEVT_TOGGLEBUTTON, &gamePage::OnToggleButton, this);
-
 	wxBoxSizer* Sizer5 = new wxBoxSizer(wxHORIZONTAL);
 
 	wxBoxSizer* s8 = new wxBoxSizer(wxVERTICAL);
@@ -132,6 +129,8 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	Sizer5->Add(s9, 1, wxEXPAND | wxALL, 20);
 
 	Panel5->SetSizer(Sizer5);
+
+	mainSizer->Add(Panel5, 1, wxALL | wxEXPAND, 20);
 	//
 
 	wxPanel* Panel4 = new wxPanel(this, wxID_ANY);
@@ -152,6 +151,8 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	startButton->Bind(wxEVT_BUTTON, &gamePage::OnStart, this);
 	list->Bind(wxEVT_COMBOBOX, &gamePage::OnComboEvt, this);
+	btn1->Bind(wxEVT_TOGGLEBUTTON, &gamePage::OnToggleButton, this);
+	btn2->Bind(wxEVT_TOGGLEBUTTON, &gamePage::OnToggleButton, this);
 }
 
 void gamePage::OnStart(wxCommandEvent& event)

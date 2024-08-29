@@ -29,6 +29,6 @@ public:
 	void OnStart(wxCommandEvent& event);
 	void OnComboEvt(wxCommandEvent& event);
 
-	void OnToggleButton(wxCommandEvent& event)
+	void OnToggleButton(wxCommandEvent& event);
 
 };

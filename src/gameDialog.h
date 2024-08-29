@@ -1,9 +1,14 @@
 ﻿#pragma once
-#include "gameDia1.h"
-#include "gameDia2.h"
-#include <wx/dialog.h>
-#include <wx/simplebook.h>
-#include <wx/wx.h>
+
+#define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
+#include <windows.h>         // Then include windows.h
+#include <winsock2.h>        // Include winsock2.h first
+#include <ws2tcpip.h>        // Additional networking headers if needed
+
+#include"Random.h"
+#include "SuffixArray.h"
+#include "TernarySearchTree.h"
+#include "timer.h"
 
 class gameDialog : public wxDialog
 {

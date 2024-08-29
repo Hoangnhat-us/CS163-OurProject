@@ -2,19 +2,21 @@
 
 gameDialog::gameDialog(wxWindow* parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(720, 460))
 {
+	this->SetBackgroundColour(wxColour(240, 240, 240));
+
 	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
 
 	wxFont font(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
 
-	// Load câu hỏi dựa trên mức độ khó
+	//Load câu hỏi dựa trên mức độ khó
 	LoadQuestion();
 
-	// Tạo đối tượng wxStaticText để hiển thị câu hỏi (từ vựng hoặc định nghĩa)
+	//Tạo đối tượng wxStaticText để hiển thị câu hỏi (từ vựng hoặc định nghĩa)
 	w = new wxStaticText(this, wxID_ANY, word, wxDefaultPosition, wxDefaultSize);
 	w->SetFont(font);
 	vbox->Add(w, 0, wxALIGN_CENTER);
 
-	// Tạo lưới các nút (buttons) để hiển thị các lựa chọn đáp án
+	//Tạo lưới các nút (buttons) để hiển thị các lựa chọn đáp án
 	wxGridSizer* gSizer = new wxGridSizer(2, 2, 20, 20);
 	wxColour buttonColor(0, 128, 0);
 
@@ -29,11 +31,10 @@ gameDialog::gameDialog(wxWindow* parent, const wxString& title) : wxDialog(paren
 	vbox->Add(gSizer, 1, wxEXPAND | wxALL, 20);
 	this->SetSizer(vbox);
 
-	Bind(wxEVT_BUTTON, &gameDia2::OnButtonClicked, this, 10001);
-	Bind(wxEVT_BUTTON, &gameDia2::OnButtonClicked, this, 10002);
-	Bind(wxEVT_BUTTON, &gameDia2::OnButtonClicked, this, 10003);
-	Bind(wxEVT_BUTTON, &gameDia2::OnButtonClicked, this, 10004);
-	SetBackgroundColour(wxColour(240, 240, 240));
+	Bind(wxEVT_BUTTON, &gameDialog::OnButtonClicked, this, 10001);
+	Bind(wxEVT_BUTTON, &gameDialog::OnButtonClicked, this, 10002);
+	Bind(wxEVT_BUTTON, &gameDialog::OnButtonClicked, this, 10003);
+	Bind(wxEVT_BUTTON, &gameDialog::OnButtonClicked, this, 10004);
 }
 
 void gameDialog::OnButtonClicked(wxCommandEvent& event)
@@ -57,7 +58,7 @@ void gameDialog::OnButtonClicked(wxCommandEvent& event)
 
 void gameDialog::LoadQuestion()
 {
-	// Xử lý theo kiểu từ điển và chế độ
+	//Xử lý theo kiểu từ điển và chế độ
 	if (dicType == 0) { // Eng-Eng
 		if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
 			if (level == 1) { // Easy
@@ -115,7 +116,7 @@ void gameDialog::LoadQuestion()
 			QuestionGenerator q = chooseCorrectWord(*SA, *tst);
 			LuuTru.push_back(q);
 		}
-		// Generate 1000 questions
+		//Generate 1000 questions
 		while (LuuTru.size() < 1000) {
 			if (mode == 1) {
 				QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
@@ -170,7 +171,7 @@ void gameDialog::LoadQuestion()
 		}
 	}
 
-	// Cập nhật câu hỏi và đáp án
+	//Cập nhật câu hỏi và đáp án
 	if (!LuuTru.empty()) {
 		word = LuuTru[0].question;
 		DapAn = LuuTru[0].answers;
@@ -180,10 +181,10 @@ void gameDialog::LoadQuestion()
 
 void gameDialog::NextQuestion()
 {
-	// Remove the current question
+	//Remove the current question
 	if (!LuuTru.empty()) {
 		LuuTru.erase(LuuTru.begin());
-		// Load the next question
+		//Load the next question
 		if (!LuuTru.empty()) {
 			LoadQuestion();
 			w->SetLabel(word);
@@ -202,7 +203,7 @@ void gameDialog::EndGame()
 {
 	gameEnded = true;
 
-	// Show the game result
+	//Show the game result
 	wxMessageDialog* dlg = new wxMessageDialog(this,
 		wxString::Format("Game Over! Your score is %d.", score),
 		"Game Over",
