@@ -190,4 +190,35 @@ void gameDia2::NextQuestion() {
     // Remove the current question
     if (!LuuTru.empty()) {
         LuuTru.erase(LuuTru.begin());
+        // Load the next question
+        if (!LuuTru.empty()) {
+            LoadQuestion();
+            w->SetLabel(word);
+            for (int i = 0; i < 4; ++i) {
+                buttons[i]->SetLabel(wxString::Format("%c. %s", 'A' + i, DapAn[i]));
+                buttons[i]->SetBackgroundColour(wxColour(0, 128, 0)); // Reset button background color
+            }
+        }
+        else {
+            EndGame(); // If no more questions, end the game
+        }
+    }
+}
+
+void gameDia2::EndGame() {
+    gameEnded = true;
+
+    // Show the game result
+    wxMessageDialog* dlg = new wxMessageDialog(this,
+        wxString::Format("Game Over! Your score is %d.", score),
+        "Game Over",
+        wxOK | wxICON_INFORMATION);
+
+    if (dlg->ShowModal() == wxID_OK) {
+        Close(true); // Close the game window when the user clicks OK
+    }
+    delete dlg;
+}
+
+
 
