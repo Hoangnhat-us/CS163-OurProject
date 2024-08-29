@@ -10,6 +10,7 @@
 #include<wx/splitter.h>
 #include"Random.h"
 #include "History.h"
+#include "Favorite.h"
 #include"addDialog.h"
 
 class searchPage : public wxWindow {
@@ -53,8 +54,10 @@ public:
 	void OnFixButtonClicked(wxCommandEvent& event);
 	void OnOriginButtonClicked(wxCommandEvent& event);
 	void OnAddButtonClicked(wxCommandEvent& event);
+	void OnLikeButtonClicked(wxCommandEvent& event);
 
 	void HandleHistoryOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt);
+	void HandleFavoriteOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt);
 private:
 	int dicTypeInt;
 	int searchTypeInt;
@@ -65,6 +68,7 @@ private:
 	void setRightControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt, std::string Word);
 
 	HistoryManager historyManager;
+	FavoriteManager favoriteManager;
 };
 
 
