@@ -115,5 +115,42 @@ addDialog::addDialog(wxWindow* parent, const wxString& title) : wxDialog(parent,
 
 	this->SetSizer(mainSizer);
 
+	add->Bind(wxEVT_BUTTON, &addDialog::OnAddButtonClicked, this);
+}
+bool addDialog::isAdded()
+{
+	return isAdd;
+}
+std::string addDialog::getWord()
+{
+	wxString wstr = wordInput->GetValue();
+	std::string str = std::string(wstr.mb_str(wxConvUTF8));
+	return str;
+}
 
+std::vector < std::string> addDialog::getDef()
+{
+	wxString wstr = defInput->GetValue();
+	std::string str = std::string(wstr.mb_str(wxConvUTF8));
+	std::vector<std::string> def;
+	std::string temp = "";
+	for (int i = 0; i < str.size(); i++)
+	{
+		if (str[i] == '|')
+		{
+			def.push_back(temp);
+			temp = "";
+		}
+		else
+		{
+			temp += str[i];
+		}
+	}
+	def.push_back(temp);
+	return def;
+}
+void addDialog::OnAddButtonClicked(wxCommandEvent& event)
+{
+	isAdd = true;
+	Close(true);
 }

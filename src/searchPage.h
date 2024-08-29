@@ -10,7 +10,7 @@
 #include<wx/splitter.h>
 #include"Random.h"
 #include "History.h"
-
+#include"addDialog.h"
 
 class searchPage : public wxWindow {
 public:
@@ -52,6 +52,7 @@ public:
 	void OnDelButtonClicked(wxCommandEvent& event);
 	void OnFixButtonClicked(wxCommandEvent& event);
 	void OnOriginButtonClicked(wxCommandEvent& event);
+	void OnAddButtonClicked(wxCommandEvent& event);
 
 	void HandleHistoryOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt);
 private:
