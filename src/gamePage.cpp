@@ -80,7 +80,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	wxPanel* Panel3 = new wxPanel(this, wxID_ANY);
 
-	wxString choices[] = { "Easy", "Medium", "Hard" };
+	wxString choices[] = { "Easy", "Medium", "Hard", "None" };
 	// Tải hình ảnh từ file
 	level = new wxComboBox(Panel3, wxID_ANY, "Select an option",
 		wxDefaultPosition, wxDefaultSize,
@@ -122,6 +122,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	this->SetSizer(mainSizer);
 
 	startButton->Bind(wxEVT_BUTTON, &gamePage::OnStart, this);
+	list->Bind(wxEVT_COMBOBOX, &gamePage::OnComboEvt, this);
 }
 
 void gamePage::OnStart(wxCommandEvent& event)
@@ -129,4 +130,17 @@ void gamePage::OnStart(wxCommandEvent& event)
 	game = new gameDialog(this, "Word Game");
 	game->ShowModal();
 
+}
+
+void gamePage::OnComboEvt(wxCommandEvent& event)
+{
+	if (list->GetSelection() == 3 || list->GetSelection() == 4 || list->GetSelection() == 2)
+	{
+		level->SetSelection(3);
+		level->Disable();
+	}
+	if (list->GetSelection() == 0 || list->GetSelection() == 1)
+		level->Enable();
+	level->Refresh();
+	level->Update();
 }

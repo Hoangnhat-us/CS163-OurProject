@@ -14,24 +14,24 @@ SuffixArray::SuffixArray(initType iType, dictType dType)
 	{
 		if (dType == EE)
 		{
-			
-				std::string filename = "Data_Storage/Eng2Eng/Current/eng2eng.txt";
-				loadCSV(filename);
-			
+
+			std::string filename = "Data_Storage/Eng2Eng/Current/eng2eng.txt";
+			loadCSV(filename);
+
 		}
 		else if (dType == EV)
 		{
-			
-				std::string filename = "Data_Storage/Eng2Viet/Current/eng2viet.txt";
-				loadCSV(filename);
-			
+
+			std::string filename = "Data_Storage/Eng2Viet/Current/eng2viet.txt";
+			loadCSV(filename);
+
 		}
 		else if (dType == VE)
 		{
-			
-				std::string filename = "Data_Storage/Viet2Eng/Current/viet2eng.txt";
-				loadCSV(filename);
-			
+
+			std::string filename = "Data_Storage/Viet2Eng/Current/viet2eng.txt";
+			loadCSV(filename);
+
 		}
 		else if (dType == SLANG)
 		{
@@ -207,7 +207,7 @@ std::vector<std::string> SuffixArray::search(const std::string& pattern) {
 			std::string key = words[wordIndex];
 			if (wordEnd != std::u32string::npos) {
 				std::u32string foundWord = text.substr(wordStart, wordEnd - wordStart);
-				meanings.push_back(key + ":" + utf8::utf32to8(foundWord));
+				meanings.push_back(key + ":\t" + utf8::utf32to8(foundWord));
 				count++;
 			}
 		}
@@ -254,7 +254,7 @@ bool SuffixArray::remove(const std::string& word)
 		words.erase(words.begin() + index);
 		wordStartIndices.erase(wordStartIndices.begin() + index);
 	}
-	
+
 	text.erase(start, end - start + 1);
 	int n = end - start + 1;
 	for (int i = 0; i < wordStartIndices.size(); i++)
@@ -285,14 +285,14 @@ bool SuffixArray::update(const std::string& word, const std::string& definition)
 		return false;
 	}
 	int start = wordStartIndices[index];
-	int end= text.find(U'|', start);
+	int end = text.find(U'|', start);
 	while (words[index] == key) {
-		end= text.find(U'|', end+1);
+		end = text.find(U'|', end + 1);
 		index++;
 	}
 	//text.erase(start, end - start + 1);
 	std::u32string definition_ = utf8::utf8to32(definition) + U'|';
-	text.replace(start, end - start + 1,definition_);
+	text.replace(start, end - start + 1, definition_);
 
 	return true;
 }

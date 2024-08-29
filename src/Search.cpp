@@ -2,7 +2,7 @@
 
 void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
 	suggest->Clear();
-	
+
 	if (isHaveunicode(prefix.ToStdString()))
 	{
 		if (dicTypeInt == 0) {
@@ -40,7 +40,7 @@ void SuggestionListBox::UpdateSuggestions(const wxString& prefix) {
 	}
 }
 
-SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst,std::vector<SuffixArray>& SA, int& dicTypeInt, int& searchType, wxSize size) : wxPanel(parent, wxID_ANY)
+SuggestionListBox::SuggestionListBox(wxWindow* parent, std::vector<TST>& tst, std::vector<SuffixArray>& SA, int& dicTypeInt, int& searchType, wxSize size) : wxPanel(parent, wxID_ANY)
 {
 	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
@@ -114,8 +114,9 @@ std::string SuggestionListBox::getSearchInput()
 	std::string str = std::string(wstr.mb_str(wxConvUTF8));
 	if (searchType == 1) {
 		auto it = std::find(str.begin(), str.end(), ':');
+		it = std::find(it, str.end(), '\t');
 		if (it != str.end()) {
-			str = std::string(str.begin(), it);
+			str = std::string(str.begin(), it - 1);
 		}
 	}
 	return str;
@@ -126,7 +127,7 @@ void SuggestionListBox::OnSuggestionSelected(wxCommandEvent& event)
 	searchInput->SetValue(suggest->GetStringSelection());
 	suggest->Hide();
 }
-void SuggestionListBox::UpdateSuggestListBox(std::vector<TST>& dic, std::vector<SuffixArray>&SA, int& dicTypeInt, int& searchType)
+void SuggestionListBox::UpdateSuggestListBox(std::vector<TST>& dic, std::vector<SuffixArray>& SA, int& dicTypeInt, int& searchType)
 {
 	this->dicTypeInt = dicTypeInt;
 	switch (dicTypeInt)

@@ -19,4 +19,6 @@ public:
 
 	gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& sWord, std::vector<TST>& dic, std::vector<SuffixArray>& SA);
 	void OnStart(wxCommandEvent& event);
+	void OnComboEvt(wxCommandEvent& event);
+
 };

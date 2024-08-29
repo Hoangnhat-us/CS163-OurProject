@@ -174,6 +174,7 @@ void searchPage::setTopControls(wxPanel* panel, int& dicTypeInt, int& searchType
 	wxBitmap bmAddButton(wxT("../../../../picture/addButton-Copy.png"), wxBITMAP_TYPE_PNG);
 	add = new wxBitmapButton(panel, wxID_ANY, bmAddButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	add->SetBackgroundColour("#38435A");
+	add->Bind(wxEVT_BUTTON, &searchPage::OnAddButtonClicked, this, add->GetId());
 
 }
 
@@ -269,8 +270,8 @@ void searchPage::OnSuggestionBoxSelect(wxCommandEvent& event)
 void searchPage::UpdateRightPanel()
 {
 	std::string selectedWord = Word;
-	int dicTypeInt = lists->getDicType();
-	int searchTypeInt = choice->getSearchType();
+	int dicTypeInt = this->dicTypeInt;
+	int searchTypeInt = this->searchTypeInt;
 	wxWindowList children = mainPanel->GetChildren();
 	wxScrolledWindow* rightPanel = nullptr;
 
@@ -339,8 +340,8 @@ void searchPage::OnSearchButtonClicked(wxCommandEvent& event)
 	Word = suggestionBox->getSearchInput();
 	suggestionBox->suggest->Hide();
 	OnSuggestionBoxToggle(event);
-	int dicTypeInt = lists->getDicType();
-	int searchTypeInt = choice->getSearchType();
+	int dicTypeInt = this->dicTypeInt;
+	int searchTypeInt = this->dicTypeInt;
 
 	UpdateRightPanel();
 
@@ -487,6 +488,25 @@ void searchPage::OnOriginButtonClicked(wxCommandEvent& event)
 	default:
 		break;
 	}
+	wxMessageBox("Reset to origin successfully", "Reset to origin", wxOK | wxICON_INFORMATION);
 	suggestionBox->UpdateSuggestListBox(dic, SA, dicTypeInt, searchTypeInt);
 
+}
+
+void searchPage::OnAddButtonClicked(wxCommandEvent& event)
+{
+	addDialog dialog(this, "Adding Dialog");
+	dialog.ShowModal();
+	if (dialog.isAdded())
+	{
+		std::string word = dialog.getWord();
+		std::vector<std::string> defs = dialog.getDef();
+		for (auto& d : defs) {
+			dic[dicTypeInt].insert(word, d);
+			SA[dicTypeInt].insert(word, d);
+		}
+		SA[dicTypeInt].rebuildSuffixArray();
+		suggestionBox->UpdateSuggestListBox(dic, SA, dicTypeInt, searchTypeInt);
+		wxMessageBox("Add successfully", "Add", wxOK | wxICON_INFORMATION);
+	}
 }
