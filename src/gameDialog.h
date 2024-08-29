@@ -17,15 +17,15 @@ public:
 	wxStaticText* point;
 	wxStaticText* w;
 	wxButton* buttons[4];
-	TST* tst;
-	SuffixArray* SA;
+	std::vector<TST> tst;
+	std::vector<SuffixArray> SA;
 	int level = 0;
 	int dicType = 0;
 	int mode = 0;
 	int score = 0; // Điểm số của người chơi
 	bool gameEnded = false; // Trạng thái kết thúc game
 
-	gameDialog(wxWindow* parent, const wxString& title);
+	gameDialog(wxWindow* parent, const wxString& title, std::vector<TST> &tst,	std::vector<SuffixArray> &SA);
 	void OnButtonClicked(wxCommandEvent& event);
 
 private:

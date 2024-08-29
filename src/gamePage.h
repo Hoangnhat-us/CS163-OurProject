@@ -17,7 +17,8 @@ public:
 	dicType* list;
 	wxComboBox* level;
 	gameDialog* game;
-
+	std::vector<TST> tst;
+	std::vector<SuffixArray> SA;
 
 	wxBitmapToggleButton* btn1;
 	wxBitmapToggleButton* btn2;

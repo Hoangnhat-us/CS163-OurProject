@@ -1,9 +1,10 @@
 ﻿#include "gameDialog.h"
 
-gameDialog::gameDialog(wxWindow* parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(720, 460))
+gameDialog::gameDialog(wxWindow* parent, const wxString& title, std::vector<TST>& tst, std::vector<SuffixArray>& SA) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(720, 460))
 {
 	this->SetBackgroundColour(wxColour(240, 240, 240));
-
+	this->tst = tst;
+	this->SA = SA;
 	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
 
 	wxFont font(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
@@ -62,110 +63,110 @@ void gameDialog::LoadQuestion()
 	if (dicType == 0) { // Eng-Eng
 		if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
 			if (level == 1) { // Easy
-				LuuTru = chooseCorrectDefinition("engeng_mode1_easy.txt", *tst);
+				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Eng/Games/Words/EasyMode.txt", tst[0]);
 			}
 			else if (level == 2) { // Medium
-				LuuTru = chooseCorrectDefinition("engeng_mode1_medium.txt", *tst);
+				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Eng/Games/Words/MediumMode.txt", tst[0]);
 			}
 			else if (level == 3) { // Difficult
-				LuuTru = chooseCorrectDefinition("engeng_mode1_difficult.txt", *tst);
+				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Eng/Games/Words/HardMode.txt", tst[0]);
 			}
 		}
 		else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
 			if (level == 1) { // Easy
-				LuuTru = chooseCorrectWord("engeng_mode2_easy.txt", *tst);
+				LuuTru = chooseCorrectWord("Data_Storage/Eng2Eng/Games/Words/EasyMode.txt", tst[0]);
 			}
 			else if (level == 2) { // Medium
-				LuuTru = chooseCorrectWord("engeng_mode2_medium.txt", *tst);
+				LuuTru = chooseCorrectWord("Data_Storage/Eng2Eng/Games/Words/MediumMode.txt", tst[0]);
 			}
 			else if (level == 3) { // Difficult
-				LuuTru = chooseCorrectWord("engeng_mode2_difficult.txt", *tst);
+				LuuTru = chooseCorrectWord("Data_Storage/Eng2Eng/Games/Words/HardModet.txt", tst[0]);
 			}
 		}
 	}
 	else if (dicType == 1) { // Eng-Viet
 		if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
 			if (level == 1) { // Easy
-				LuuTru = chooseCorrectDefinition("engviet_easy.txt", *tst);
+				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Viet/Games/Words/EasyMode.txt", tst[dicType]);
 			}
 			else if (level == 2) { // Medium
-				LuuTru = chooseCorrectDefinition("engviet_medium.txt", *tst);
+				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Viet/Games/Words/MediumMode.txt", tst[dicType]);
 			}
 			else if (level == 3) { // Difficult
-				LuuTru = chooseCorrectDefinition("engviet_difficult.txt", *tst);
+				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Viet/Games/Words/HardMode.txt", tst[dicType]);
 			}
 		}
 		else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
 			if (level == 1) { // Easy
-				LuuTru = chooseCorrectWord("engviet_easy.txt", *tst);
+				LuuTru = chooseCorrectWord("Data_Storage/Eng2Viet/Games/Words/EasyMode.txt", tst[dicType]);
 			}
 			else if (level == 2) { // Medium
-				LuuTru = chooseCorrectWord("engviet_medium.txt", *tst);
+				LuuTru = chooseCorrectWord("Data_Storage/Eng2Viet/Games/Words/MediumMode.txt", tst[dicType]);
 			}
 			else if (level == 3) { // Difficult
-				LuuTru = chooseCorrectWord("engviet_difficult.txt", *tst);
+				LuuTru = chooseCorrectWord("Data_Storage/Eng2Viet/Games/Words/MediumMode.txt", tst[dicType]);
 			}
 		}
 	}
 	else if (dicType == 2) { // Viet-Eng
 		if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
-			QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+			QuestionGenerator q = chooseCorrectDefinition(SA[dicType], tst[dicType]);
 			LuuTru.push_back(q);
 		}
 		else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
-			QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+			QuestionGenerator q = chooseCorrectWord(SA[dicType], tst[dicType]);
 			LuuTru.push_back(q);
 		}
 		//Generate 1000 questions
 		while (LuuTru.size() < 1000) {
 			if (mode == 1) {
-				QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+				QuestionGenerator q = chooseCorrectDefinition(SA[dicType], tst[dicType]);
 				LuuTru.push_back(q);
 			}
 			else if (mode == 2) {
-				QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+				QuestionGenerator q = chooseCorrectWord(SA[dicType], tst[dicType]);
 				LuuTru.push_back(q);
 			}
 		}
 	}
 	else if (dicType == 3) { // Slang
 		if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
-			QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+			QuestionGenerator q = chooseCorrectDefinition(SA[dicType], tst[dicType]);
 			LuuTru.push_back(q);
 		}
 		else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
-			QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+			QuestionGenerator q = chooseCorrectWord(SA[dicType], tst[dicType]);
 			LuuTru.push_back(q);
 		}
 		// Generate 1000 questions
 		while (LuuTru.size() < 1000) {
 			if (mode == 1) {
-				QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+				QuestionGenerator q = chooseCorrectDefinition(SA[dicType], tst[dicType]);
 				LuuTru.push_back(q);
 			}
 			else if (mode == 2) {
-				QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+				QuestionGenerator q = chooseCorrectWord(SA[dicType], tst[dicType]);
 				LuuTru.push_back(q);
 			}
 		}
 	}
 	else if (dicType == 4) { // Emoji
 		if (mode == 1) { // Chế độ 1: 1 emoji ra 4 nghĩa
-			QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+			QuestionGenerator q = chooseCorrectDefinition(SA[dicType], tst[dicType]);
 			LuuTru.push_back(q);
 		}
 		else if (mode == 2) { // Chế độ 2: 1 nghĩa và 4 emoji
-			QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+			QuestionGenerator q = chooseCorrectWord(SA[dicType], tst[dicType]);
 			LuuTru.push_back(q);
 		}
 		// Generate 1000 questions
 		while (LuuTru.size() < 1000) {
 			if (mode == 1) {
-				QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+				QuestionGenerator q = chooseCorrectDefinition(SA[dicType], tst[dicType]);
 				LuuTru.push_back(q);
 			}
 			else if (mode == 2) {
-				QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+				QuestionGenerator q = chooseCorrectWord(SA[dicType], tst[dicType]);
 				LuuTru.push_back(q);
 			}
 		}

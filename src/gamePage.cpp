@@ -7,6 +7,8 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	wxBitmap bm3(wxT("../../../../picture/levelChoice.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bm4(wxT("../../../../picture/startChoice.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bm5(wxT("../../../../picture/home.png"), wxBITMAP_TYPE_PNG);
+	this->tst = dic;
+	this->SA = SA;
 
 	this->SetBackgroundColour("#B5D395");
 
@@ -157,7 +159,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 void gamePage::OnStart(wxCommandEvent& event)
 {
-	game = new gameDialog(this, "Word Game");
+	game = new gameDialog(this, "Word Game", tst, SA);
 	game->ShowModal();
 
 }
