@@ -269,8 +269,8 @@ void searchPage::OnSuggestionBoxSelect(wxCommandEvent& event)
 void searchPage::UpdateRightPanel()
 {
 	std::string selectedWord = Word;
-	int dicTypeInt = lists->getDicType();
-	int searchTypeInt = choice->getSearchType();
+	int dicTypeInt = this->dicTypeInt;
+	int searchTypeInt = this->searchTypeInt;
 	wxWindowList children = mainPanel->GetChildren();
 	wxScrolledWindow* rightPanel = nullptr;
 
@@ -339,8 +339,8 @@ void searchPage::OnSearchButtonClicked(wxCommandEvent& event)
 	Word = suggestionBox->getSearchInput();
 	suggestionBox->suggest->Hide();
 	OnSuggestionBoxToggle(event);
-	int dicTypeInt = lists->getDicType();
-	int searchTypeInt = choice->getSearchType();
+	int dicTypeInt = this->dicTypeInt;
+	int searchTypeInt = this->dicTypeInt;
 
 	UpdateRightPanel();
 
