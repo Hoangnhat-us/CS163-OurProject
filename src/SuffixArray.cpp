@@ -249,7 +249,7 @@ bool SuffixArray::remove(const std::string& word)
 	int end = text.find(U'|', start);
 	words.erase(words.begin() + index);
 	wordStartIndices.erase(wordStartIndices.begin() + index);
-	while (words[index] == key) {
+	while (index < words.size() && words[index] == key) {
 		end = text.find(U'|', end + 1);
 		words.erase(words.begin() + index);
 		wordStartIndices.erase(wordStartIndices.begin() + index);
