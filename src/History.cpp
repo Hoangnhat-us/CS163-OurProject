@@ -4,7 +4,7 @@
 #include <wx/wx.h>
 
 void HistoryManager::addHistory(const std::string& word, const std::vector<std::string>& definitions) {
-    history.emplace_back(word, definitions);
+    history.emplace(history.begin(), word, definitions);
 }
 
 void HistoryManager::saveHistory(const std::string& filename) const {

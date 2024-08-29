@@ -150,7 +150,7 @@ void historyPage::refreshHistoryGrid() {
     HistoryManager historyManager;
     std::string historyFilePath;
 
-    switch (lists->getDicType()) {
+    switch (dicTypeInt) {
     case 0:
         historyFilePath = "Data_Storage/History/EngToEng.bin";
         break;
@@ -206,8 +206,8 @@ void historyPage::refreshHistoryGrid() {
             attr->SetRenderer(new wxGridCellAutoWrapStringRenderer());
             historyGrid->SetAttr(row, 1, attr);
 
-            // Set fixed row height
-            int rowHeight = 200;
+            int lineCount = std::count(combinedDefinitions.begin(), combinedDefinitions.end(), '\n') + 1;
+            int rowHeight = lineCount * historyGrid->GetDefaultRowSize();
             historyGrid->SetRowSize(row, rowHeight);
         }
     }
