@@ -116,6 +116,41 @@ void frame::LoadDic() {
 	SA[2] = SuffixArray(Cur, VE);
 	SA[3] = SuffixArray(Cur, SLANG);
 	SA[4] = SuffixArray(Cur, EMOJI);
+
+	
+		/*for (int i = 0; i <= 27; i++) {
+			std::string c = std::to_string(i + 1);
+			std::string s = "Data_Storage/Eng2Eng/Origin/";
+			s += c;
+			s += ".txt";
+			dic[0].loadfile(s);
+		}
+		SA[0] = SuffixArray(Origin, EE);
+		
+		for (int i = 0; i <= 27; i++) {
+			std::string c = std::to_string(i + 1);
+			std::string s = "Data_Storage/Eng2Viet/Origin/";
+			s += c;
+			s += ".txt";
+			dic[1].loadfile(s);
+		}
+		SA[1] = SuffixArray(Origin, EV);
+		
+		for (int i = 0; i <= 24; i++) {
+			std::string c = std::to_string(i + 1);
+			std::string s = "Data_Storage/Viet2Eng/Origin/";
+			s += c;
+			s += ".txt";
+			dic[2].loadfile(s);
+		}
+		SA[2] = SuffixArray(Origin, VE);
+		
+		dic[3].loadfile("Data_Storage/Slang/Origin/slangs.txt");
+		SA[3] = SuffixArray(Origin, SLANG);
+		
+		dic[4].loadfile("Data_Storage/Emoji/Origin/emoji_df.txt");
+		SA[4] = SuffixArray(Origin, EMOJI);*/
+		
 }
 
 void frame::switchToGame(wxCommandEvent& event)
