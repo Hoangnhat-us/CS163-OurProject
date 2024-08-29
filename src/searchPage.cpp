@@ -2,6 +2,8 @@
 #include "searchPage.h"
 #include<wx/splitter.h>
 #include "History.h"
+#include "Favorite.h"
+
 
 searchPage::searchPage(wxWindow* parent, int& dicTypeInt, int& searchTypeInt, std::string& sWord, std::vector<TST>& dic,std::vector<SuffixArray> &SA)
 	: wxWindow(parent, wxID_ANY)
@@ -186,6 +188,7 @@ void searchPage::setControls(wxPanel* panel, int& dicTypeInt, int& searchTypeInt
 	wxBitmap bmLike(wxT("../../../../picture/heart.png"), wxBITMAP_TYPE_PNG);
 	like = new wxBitmapButton(panel, wxID_ANY, bmLike, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 	like->SetBackgroundColour("#F8D65B");
+	like->Bind(wxEVT_BUTTON, &searchPage::OnLikeButtonClicked, this, like->GetId());
 
 	wxBitmap bmDel(wxT("../../../../picture/bin.png"), wxBITMAP_TYPE_PNG);
 	del = new wxBitmapButton(panel, wxID_ANY, bmDel, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
@@ -332,6 +335,56 @@ void searchPage::UpdateRightPanel()
 		rightPanel->Layout();
 		rightPanel->Refresh();
 		mainPanel->Layout();
+	}
+}
+
+void searchPage::OnLikeButtonClicked(wxCommandEvent& event)
+{
+	wxMessageBox(wxT("Like"), wxT("This is the title"), wxICON_INFORMATION);
+	std::string likedWord = Word;
+	std::vector<std::string> defs = dic[dicTypeInt].search(likedWord);
+	if (defs.empty()) {
+		defs = dic[dicTypeInt].suggestCorrections(likedWord, 2);
+	}
+
+	HandleFavoriteOperations(likedWord, defs, dicTypeInt);
+}
+
+void searchPage::HandleFavoriteOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt) {
+	std::string basePath = "Data_Storage/Favorite/";
+
+	wxMessageBox(wxT("hi"), wxT("This is the title"), wxICON_INFORMATION);
+	std::string favoriteFile;
+	switch (dicTypeInt) {
+	case 0:
+		favoriteFile = basePath + "EngToEng.bin";
+		break;
+	case 1:
+		favoriteFile = basePath + "EngToVie.bin";
+		break;
+	case 2:
+		favoriteFile = basePath + "VieToEng.bin";
+		break;
+	case 3:
+		favoriteFile = basePath + "Slang.bin";
+		break;
+	case 4:
+		favoriteFile = basePath + "Emoji.bin";
+		break;
+	default:
+		std::cerr << "Invalid dictionary type." << std::endl;
+		return;
+	}
+
+	wxMessageBox(wxT("This is abc."), wxT("This is the title"), wxICON_INFORMATION);
+	favoriteManager.loadFavorite(favoriteFile);
+
+	if (!definitions.empty()) {
+		favoriteManager.addFavorite(word, definitions);
+		favoriteManager.saveFavorite(favoriteFile);
+	}
+	else {
+		std::cerr << "No definitions found to save to favorite." << std::endl;
 	}
 }
 
