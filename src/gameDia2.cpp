@@ -16,7 +16,7 @@ gameDia2::gameDia2(wxWindow* parent) : wxPanel(parent, wxID_ANY)
     w->SetFont(font);
     vbox->Add(w, 0, wxALIGN_CENTER);
 
-    // Tạo lưới các nút (buttons) để hiển thị các lựa chọn đáp án
+    // Tạo lưới các nút (buttons) để hiển thị các lựa ch ọn đáp án
     wxGridSizer* gSizer = new wxGridSizer(2, 2, 20, 20);
     wxColour buttonColor(0, 128, 0);
 
