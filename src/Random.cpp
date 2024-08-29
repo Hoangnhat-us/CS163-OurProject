@@ -48,6 +48,7 @@ std::vector<QuestionGenerator> chooseCorrectWord(std::string filename, TST& TST)
 		}
 		q.question = definitions[0];
 		q.correctAnswerIndex = random(4);
+		q.answers.resize(4);
 		q.answers[q.correctAnswerIndex] = words[i];
 		words.erase(words.begin() + i);
 		for (int j = 0; j < 4; j++)
@@ -98,7 +99,7 @@ std::vector<QuestionGenerator> chooseCorrectDefinition(std::string filename, TST
 		words.erase(words.begin() + i);
 		for (int j = 0; j < 4; j++)
 		{
-			if (j != q.correctAnswerIndex && words.size()>0)
+			if (j != q.correctAnswerIndex && words.size() > 0)
 			{
 				int k = random(words.size());
 				std::vector<std::string> defs = TST.search(words[k]);
@@ -110,7 +111,7 @@ std::vector<QuestionGenerator> chooseCorrectDefinition(std::string filename, TST
 				q.answers[j] = defs[0];
 				words.erase(words.begin() + k);
 			}
-			
+
 		}
 		questions.push_back(q);
 	}
@@ -125,6 +126,7 @@ QuestionGenerator chooseCorrectWord(const SuffixArray& SA, TST& TST)
 	std::vector<std::string> definitions = TST.search(word);
 	q.question = definitions[0];
 	q.correctAnswerIndex = random(4);
+	q.answers.resize(4);
 	q.answers[q.correctAnswerIndex] = word;
 	for (int i = 0; i < 4; i++)
 	{
@@ -145,16 +147,19 @@ QuestionGenerator chooseCorrectWord(const SuffixArray& SA, TST& TST)
 QuestionGenerator chooseCorrectDefinition(const SuffixArray& SA, TST& TST)
 {
 	QuestionGenerator q;
+
 	std::string word = WOTD(SA);
+
 	std::vector<std::string> definitions = TST.search(word);
 
 	if (definitions.empty()) {
-		throw std::runtime_error("No definitions found for the word of the day.");
+		/*throw std::runtime_error("No definitions found for the word of the day.");*/
 	}
 
-	
+
 	q.question = word;
 	q.correctAnswerIndex = random(4);
+	q.answers.resize(4);
 	q.answers[q.correctAnswerIndex] = definitions[0];
 
 	for (int i = 0; i < 4; i++)
@@ -169,7 +174,7 @@ QuestionGenerator chooseCorrectDefinition(const SuffixArray& SA, TST& TST)
 			std::vector<std::string> defs = TST.search(wotd);
 
 			if (defs.empty()) {
-				throw std::runtime_error("No definitions found for a different word.");
+				/*throw std::runtime_error("No definitions found for a different word.");*/
 			}
 
 			q.answers[i] = defs[0];
