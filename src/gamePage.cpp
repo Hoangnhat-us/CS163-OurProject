@@ -13,6 +13,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	wxPanel* top = new wxPanel(this, wxID_ANY);
+	top->SetBackgroundColour("#38435A");
 	wxPanel* banners = new wxPanel(top, wxID_ANY);
 	banners->SetBackgroundColour("#38435A");
 	wxBoxSizer* ban = new wxBoxSizer(wxHORIZONTAL);
@@ -24,7 +25,8 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	banners->SetSizer(a);
 
-	home = new wxBitmapButton(top, wxID_ANY, bm5, wxDefaultPosition, wxDefaultSize);
+	home = new wxBitmapButton(top, wxID_ANY, bm5, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	home->SetBackgroundColour("#38435A");
 
 	ban->Add(home);
 
@@ -55,6 +57,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	wxPanel* Panel2 = new wxPanel(this, wxID_ANY);
 
 	list = new dicType(Panel2, dicTypeInt);
+	list->SetSize(127, 33);
 	dicTypeChoice = new wxStaticBitmap(Panel2, wxID_ANY, bm2);
 
 
@@ -84,6 +87,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 		WXSIZEOF(choices), choices);
 	wxFont font(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
 	level->SetFont(font);
+	level->SetSelection(0);
 
 	levelChoice = new wxStaticBitmap(Panel3, wxID_ANY, bm3);
 
@@ -116,4 +120,13 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	mainSizer->Add(Panel4, 1, wxALL | wxEXPAND, 20);
 
 	this->SetSizer(mainSizer);
+
+	startButton->Bind(wxEVT_BUTTON, &gamePage::OnStart, this);
+}
+
+void gamePage::OnStart(wxCommandEvent& event)
+{
+	game = new gameDialog(this, "Word Game");
+	game->ShowModal();
+
 }

@@ -79,24 +79,28 @@ void frame::OnExit(wxCloseEvent& event)
 void frame::switchToSearch(wxCommandEvent& event)
 {
 	search->Refresh();
+	search->Update();
 	book->SetSelection(1);
 }
 
 void frame::switchToHome(wxCommandEvent& event)
 {
 	home->Refresh();
+	home->Update();
 	book->SetSelection(0);
 }
 
 void frame::switchToFav(wxCommandEvent& event)
 {
 	favorite->Refresh();
+	favorite->Update();
 	book->SetSelection(2);
 }
 
 void frame::switchToHis(wxCommandEvent& event)
 {
 	his->Refresh();
+	his->Update();
 	book->SetSelection(3);
 }
 

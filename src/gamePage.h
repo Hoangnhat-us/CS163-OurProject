@@ -1,5 +1,6 @@
 #pragma once
 #include "dicType.h";
+#include "gameDialog.h"
 #include "SuffixArray.h"
 #include "TernarySearchTree.h"
 #include <wx/wx.h>
@@ -14,6 +15,8 @@ public:
 	wxBitmapButton* home;
 	dicType* list;
 	wxComboBox* level;
+	gameDialog* game;
 
 	gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& sWord, std::vector<TST>& dic, std::vector<SuffixArray>& SA);
+	void OnStart(wxCommandEvent& event);
 };

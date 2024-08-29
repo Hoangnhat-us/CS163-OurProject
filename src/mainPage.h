@@ -34,7 +34,6 @@ private:
 	void setControls(int& dicTypeIt, int& searchTypeIt);
 	void OnTextChange(wxCommandEvent& event);
 	void OnAdding(wxCommandEvent& event);
-
 };
 
 
