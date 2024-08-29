@@ -436,9 +436,6 @@ void searchPage::OnFixButtonClicked(wxCommandEvent& event)
 		SA[dicTypeInt].rebuildSuffixArray();
 	}
 	isEditing = !isEditing;
-	
-	
-	
 
 	mainPanel->Layout();
 	mainPanel->Refresh();
