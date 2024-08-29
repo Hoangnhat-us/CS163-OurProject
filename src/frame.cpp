@@ -31,7 +31,6 @@ frame::frame() : wxFrame(NULL, wxID_ANY, "wxSimplebook Example")
 	this->SetSizerAndFit(sizer);
 
 	home->Random->Bind(wxEVT_BUTTON, &frame::switchToSearch, this);
-	home->searchButton->Bind(wxEVT_BUTTON, &frame::switchToSearch, this);
 	home->history->Bind(wxEVT_BUTTON, &frame::switchToHis, this);
 	home->FavWords->Bind(wxEVT_BUTTON, &frame::switchToFav, this);
 	home->WordGames->Bind(wxEVT_BUTTON, &frame::switchToGame, this);

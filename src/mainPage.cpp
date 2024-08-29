@@ -7,42 +7,17 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, std::str
 	this->dic = dic;
 	this->SA = SA;
 
-	suggestionBox = new SuggestionListBox(this, dic, SA, dicTypeIt, searchTypeIt, wxSize(633, 33));
-	suggestionBox->suggest->SetSize(633, 165);
-
 	this->SetBackgroundColour(wxColor("#38435A"));
 
-	setControls(dicTypeIt, searchTypeIt);
+	wxPanel* main = new wxPanel(this, wxID_ANY);
+
+	setControls(dicTypeIt, searchTypeIt, main);
 
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
-	wxBoxSizer* topSizer = new wxBoxSizer(wxHORIZONTAL);
-
-	topSizer->Add(addButton, 0, wxEXPAND | wxALL, 23);
-	topSizer->Add(origin, 0, wxEXPAND | wxALL, 23);
-
-	wxBoxSizer* temp = new wxBoxSizer(wxVERTICAL);
-	temp->Add(list, 0, wxALIGN_RIGHT | wxALL, 23);
-
-	topSizer->Add(temp, 1, wxALIGN_BOTTOM | wxALL, 23);
-
-	mainSizer->Add(topSizer, 0, wxEXPAND);
-
-	mainSizer->AddSpacer(35);
+	mainSizer->Add(banner, 0, wxALIGN_CENTER);
 	mainSizer->Add(name, 0, wxALIGN_CENTER);
 
-	// Create a horizontal sizer for the search bar
-	wxBoxSizer* searchSizer = new wxBoxSizer(wxHORIZONTAL);
-
-
-	// Add search input and button to the search sizer
-	searchSizer->Add(suggestionBox, 1, wxALIGN_CENTER, 10);
-	searchSizer->AddSpacer(10);
-	searchSizer->Add(searchButton, 0, wxALIGN_CENTER, 10);
-
-	mainSizer->Add(searchSizer, 0, wxALIGN_CENTER);
-
-	mainSizer->AddSpacer(10);
 
 	wxBoxSizer* botSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -65,82 +40,51 @@ mainPage::mainPage(wxWindow* parent, int& dicTypeIt, int& searchTypeIt, std::str
 	// Add the searchSizer to the mainSizer
 
 	mainSizer->Add(botSizer, 1, wxEXPAND | wxTOP, 95);
-	mainSizer->AddSpacer(20);
 
-	this->SetSizerAndFit(mainSizer);
+	main->SetSizer(mainSizer);
 
-	Bind(wxEVT_TEXT, &mainPage::OnTextChange, this, suggestionBox->searchInput->GetId());
-	addButton->Bind(wxEVT_BUTTON, &mainPage::OnAdding, this);
+	wxBoxSizer* all = new wxBoxSizer(wxVERTICAL);
+
+	all->Add(main, 0, wxALIGN_CENTER | wxTOP, 30);
+
+	this->SetSizer(all);
+
 
 }
 
-void mainPage::OnButtonClicked(wxCommandEvent& event)
-{
-	wxCommandEvent evt(wxEVT_COMMAND_BUTTON_CLICKED, wxID_ANY);
-	evt.SetEventObject(this);
-	wxPostEvent(GetParent(), evt);
-}
 
-void mainPage::setControls(int& dicTypeIt, int& searchTypeIt)
+void mainPage::setControls(int& dicTypeIt, int& searchTypeIt, wxPanel* panel)
 {
 	// Create the search input field
 		// Create the search button
-	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Varela Round");
 
-
-
-	searchButton = new wxButton(this, wxID_ANY, "Search", wxDefaultPosition, wxSize(50, 33), wxNO_BORDER);
-	searchButton->SetFont(font);
-	searchButton->SetBackgroundColour("#FF4F70");
-	searchButton->SetForegroundColour(wxColour("#FFFFFF"));
 
 	// Tạo wxBitmap từ file ảnh
 	wxBitmap bmHistory(wxT("../../../../picture/search history.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bmRandom(wxT("../../../../picture/random word.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bmFavWords(wxT("../../../../picture/favorite words.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bmWordGames(wxT("../../../../picture/word games.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bmBanner(wxT("../../../../picture/TPHANG Banner.png"), wxBITMAP_TYPE_PNG);
 
+	banner = new wxStaticBitmap(panel, wxID_ANY, bmBanner);
 
 
 	// Tạo wxBitmapButton
-	history = new wxBitmapButton(this, wxID_ANY, bmHistory, wxDefaultPosition, wxDefaultSize);
-	Random = new wxBitmapButton(this, wxID_ANY, bmRandom, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-	FavWords = new wxBitmapButton(this, wxID_ANY, bmFavWords, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-	WordGames = new wxBitmapButton(this, wxID_ANY, bmWordGames, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	history = new wxBitmapButton(panel, wxID_ANY, bmHistory, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	Random = new wxBitmapButton(panel, wxID_ANY, bmRandom, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	FavWords = new wxBitmapButton(panel, wxID_ANY, bmFavWords, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+	WordGames = new wxBitmapButton(panel, wxID_ANY, bmWordGames, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
 
 	history->SetBackgroundColour("#38435A");
 	Random->SetBackgroundColour("#38435A");
 	FavWords->SetBackgroundColour("#38435A");
 	WordGames->SetBackgroundColour("#38435A");
 
-
-	list = new dicType(this, dicTypeIt);
-
-	wxBitmap bmAddButton(wxT("../../../../picture/addButton.png"), wxBITMAP_TYPE_PNG);
-	wxBitmap bmOrigin(wxT("../../../../picture/origin.png"), wxBITMAP_TYPE_PNG);
-
-	addButton = new wxBitmapButton(this, wxID_ANY, bmAddButton, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-	origin = new wxBitmapButton(this, wxID_ANY, bmOrigin, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-
-	addButton->SetBackgroundColour("#38435A");
-	origin->SetBackgroundColour("#38435A");
-
 	wxBitmap tPDic(wxT("../../../../picture/TPHANG DICTIONARY.png"), wxBITMAP_TYPE_PNG);
-	name = new wxBitmapButton(this, wxID_ANY, tPDic, wxDefaultPosition, wxSize(884, 147), wxNO_BORDER);
+	name = new wxBitmapButton(panel, wxID_ANY, tPDic, wxDefaultPosition, wxSize(884, 147), wxNO_BORDER);
 	name->SetBackgroundColour("#38435A");
 
 
-}
-
-void mainPage::OnTextChange(wxCommandEvent& event) {
-	wxString prefix = suggestionBox->searchInput->GetValue();
-	suggestionBox->UpdateSuggestions(prefix);
-}
-
-void mainPage::OnAdding(wxCommandEvent& event)
-{
-	addDialog dialog(this, "Adding Dialog");
-	dialog.ShowModal();
 }
 
 
