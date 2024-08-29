@@ -1,10 +1,13 @@
 ﻿#include "gameDialog.h"
 
-gameDialog::gameDialog(wxWindow* parent, const wxString& title, std::vector<TST>& tst, std::vector<SuffixArray>& SA) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(720, 460))
+gameDialog::gameDialog(wxWindow* parent, const wxString& title, std::vector<TST>& tst, std::vector<SuffixArray>& SA, int& level, int& dicType, int& mode) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(720, 460))
 {
 	this->SetBackgroundColour(wxColour(240, 240, 240));
 	this->tst = tst;
 	this->SA = SA;
+	this->level = level;
+	this->dicType = dicType;
+	this->mode = mode;
 	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
 
 	wxFont font(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
@@ -62,48 +65,48 @@ void gameDialog::LoadQuestion()
 	//Xử lý theo kiểu từ điển và chế độ
 	if (dicType == 0) { // Eng-Eng
 		if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
-			if (level == 1) { // Easy
+			if (level == 0) { // Easy
 				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Eng/Games/Words/EasyMode.txt", tst[0]);
 			}
-			else if (level == 2) { // Medium
+			else if (level == 1) { // Medium
 				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Eng/Games/Words/MediumMode.txt", tst[0]);
 			}
-			else if (level == 3) { // Difficult
+			else if (level == 2) { // Difficult
 				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Eng/Games/Words/HardMode.txt", tst[0]);
 			}
 		}
 		else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
-			if (level == 1) { // Easy
+			if (level == 0) { // Easy
 				LuuTru = chooseCorrectWord("Data_Storage/Eng2Eng/Games/Words/EasyMode.txt", tst[0]);
 			}
-			else if (level == 2) { // Medium
+			else if (level == 1) { // Medium
 				LuuTru = chooseCorrectWord("Data_Storage/Eng2Eng/Games/Words/MediumMode.txt", tst[0]);
 			}
-			else if (level == 3) { // Difficult
+			else if (level == 2) { // Difficult
 				LuuTru = chooseCorrectWord("Data_Storage/Eng2Eng/Games/Words/HardModet.txt", tst[0]);
 			}
 		}
 	}
 	else if (dicType == 1) { // Eng-Viet
 		if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
-			if (level == 1) { // Easy
+			if (level == 0) { // Easy
 				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Viet/Games/Words/EasyMode.txt", tst[dicType]);
 			}
-			else if (level == 2) { // Medium
+			else if (level == 1) { // Medium
 				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Viet/Games/Words/MediumMode.txt", tst[dicType]);
 			}
-			else if (level == 3) { // Difficult
+			else if (level == 2) { // Difficult
 				LuuTru = chooseCorrectDefinition("Data_Storage/Eng2Viet/Games/Words/HardMode.txt", tst[dicType]);
 			}
 		}
 		else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
-			if (level == 1) { // Easy
+			if (level == 0) { // Easy
 				LuuTru = chooseCorrectWord("Data_Storage/Eng2Viet/Games/Words/EasyMode.txt", tst[dicType]);
 			}
-			else if (level == 2) { // Medium
+			else if (level == 1) { // Medium
 				LuuTru = chooseCorrectWord("Data_Storage/Eng2Viet/Games/Words/MediumMode.txt", tst[dicType]);
 			}
-			else if (level == 3) { // Difficult
+			else if (level == 2) { // Difficult
 				LuuTru = chooseCorrectWord("Data_Storage/Eng2Viet/Games/Words/MediumMode.txt", tst[dicType]);
 			}
 		}
@@ -220,6 +223,6 @@ void gameDialog::SetUpButtons()
 {
 	wxString labels[4] = { "A.", "B.", "C.", "D." };
 	for (int i = 0; i < 4; ++i) {
-		buttons[i] = new wxButton(this, 10001 + i, labels[i] + " " + DapAn[i], wxDefaultPosition, wxSize(200, 50));
+		buttons[i] = new wxButton(this, 10001 + i, labels[i] + " " + wxString::FromUTF8(DapAn[i].c_str()), wxDefaultPosition, wxSize(200, 50),wxTE_MULTILINE);
 	}
 }

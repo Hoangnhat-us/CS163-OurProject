@@ -159,13 +159,15 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 void gamePage::OnStart(wxCommandEvent& event)
 {
-	game = new gameDialog(this, "Word Game", tst, SA);
+	int lvl = level->GetSelection();
+	game = new gameDialog(this, "Word Game", tst, SA,lvl,dicTypeInt,mode);
 	game->ShowModal();
 
 }
 
 void gamePage::OnComboEvt(wxCommandEvent& event)
 {
+	dicTypeInt = list->GetSelection();
 	if (list->GetSelection() == 3 || list->GetSelection() == 4 || list->GetSelection() == 2)
 	{
 		level->SetSelection(3);
@@ -191,7 +193,7 @@ void gamePage::OnToggleButton(wxCommandEvent& event)
 	}
 	if (selectedButton != btn2) {
 		btn2->SetValue(false);
-		mode = 0;
+		mode = 2;
 	}
 
 

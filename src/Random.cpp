@@ -42,13 +42,17 @@ std::vector<QuestionGenerator> chooseCorrectWord(std::string filename, TST& TST)
 		QuestionGenerator q;
 		int i = random(words.size());
 		std::vector<std::string> definitions = TST.search(words[i]);
+		if (definitions.empty()) {
+			words.erase(words.begin() + i);
+			continue;
+		}
 		q.question = definitions[0];
 		q.correctAnswerIndex = random(4);
 		q.answers[q.correctAnswerIndex] = words[i];
 		words.erase(words.begin() + i);
 		for (int j = 0; j < 4; j++)
 		{
-			if (j != q.correctAnswerIndex)
+			if (j != q.correctAnswerIndex && !words.empty())
 			{
 				int k = random(words.size());
 				q.answers[j] = words[k];
@@ -84,18 +88,29 @@ std::vector<QuestionGenerator> chooseCorrectDefinition(std::string filename, TST
 		int i = random(words.size());
 		q.question = words[i];
 		std::vector<std::string> definitions = TST.search(words[i]);
+		if (definitions.empty()) {
+			words.erase(words.begin() + i);
+			continue;
+		}
 		q.correctAnswerIndex = random(4);
+		q.answers.resize(4);
 		q.answers[q.correctAnswerIndex] = definitions[0];
 		words.erase(words.begin() + i);
 		for (int j = 0; j < 4; j++)
 		{
-			if (j != q.correctAnswerIndex)
+			if (j != q.correctAnswerIndex && words.size()>0)
 			{
 				int k = random(words.size());
 				std::vector<std::string> defs = TST.search(words[k]);
+				if (defs.empty()) {
+					words.erase(words.begin() + k);
+					j--;
+					continue;
+				}
 				q.answers[j] = defs[0];
 				words.erase(words.begin() + k);
 			}
+			
 		}
 		questions.push_back(q);
 	}
@@ -105,9 +120,9 @@ std::vector<QuestionGenerator> chooseCorrectDefinition(std::string filename, TST
 
 QuestionGenerator chooseCorrectWord(const SuffixArray& SA, TST& TST)
 {
+	QuestionGenerator q;
 	std::string word = WOTD(SA);
 	std::vector<std::string> definitions = TST.search(word);
-	QuestionGenerator q;
 	q.question = definitions[0];
 	q.correctAnswerIndex = random(4);
 	q.answers[q.correctAnswerIndex] = word;
@@ -129,12 +144,19 @@ QuestionGenerator chooseCorrectWord(const SuffixArray& SA, TST& TST)
 
 QuestionGenerator chooseCorrectDefinition(const SuffixArray& SA, TST& TST)
 {
+	QuestionGenerator q;
 	std::string word = WOTD(SA);
 	std::vector<std::string> definitions = TST.search(word);
-	QuestionGenerator q;
+
+	if (definitions.empty()) {
+		throw std::runtime_error("No definitions found for the word of the day.");
+	}
+
+	
 	q.question = word;
 	q.correctAnswerIndex = random(4);
 	q.answers[q.correctAnswerIndex] = definitions[0];
+
 	for (int i = 0; i < 4; i++)
 	{
 		if (i != q.correctAnswerIndex)
@@ -145,6 +167,11 @@ QuestionGenerator chooseCorrectDefinition(const SuffixArray& SA, TST& TST)
 				wotd = WOTD(SA);
 			}
 			std::vector<std::string> defs = TST.search(wotd);
+
+			if (defs.empty()) {
+				throw std::runtime_error("No definitions found for a different word.");
+			}
+
 			q.answers[i] = defs[0];
 		}
 	}

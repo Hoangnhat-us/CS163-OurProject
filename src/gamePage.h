@@ -23,8 +23,8 @@ public:
 	wxBitmapToggleButton* btn1;
 	wxBitmapToggleButton* btn2;
 
-	int mode = 0;
-
+	int mode = 1;
+	int dicTypeInt = 0;
 
 	gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::string& sWord, std::vector<TST>& dic, std::vector<SuffixArray>& SA);
 	void OnStart(wxCommandEvent& event);
