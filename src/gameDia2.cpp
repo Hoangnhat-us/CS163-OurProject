@@ -1,4 +1,6 @@
 ﻿#include "gameDia2.h"
+#include "Random.h"
+#include <vector>
 
 gameDia2::gameDia2(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 {
@@ -33,67 +35,130 @@ gameDia2::gameDia2(wxWindow* parent) : wxPanel(parent, wxID_ANY)
     Bind(wxEVT_BUTTON, &gameDia2::OnButtonClicked, this, 10002);
     Bind(wxEVT_BUTTON, &gameDia2::OnButtonClicked, this, 10003);
     Bind(wxEVT_BUTTON, &gameDia2::OnButtonClicked, this, 10004);
-
     SetBackgroundColour(wxColour(240, 240, 240));
 }
 
 void gameDia2::LoadQuestion() {
-    // Xử lý theo kiểu từ điển
+    // Xử lý theo kiểu từ điển và chế độ
     if (dicType == 0) { // Eng-Eng
         if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
-            LuuTru = chooseCorrectDefinition("engeng_mode1.txt", TST);
+            if (level == 1) { // Easy
+                LuuTru = chooseCorrectDefinition("engeng_mode1_easy.txt", *tst);
+            }
+            else if (level == 2) { // Medium
+                LuuTru = chooseCorrectDefinition("engeng_mode1_medium.txt", *tst);
+            }
+            else if (level == 3) { // Difficult
+                LuuTru = chooseCorrectDefinition("engeng_mode1_difficult.txt", *tst);
+            }
         }
         else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
-            LuuTru = chooseCorrectWord("engeng_mode2.txt", TST);
+            if (level == 1) { // Easy
+                LuuTru = chooseCorrectWord("engeng_mode2_easy.txt", *tst);
+            }
+            else if (level == 2) { // Medium
+                LuuTru = chooseCorrectWord("engeng_mode2_medium.txt", *tst);
+            }
+            else if (level == 3) { // Difficult
+                LuuTru = chooseCorrectWord("engeng_mode2_difficult.txt", *tst);
+            }
         }
     }
     else if (dicType == 1) { // Eng-Viet
-        if (mode == 1) { // Level 1 (Easy): 1 từ vựng ra 4 định nghĩa
-            LuuTru = chooseCorrectDefinition("engviet_easy.txt", TST);
+        if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
+            if (level == 1) { // Easy
+                LuuTru = chooseCorrectDefinition("engviet_easy.txt", *tst);
+            }
+            else if (level == 2) { // Medium
+                LuuTru = chooseCorrectDefinition("engviet_medium.txt", *tst);
+            }
+            else if (level == 3) { // Difficult
+                LuuTru = chooseCorrectDefinition("engviet_difficult.txt", *tst);
+            }
         }
-        else if (mode == 2) { // Level 2 (Medium): 1 định nghĩa và 4 từ vựng
-            LuuTru = chooseCorrectWord("engviet_medium.txt", TST);
-        }
-        else if (mode == 3) { // Level 3 (Difficult): 1 từ vựng ra 4 định nghĩa
-            LuuTru = chooseCorrectDefinition("engviet_difficult.txt", TST);
+        else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
+            if (level == 1) { // Easy
+                LuuTru = chooseCorrectWord("engviet_easy.txt", *tst);
+            }
+            else if (level == 2) { // Medium
+                LuuTru = chooseCorrectWord("engviet_medium.txt", *tst);
+            }
+            else if (level == 3) { // Difficult
+                LuuTru = chooseCorrectWord("engviet_difficult.txt", *tst);
+            }
         }
     }
     else if (dicType == 2) { // Viet-Eng
-        if (mode == 1) { // Level 1 (Easy): 
-            LuuTru = chooseCorrectDefinition("vieteng_easy.txt", TST);
+        if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
+            QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+            LuuTru.push_back(q);
         }
-        else if (mode == 2) { // Level 2 (Medium):
-            LuuTru = chooseCorrectWord("vieteng_medium.txt", TST);
+        else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
+            QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+            LuuTru.push_back(q);
         }
-        else if (mode == 3) { // Level 3 (Difficult): 
-            LuuTru = chooseCorrectDefinition("vieteng_difficult.txt", TST);
+        // Generate 1000 questions
+        while (LuuTru.size() < 1000) {
+            if (mode == 1) {
+                QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+                LuuTru.push_back(q);
+            }
+            else if (mode == 2) {
+                QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+                LuuTru.push_back(q);
+            }
         }
     }
     else if (dicType == 3) { // Slang
-        if (mode == 1) { 
-            LuuTru = chooseCorrectDefinition("slang_mode1.txt", TST);
+        if (mode == 1) { // Chế độ 1: 1 từ vựng ra 4 định nghĩa
+            QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+            LuuTru.push_back(q);
         }
-        else if (mode == 2) {
-            LuuTru = chooseCorrectWord("slang_mode2.txt", TST);
+        else if (mode == 2) { // Chế độ 2: 1 định nghĩa và 4 từ vựng
+            QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+            LuuTru.push_back(q);
+        }
+        // Generate 1000 questions
+        while (LuuTru.size() < 1000) {
+            if (mode == 1) {
+                QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+                LuuTru.push_back(q);
+            }
+            else if (mode == 2) {
+                QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+                LuuTru.push_back(q);
+            }
         }
     }
     else if (dicType == 4) { // Emoji
-        if (mode == 1) { 
-            LuuTru = chooseCorrectDefinition("emoji_mode1.txt", TST);
+        if (mode == 1) { // Chế độ 1: 1 emoji ra 4 nghĩa
+            QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+            LuuTru.push_back(q);
         }
-        else if (mode == 2) { 
-            LuuTru = chooseCorrectWord("emoji_mode2.txt", TST);
+        else if (mode == 2) { // Chế độ 2: 1 nghĩa và 4 emoji
+            QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+            LuuTru.push_back(q);
+        }
+        // Generate 1000 questions
+        while (LuuTru.size() < 1000) {
+            if (mode == 1) {
+                QuestionGenerator q = chooseCorrectDefinition(*SA, *tst);
+                LuuTru.push_back(q);
+            }
+            else if (mode == 2) {
+                QuestionGenerator q = chooseCorrectWord(*SA, *tst);
+                LuuTru.push_back(q);
+            }
         }
     }
 
-  
+    // Cập nhật câu hỏi và đáp án
     if (!LuuTru.empty()) {
         word = LuuTru[0].question;
         DapAn = LuuTru[0].answers;
         correctAnswerIndex = LuuTru[0].correctAnswerIndex;
     }
 }
-
 
 void gameDia2::SetUpButtons() {
     wxString labels[4] = { "A.", "B.", "C.", "D." };
@@ -104,44 +169,25 @@ void gameDia2::SetUpButtons() {
 
 void gameDia2::OnButtonClicked(wxCommandEvent& event)
 {
-    if (gameEnded) return; 
+    if (gameEnded) return;
 
     int id = event.GetId();
     int clickedIndex = id - 10001;
 
     if (clickedIndex == correctAnswerIndex) {
         buttons[clickedIndex]->SetBackgroundColour(wxColour(0, 255, 0));
-        score++; 
+        score++;
+        NextQuestion();
     }
     else {
-        buttons[clickedIndex]->SetBackgroundColour(wxColour(255, 0, 0)); 
+        buttons[clickedIndex]->SetBackgroundColour(wxColour(255, 0, 0));
         buttons[correctAnswerIndex]->SetBackgroundColour(wxColour(0, 255, 0));
-        EndGame(); 
-        return; 
+        EndGame();
     }
-
-   
-    NextQuestion();
 }
 
 void gameDia2::NextQuestion() {
-    LoadQuestion();
-    if (LuuTru.empty()) {
-        EndGame(); 
-        return;
-    }
+    // Remove the current question
+    if (!LuuTru.empty()) {
+        LuuTru.erase(LuuTru.begin());
 
-    w->SetLabel(word);
-    SetUpButtons();
-    for (int i = 0; i < 4; ++i) {
-        buttons[i]->SetBackgroundColour(wxColour(0, 128, 0)); 
-        buttons[i]->Enable();
-        buttons[i]->SetLabel(wxString::Format("%s %s", wxString("ABCD")[i], DapAn[i]));
-    }
-}
-
-void gameDia2::EndGame() {
-    gameEnded = true; 
-    wxString msg = wxString::Format("Game Over! Your score is %d", score);
-        wxMessageBox(msg, "Game Over", wxOK | wxICON_INFORMATION);
-}

@@ -4,7 +4,6 @@
 #include "Random.h"
 #include "SuffixArray.h"
 #include "TernarySearchTree.h"
-#include "QuestionGenerator.h"
 
 class gameDia2 : public wxPanel
 {
@@ -13,6 +12,8 @@ public:
     wxStaticText* point;
     wxStaticText* w;
     wxButton* buttons[4];
+    TST* tst;
+    SuffixArray* SA;
     int level = 0;
     int dicType = 0;
     int mode = 0;
