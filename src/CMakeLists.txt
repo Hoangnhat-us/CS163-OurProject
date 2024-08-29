@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_executable (src "dictionary.cpp" "dictionary.h" "dicType.cpp" "dicType.h" "frame.cpp" "frame.h" "mainPage.cpp" "mainPage.h" "searchPage.cpp" "searchPage.h" "searchType.cpp" "searchType.h" "Search.h" "Search.cpp" "favoritePage.cpp" "favoritePage.h" "TernarySearchTree.h" "TernarySearchTree.cpp" "SuffixArray.h" "SuffixArray.cpp" "Random.h" "Random.cpp" "historyPage.cpp" "historyPage.h" "History.cpp" "History.h" "addDialog.h" "addDialog.cpp" "gamePage.cpp" "gamePage.h" "gameDialog.h" "gameDialog.cpp" "gameDia1.h" "gameDia1.cpp" "gameDia2.h" "gameDia2.cpp" "timer.cpp" "timer.h")
+add_executable (src "dictionary.cpp" "dictionary.h" "dicType.cpp" "dicType.h" "frame.cpp" "frame.h" "mainPage.cpp" "mainPage.h" "searchPage.cpp" "searchPage.h" "searchType.cpp" "searchType.h" "Search.h" "Search.cpp" "favoritePage.cpp" "favoritePage.h" "Favorite.cpp" "Favorite.h" "TernarySearchTree.h" "TernarySearchTree.cpp" "SuffixArray.h" "SuffixArray.cpp" "Random.h" "Random.cpp" "historyPage.cpp" "historyPage.h" "History.cpp" "History.h" "addDialog.h" "addDialog.cpp" "gamePage.cpp" "gamePage.h" "gameDialog.h" "gameDialog.cpp" "gameDia1.h" "gameDia1.cpp" "gameDia2.h" "gameDia2.cpp" "timer.cpp" "timer.h")
 
 if (WIN32)
 	set_property(TARGET src PROPERTY WIN32_EXECUTABLE TRUE)

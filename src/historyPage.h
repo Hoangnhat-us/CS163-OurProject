@@ -9,11 +9,7 @@ class historyPage : public wxWindow {
 public:
     historyPage(wxWindow* parent, int& dicTypeInt);
     wxBitmapButton* home;
-    wxTextCtrl* searchInput;
     dicType* lists;
-    wxBitmapButton* origin;
-    wxBitmapButton* add;
-    wxButton* games;
 
 private:
     wxBoxSizer* mainSizer;
@@ -22,7 +18,6 @@ private:
 
     void setTopControls(wxPanel* panel, int& dicTypeInt);
     wxPanel* wordsHistoryTable(wxWindow* parent);
-    void OnGamesButtonClicked(wxCommandEvent& event);
     void setMain(wxScrolledWindow* main);
     void refreshHistoryGrid();
     void OnShow(wxShowEvent& event);
