@@ -7,6 +7,8 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	wxBitmap bm3(wxT("../../../../picture/levelChoice.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bm4(wxT("../../../../picture/startChoice.png"), wxBITMAP_TYPE_PNG);
 	wxBitmap bm5(wxT("../../../../picture/home.png"), wxBITMAP_TYPE_PNG);
+	this->tst = dic;
+	this->SA = SA;
 
 	this->SetBackgroundColour("#B5D395");
 
@@ -53,11 +55,13 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	mainSizer->Add(Panel1, 1, wxALL | wxEXPAND, 20);
 
 	//
+	wxFont font(14, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Varela Round");
 
 	wxPanel* Panel2 = new wxPanel(this, wxID_ANY);
 
 	list = new dicType(Panel2, dicTypeInt);
-	list->SetSize(127, 33);
+	list->SetSize(wxSize(127, 33));
+	list->SetFont(font);
 	dicTypeChoice = new wxStaticBitmap(Panel2, wxID_ANY, bm2);
 
 
@@ -70,7 +74,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	wxBoxSizer* s4 = new wxBoxSizer(wxVERTICAL);
 	s4->Add(list, 1, wxALIGN_RIGHT);
-	Sizer2->Add(s4, 1, wxEXPAND);
+	Sizer2->Add(s4, 1);
 
 	Panel2->SetSizer(Sizer2);
 
@@ -85,7 +89,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 	level = new wxComboBox(Panel3, wxID_ANY, "Select an option",
 		wxDefaultPosition, wxDefaultSize,
 		WXSIZEOF(choices), choices);
-	wxFont font(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
+	wxFont font2(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
 	level->SetFont(font);
 	level->SetSelection(0);
 
@@ -99,11 +103,37 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	wxBoxSizer* s6 = new wxBoxSizer(wxVERTICAL);
 	s6->Add(level, 1, wxALIGN_RIGHT);
-	Sizer3->Add(s6);
+	Sizer3->Add(s6, 1);
 
 	Panel3->SetSizer(Sizer3);
 
 	mainSizer->Add(Panel3, 1, wxALL | wxEXPAND, 20);
+	//
+
+	wxPanel* Panel5 = new wxPanel(this, wxID_ANY);
+
+	wxBitmap bitmap1(wxT("../../../../picture/wordMode.png"), wxBITMAP_TYPE_PNG);
+	wxBitmap bitmap2(wxT("../../../../picture/defMode.png"), wxBITMAP_TYPE_PNG);
+
+	btn1 = new wxBitmapToggleButton(Panel5, wxID_ANY, bitmap1);
+	btn2 = new wxBitmapToggleButton(Panel5, wxID_ANY, bitmap2);
+
+	btn1->SetValue(true);
+
+	wxBoxSizer* Sizer5 = new wxBoxSizer(wxHORIZONTAL);
+
+	wxBoxSizer* s8 = new wxBoxSizer(wxVERTICAL);
+	s8->Add(btn1, 1, wxALIGN_CENTER);
+	Sizer5->Add(s8, 1, wxEXPAND | wxALL, 20);
+
+	wxBoxSizer* s9 = new wxBoxSizer(wxVERTICAL);
+	s9->Add(btn2, 1, wxALIGN_CENTER);
+	Sizer5->Add(s9, 1, wxEXPAND | wxALL, 20);
+
+	Panel5->SetSizer(Sizer5);
+
+	mainSizer->Add(Panel5, 1, wxALL | wxEXPAND, 20);
+	//
 
 	wxPanel* Panel4 = new wxPanel(this, wxID_ANY);
 
@@ -113,7 +143,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	wxBoxSizer* s7 = new wxBoxSizer(wxVERTICAL);
 	s7->Add(startButton, 1, wxALIGN_RIGHT);
-	Sizer4->Add(s7);
+	Sizer4->Add(s7, 1, wxEXPAND | wxALL, 20);
 
 	Panel4->SetSizer(Sizer4);
 
@@ -123,11 +153,13 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	startButton->Bind(wxEVT_BUTTON, &gamePage::OnStart, this);
 	list->Bind(wxEVT_COMBOBOX, &gamePage::OnComboEvt, this);
+	btn1->Bind(wxEVT_TOGGLEBUTTON, &gamePage::OnToggleButton, this);
+	btn2->Bind(wxEVT_TOGGLEBUTTON, &gamePage::OnToggleButton, this);
 }
 
 void gamePage::OnStart(wxCommandEvent& event)
 {
-	game = new gameDialog(this, "Word Game");
+	game = new gameDialog(this, "Word Game", tst, SA);
 	game->ShowModal();
 
 }
@@ -143,4 +175,25 @@ void gamePage::OnComboEvt(wxCommandEvent& event)
 		level->Enable();
 	level->Refresh();
 	level->Update();
+}
+
+
+void gamePage::OnToggleButton(wxCommandEvent& event)
+{
+	// Manually manage the selection logic
+	wxBitmapToggleButton* selectedButton = dynamic_cast<wxBitmapToggleButton*>(event.GetEventObject());
+
+	// Deselect other buttons
+	if (selectedButton != btn1)
+	{
+		btn1->SetValue(false);
+		mode = 1;
+	}
+	if (selectedButton != btn2) {
+		btn2->SetValue(false);
+		mode = 0;
+	}
+
+
+	selectedButton->SetValue(true);
 }
