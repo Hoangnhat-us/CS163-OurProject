@@ -340,7 +340,6 @@ void searchPage::UpdateRightPanel()
 
 void searchPage::OnLikeButtonClicked(wxCommandEvent& event)
 {
-	wxMessageBox(wxT("Like"), wxT("This is the title"), wxICON_INFORMATION);
 	std::string likedWord = Word;
 	std::vector<std::string> defs = dic[dicTypeInt].search(likedWord);
 	if (defs.empty()) {
@@ -353,7 +352,6 @@ void searchPage::OnLikeButtonClicked(wxCommandEvent& event)
 void searchPage::HandleFavoriteOperations(const std::string& word, const std::vector<std::string>& definitions, int dicTypeInt) {
 	std::string basePath = "Data_Storage/Favorite/";
 
-	wxMessageBox(wxT("hi"), wxT("This is the title"), wxICON_INFORMATION);
 	std::string favoriteFile;
 	switch (dicTypeInt) {
 	case 0:
@@ -376,7 +374,6 @@ void searchPage::HandleFavoriteOperations(const std::string& word, const std::ve
 		return;
 	}
 
-	wxMessageBox(wxT("This is abc."), wxT("This is the title"), wxICON_INFORMATION);
 	favoriteManager.loadFavorite(favoriteFile);
 
 	if (!definitions.empty()) {

@@ -1,9 +1,10 @@
 #include "dicType.h"
-#include "favoritePage.h"  // Ensure proper include path
+#include "favoritePage.h"
 #include "Favorite.h"
 
 favoritePage::favoritePage(wxWindow* parent, int& dicTypeInt)
     : wxWindow(parent, wxID_ANY), dicTypeInt(dicTypeInt) {
+
     this->SetBackgroundColour("#FFFFFF");
     mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -27,7 +28,7 @@ favoritePage::favoritePage(wxWindow* parent, int& dicTypeInt)
 
     wxPanel* mid = new wxPanel(this, wxID_ANY);
     wxPanel* banners = new wxPanel(mid, wxID_ANY);
-    banners->SetBackgroundColour("#636252");
+    banners->SetBackgroundColour("#ff82a8");
     wxBoxSizer* ban = new wxBoxSizer(wxHORIZONTAL);
 
     wxBoxSizer* a = new wxBoxSizer(wxHORIZONTAL);
@@ -63,18 +64,20 @@ void favoritePage::setTopControls(wxPanel* panel, int& dicTypeInt) {
     lists->Bind(wxEVT_COMBOBOX, &favoritePage::OnDicTypeChanged, this);
 }
 
-wxPanel* favoritePage::wordsfavoriteTable(wxWindow* parent) {
+wxPanel* favoritePage::wordsFavoriteTable(wxWindow* parent) {
     wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
     wxBoxSizer* contentSizer = new wxBoxSizer(wxVERTICAL);
 
     favoriteGrid = new wxGrid(mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    favoriteGrid->CreateGrid(0, 2);  // Start with 0 rows and 2 columns
+    favoriteGrid->CreateGrid(0, 3);  // 3 columns to include the "Remove" column
 
     favoriteGrid->SetColLabelValue(0, "Word");
     favoriteGrid->SetColLabelValue(1, "Definition");
+    favoriteGrid->SetColLabelValue(2, "Remove");
 
     favoriteGrid->SetColSize(0, 100);  // Word column width
     favoriteGrid->SetColSize(1, 900);  // Definition column width
+    favoriteGrid->SetColSize(2, 100);  // Remove button column width
 
     favoriteGrid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_TOP);
     favoriteGrid->SetGridLineColour(*wxLIGHT_GREY);
@@ -82,14 +85,17 @@ wxPanel* favoritePage::wordsfavoriteTable(wxWindow* parent) {
     contentSizer->Add(favoriteGrid, 1, wxEXPAND | wxALL, 20);
     mainPanel->SetSizer(contentSizer);
 
-    refreshFavoriteGrid();  // Load initial data
+    refreshFavoriteGrid();
+
+    // Bind the event here after the grid is initialized
+    favoriteGrid->Bind(wxEVT_GRID_CELL_LEFT_CLICK, &favoritePage::OnRemoveButtonClicked, this);
 
     return mainPanel;
 }
 
 void favoritePage::setMain(wxScrolledWindow* main) {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-    wxPanel* contentPanel = wordsfavoriteTable(main);
+    wxPanel* contentPanel = wordsFavoriteTable(main);
     sizer->Add(contentPanel, 1, wxEXPAND);
     main->SetSizer(sizer);
     main->SetScrollRate(5, 5);
@@ -169,11 +175,45 @@ void favoritePage::refreshFavoriteGrid() {
             int lineCount = std::count(combinedDefinitions.begin(), combinedDefinitions.end(), '\n') + 1;
             int rowHeight = lineCount * favoriteGrid->GetDefaultRowSize();
             favoriteGrid->SetRowSize(row, rowHeight);
+
+            // Set "Remove" label for cells in the Remove column
+            favoriteGrid->SetCellValue(row, 2, "Remove");
         }
     }
 
     favoriteGrid->ForceRefresh();  // Force the grid to refresh and display the new data
     mainSizer->Layout();
+}
+
+void favoritePage::OnRemoveButtonClicked(wxGridEvent& event) {
+    std::string favoriteFilePath;
+
+    switch (dicTypeInt) {
+    case 0:
+        favoriteFilePath = "Data_Storage/Favorite/EngToEng.bin";
+        break;
+    case 1:
+        favoriteFilePath = "Data_Storage/Favorite/EngToVie.bin";
+        break;
+    case 2:
+        favoriteFilePath = "Data_Storage/Favorite/VieToEng.bin";
+        break;
+    case 3:
+        favoriteFilePath = "Data_Storage/Favorite/Slang.bin";
+        break;
+    case 4:
+        favoriteFilePath = "Data_Storage/Favorite/Emoji.bin";
+        break;
+    default:
+        wxLogError("Unknown dictionary type.");
+        return;
+    }
+    int row = event.GetRow();
+    if (row != wxNOT_FOUND) {
+        wxString word = favoriteGrid->GetCellValue(row, 0);
+        favoriteManager.removeFavorite(std::string(word.mb_str()), favoriteFilePath);
+        refreshFavoriteGrid();  // Refresh grid after removing the favorite
+    }
 }
 
 void favoritePage::OnDicTypeChanged(wxCommandEvent& event) {

@@ -6,10 +6,12 @@
 void FavoriteManager::addFavorite(const std::string& word, const std::vector<std::string>& definitions) {
     for (const auto& pair : favorites) {
         if (pair.first == word) {
+            wxMessageBox("Word already in Favorite List", "Favorite", wxOK | wxICON_INFORMATION);
             return;
         }
     }
     favorites.insert(favorites.begin(), { word, definitions });
+    wxMessageBox("Add words to favorite successfully", "Favorite", wxOK | wxICON_INFORMATION);
 }
 
 void FavoriteManager::saveFavorite(const std::string& filename) const {
@@ -65,7 +67,8 @@ void FavoriteManager::loadFavorite(const std::string& filename) {
                 definitions[j] = definition;
             }
 
-            favorites.insert(favorites.begin(), { word, definitions });
+            // Append each entry to the end of the vector to maintain the order
+            favorites.emplace_back(word, definitions);
         }
 
         inFile.close();
@@ -74,6 +77,16 @@ void FavoriteManager::loadFavorite(const std::string& filename) {
         std::cerr << "Failed to open file for loading: " << filename << std::endl;
     }
 }
+
+void FavoriteManager::removeFavorite(const std::string& word, const std::string& filename) {
+    auto it = std::remove_if(favorites.begin(), favorites.end(),
+        [&word](const auto& pair) { return pair.first == word; });
+    if (it != favorites.end()) {
+        favorites.erase(it, favorites.end());
+        saveFavorite(filename);  // Save the updated favorites list to file
+    }
+}
+
 
 const std::vector<std::pair<std::string, std::vector<std::string>>>& FavoriteManager::getFavoriteData() const {
     return favorites;

@@ -17,11 +17,12 @@ private:
     int dicTypeInt;
 
     void setTopControls(wxPanel* panel, int& dicTypeInt);
-    wxPanel* wordsfavoriteTable(wxWindow* parent);
+    wxPanel* wordsFavoriteTable(wxWindow* parent);
     void setMain(wxScrolledWindow* main);
-    void refreshFavoriteGrid();
-    void OnShow(wxShowEvent& event);
     void OnDicTypeChanged(wxCommandEvent& event);
+    void refreshFavoriteGrid();
+    void OnRemoveButtonClicked(wxGridEvent& event);
+    void OnShow(wxShowEvent& event);
 
     FavoriteManager favoriteManager;
 };
