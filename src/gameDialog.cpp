@@ -1,6 +1,6 @@
 ﻿#include "gameDialog.h"
 
-gameDialog::gameDialog(wxWindow* parent, const wxString& title, std::vector<TST>& tst, std::vector<SuffixArray>& SA, int& level, int& dicType, int& mode) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(720, 460))
+gameDialog::gameDialog(wxWindow* parent, const wxString& title, std::vector<TST>& tst, std::vector<SuffixArray>& SA, int& level, int& dicType, int& mode) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(720, 720))
 {
 	this->SetBackgroundColour(wxColour(240, 240, 240));
 	this->tst = tst;
@@ -8,26 +8,28 @@ gameDialog::gameDialog(wxWindow* parent, const wxString& title, std::vector<TST>
 	this->level = level;
 	this->dicType = dicType;
 	this->mode = mode;
+	this->SetBackgroundColour("#FFFFFF");
 	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
 
 	wxFont font(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
+
+	wxFont Wordfont(20, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_MAX, wxFONTWEIGHT_SEMIBOLD, false, "Kadwa Bold");
 
 	//Load câu hỏi dựa trên mức độ khó
 	LoadQuestion();
 
 	//Tạo đối tượng wxStaticText để hiển thị câu hỏi (từ vựng hoặc định nghĩa)
-	w = new wxStaticText(this, wxID_ANY, word, wxDefaultPosition, wxDefaultSize);
-	w->SetFont(font);
-	vbox->Add(w, 0, wxALIGN_CENTER);
+	w = new wxTextCtrl(this, wxID_ANY, wxString::FromUTF8(word), wxDefaultPosition, wxSize(400,100), wxTE_MULTILINE | wxTE_READONLY | wxBORDER_NONE | wxTE_NO_VSCROLL | wxALIGN_CENTER);
+	w->SetFont(Wordfont);
+	vbox->Add(w, 0, wxALIGN_CENTER|wxTOP, 20);
 
 	//Tạo lưới các nút (buttons) để hiển thị các lựa chọn đáp án
 	wxGridSizer* gSizer = new wxGridSizer(2, 2, 20, 20);
-	wxColour buttonColor(0, 128, 0);
 
 	SetUpButtons();
 	for (int i = 0; i < 4; ++i) {
 		buttons[i]->SetFont(font);
-		buttons[i]->SetBackgroundColour(buttonColor);
+		buttons[i]->SetBackgroundColour("#ff82a8");
 		buttons[i]->SetForegroundColour(*wxWHITE);
 		gSizer->Add(buttons[i], 0, wxEXPAND | wxALL, 10);
 	}
@@ -185,16 +187,19 @@ void gameDialog::LoadQuestion()
 
 void gameDialog::NextQuestion()
 {
+	int maxWidth = 200;
 	//Remove the current question
 	if (!LuuTru.empty()) {
 		LuuTru.erase(LuuTru.begin());
 		//Load the next question
 		if (!LuuTru.empty()) {
 			LoadQuestion();
-			w->SetLabel(word);
+			w->SetLabel(wxString::FromUTF8(word));
 			for (int i = 0; i < 4; ++i) {
-				buttons[i]->SetLabel(wxString::Format("%c. %s", 'A' + i, DapAn[i]));
-				buttons[i]->SetBackgroundColour(wxColour(0, 128, 0)); // Reset button background color
+				wxString answer = wxString::FromUTF8(DapAn[i].c_str());
+				answer = 'A'+i + " " + WrapText(answer,maxWidth);
+				buttons[i]->SetLabel(answer);
+				buttons[i]->SetBackgroundColour("#ff82a8"); // Reset button background color
 			}
 		}
 		else {
@@ -222,7 +227,48 @@ void gameDialog::EndGame()
 void gameDialog::SetUpButtons()
 {
 	wxString labels[4] = { "A.", "B.", "C.", "D." };
+	int maxWidth = 200; // Set your desired maximum width here
+
 	for (int i = 0; i < 4; ++i) {
-		buttons[i] = new wxButton(this, 10001 + i, labels[i] + " " + wxString::FromUTF8(DapAn[i].c_str()), wxDefaultPosition, wxSize(200, 50),wxTE_MULTILINE);
+		wxString answer = wxString::FromUTF8(DapAn[i].c_str());
+		answer = labels[i] + " " + WrapText(answer, maxWidth);
+
+		buttons[i] = new wxButton(this, 10001 + i, answer, wxDefaultPosition, wxSize(maxWidth, 100), wxTE_MULTILINE);
+
+		buttons[i]->SetBackgroundColour("#ff82a8");
 	}
+}
+
+wxString gameDialog::WrapText(const wxString& text, int maxWidth)
+{
+	wxClientDC dc(this);
+	dc.SetFont(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT));
+
+	wxString wrappedText;
+	wxString line;
+	wxString word;
+	int spaceWidth = dc.GetTextExtent(" ").GetWidth();
+
+	wxArrayString words = wxSplit(text, ' ');
+
+	for (size_t i = 0; i < words.size(); ++i) {
+		word = words[i];
+		int wordWidth = dc.GetTextExtent(word).GetWidth();
+
+		if (dc.GetTextExtent(line + word).GetWidth() + spaceWidth <= maxWidth) {
+			line += (line.empty() ? "" : " ") + word;
+		}
+		else {
+			if (!wrappedText.empty()) wrappedText += "\n";
+			wrappedText += line;
+			line = word;
+		}
+	}
+
+	if (!line.empty()) {
+		if (!wrappedText.empty()) wrappedText += "\n";
+		wrappedText += line;
+	}
+
+	return wrappedText;
 }

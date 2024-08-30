@@ -15,7 +15,7 @@ class gameDialog : public wxDialog
 public:
 	CountdownTimer* timer;
 	wxStaticText* point;
-	wxStaticText* w;
+	wxTextCtrl* w;
 	wxButton* buttons[4];
 	std::vector<TST> tst;
 	std::vector<SuffixArray> SA;
@@ -27,6 +27,7 @@ public:
 
 	gameDialog(wxWindow* parent, const wxString& title, std::vector<TST> &tst,	std::vector<SuffixArray> &SA, int &level, int &dicType,int &mode);
 	void OnButtonClicked(wxCommandEvent& event);
+	wxString WrapText(const wxString &text, int maxWidth);
 
 private:
 	void LoadQuestion();

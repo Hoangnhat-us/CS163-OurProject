@@ -84,7 +84,7 @@ gamePage::gamePage(wxWindow* parent, int& dicTypeInt, int& searchType, std::stri
 
 	wxPanel* Panel3 = new wxPanel(this, wxID_ANY);
 
-	wxString choices[] = { "Easy", "Medium", "Hard", "None" };
+	wxString choices[] = { "Easy", "Medium", "Hard"};
 	// Tải hình ảnh từ file
 	level = new wxComboBox(Panel3, wxID_ANY, "Select an option",
 		wxDefaultPosition, wxDefaultSize,
@@ -170,11 +170,13 @@ void gamePage::OnComboEvt(wxCommandEvent& event)
 	dicTypeInt = list->GetSelection();
 	if (list->GetSelection() == 3 || list->GetSelection() == 4 || list->GetSelection() == 2)
 	{
-		level->SetSelection(3);
+		level->SetLabel("None");
 		level->Disable();
 	}
-	if (list->GetSelection() == 0 || list->GetSelection() == 1)
+	if (list->GetSelection() == 0 || list->GetSelection() == 1) {
+		level->SetSelection(0);
 		level->Enable();
+	}
 	level->Refresh();
 	level->Update();
 }
@@ -189,11 +191,11 @@ void gamePage::OnToggleButton(wxCommandEvent& event)
 	if (selectedButton != btn1)
 	{
 		btn1->SetValue(false);
-		mode = 1;
+		mode = 2;
 	}
 	if (selectedButton != btn2) {
 		btn2->SetValue(false);
-		mode = 2;
+		mode = 1;
 	}
 
 
